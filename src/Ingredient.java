@@ -1,2 +1,4 @@
-public class Ingredient {
+public class Ingredient
+{
+	String name;
 }
