@@ -2,6 +2,7 @@ public class Main
 {
     public static void main(String[] args)
     {
-        GUI.panel();
+        Controller ctrl = new Controller();
+        ctrl.init();
     }
 }

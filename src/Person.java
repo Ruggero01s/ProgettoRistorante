@@ -1,13 +1,13 @@
 public class Person
 {
-    boolean manager, employee, warehouseman;
+    boolean manager, employee, storageWorker;
     String name;
 
-    public Person(String name, boolean manager, boolean employee, boolean warehouseman)
+    public Person(String name, boolean manager, boolean employee, boolean storageWorker)
     {
         this.manager = manager;
         this.employee = employee;
-        this.warehouseman = warehouseman;
+        this.storageWorker = storageWorker;
         this.name = name;
     }
     public Person() {
@@ -28,12 +28,12 @@ public class Person
         this.employee = employee;
     }
 
-    public boolean isWarehouseman() {
-        return warehouseman;
+    public boolean isStorageWorker() {
+        return storageWorker;
     }
 
-    public void setWarehouseman(boolean warehouseman) {
-        this.warehouseman = warehouseman;
+    public void setStorageWorker(boolean storageWorker) {
+        this.storageWorker = storageWorker;
     }
 
     public String getName() {

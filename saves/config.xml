@@ -1,0 +1,4 @@
+<?xml version="1.0" encoding="utf-8"?>
+<config>
+	<baseConfig capacity="10" workPersonLoad="1.0" workResturantLoad="12.0"></baseConfig>
+</config>

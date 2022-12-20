@@ -1,13 +1,10 @@
-import javax.xml.parsers.*;
 import javax.xml.stream.XMLOutputFactory;
 import javax.xml.stream.XMLStreamWriter;
-import javax.xml.transform.*;
-import javax.xml.transform.dom.*;
-import javax.xml.transform.stream.*;
-import org.w3c.dom.*;
 import java.io.FileOutputStream;
-import java.io.IOException;
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
+
 public class Writer
 {
     static ArrayList<Person> listP = new ArrayList<>();
@@ -34,7 +31,7 @@ public class Writer
                 xmlw.writeAttribute("name", p.getName());
                 xmlw.writeAttribute("manager", String.valueOf(p.isManager()));
                 xmlw.writeAttribute("employee", String.valueOf(p.isEmployee()));
-                xmlw.writeAttribute("warehouseman", String.valueOf(p.isWarehouseman()));
+                xmlw.writeAttribute("storageWorker", String.valueOf(p.isStorageWorker()));
                 xmlw.writeEndElement(); // </person>
             }
             xmlw.writeCharacters("\n");

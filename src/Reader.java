@@ -18,26 +18,26 @@ public class Reader {
             String tagName = "";
 
             xmlif = XMLInputFactory.newInstance();
-            xmlr = xmlif.createXMLStreamReader(new FileInputStream(FILE + filename));
-            while (xmlr.hasNext()) { // continua a leggere finche ha eventi a disposizione
-                boolean manager = false, employee = false, warehouseman = false;
+            xmlr = xmlif.createXMLStreamReader(new FileInputStream(ROOT + PEOPLE_NAME_FILE));
+            while (xmlr.hasNext())
+            { // continua a leggere finche ha eventi a disposizione
+                boolean manager = false, employee = false, storageWorker = false;
                 String name = "";
-                // switch sul tipo di evento
-                // if (xmlr.getEventType()==XMLStreamConstants.START_ELEMENT) // inizio di un elemento
-               if(xmlr.getEventType() == XMLStreamConstants.START_ELEMENT) {
+               if(xmlr.getEventType() == XMLStreamConstants.START_ELEMENT) // inizio di un elemento
+               {
                    tagName = xmlr.getLocalName();
                    if (tagName.equals("person")) {
                        name = xmlr.getAttributeValue(0);
                        String mana = xmlr.getAttributeValue(1);
                        String empl = xmlr.getAttributeValue(2);
-                       String ware = xmlr.getAttributeValue(3);
+                       String stor = xmlr.getAttributeValue(3);
                        if (mana.equals("true")) manager = true;
                        else manager = false;
                        if (empl.equals("true")) employee = true;
                        else employee = false;
-                       if (ware.equals("true")) warehouseman = true;
-                       else warehouseman = false;
-                       listP.add(new Person(name, manager, employee, warehouseman));
+                       if (stor.equals("true")) storageWorker = true;
+                       else storageWorker = false;
+                       listP.add(new Person(name, manager, employee, storageWorker));
                    }
                }
 
