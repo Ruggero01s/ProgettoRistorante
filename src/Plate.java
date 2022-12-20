@@ -7,6 +7,6 @@ public class Plate
     {
         // l'elenco di ingredienti sarà un set? od una mappa? bisogna anche decidere la key
         int portions;
-        float caricoLavoroPorzione;
+        float workLoadPortion;
     }
 }
