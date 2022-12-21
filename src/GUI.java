@@ -235,6 +235,7 @@ public class GUI
                 frame.add(cfgRecipeSendButton);
                 frame.add(cfgBackButton);
                 break;
+
             case CONFIG_DISHES:
                 frame.setLayout(new FlowLayout());
                 frame.add(cfgDishText);

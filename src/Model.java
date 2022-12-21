@@ -1,7 +1,4 @@
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Set;
-import java.util.SortedSet;
+import java.util.*;
 
 public class Model
 {
@@ -12,8 +9,8 @@ public class Model
      double workResturantLoad;
      HashMap<String, Double> drinksMap = new HashMap<>();
      HashMap<String, Double> extraFoodsMap = new HashMap<>();
-     ArrayList<Dish> dishesList = new ArrayList<>();
-     ArrayList<Recipe> recipesList = new ArrayList<>();
+     HashMap<Dish, Integer> dishesMap = new HashMap<>();
+     HashMap<Recipe, Integer> recipesMap = new HashMap<>();
 
     public int getWorkPersonLoad() {
         return workPersonLoad;
