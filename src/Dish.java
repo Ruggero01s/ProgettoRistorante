@@ -1,4 +1,6 @@
-public class Plate
+import java.util.HashMap;
+
+public class Dish
 {
     String name;
     boolean permanent;

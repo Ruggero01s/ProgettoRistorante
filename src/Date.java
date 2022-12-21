@@ -3,6 +3,24 @@ import java.util.Calendar;
 
 public class Date
 {
+	Calendar date = Calendar.getInstance();
+
+	public Date (String day,String month, String year) throws ParseException
+	{
+		SimpleDateFormat format = new SimpleDateFormat("dd-MM-yyyy");
+		java.util.Date dateFormat = format.parse(day.concat("-".concat(month).concat("-").concat(year)));
+		this.date.setTime(dateFormat);
+	}
+
+	public String getStringDate ()
+	{
+
+		SimpleDateFormat format = new SimpleDateFormat("dd/MM/yyyy");
+		java.util.Date dateFormat = new java.util.Date();
+		dateFormat.setTime(this.date.getTimeInMillis());
+		return format.format(dateFormat);
+	}
+
 
 	public void test ()
 	{
