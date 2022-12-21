@@ -1,4 +1,7 @@
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Set;
+import java.util.SortedSet;
 
 public class Model
 {
@@ -7,8 +10,10 @@ public class Model
 
     int capacity,workPersonLoad;
      double workResturantLoad;
-     HashMap<String, Double> drinks = new HashMap<>();
-     HashMap<String, Double> extraFoods = new HashMap<>();
+     HashMap<String, Double> drinksMap = new HashMap<>();
+     HashMap<String, Double> extraFoodsMap = new HashMap<>();
+     ArrayList<Dish> dishesList = new ArrayList<>();
+     ArrayList<Recipe> recipesList = new ArrayList<>();
 
     public int getWorkPersonLoad() {
         return workPersonLoad;
@@ -35,19 +40,19 @@ public class Model
         updateWorkResturantLoad();
     }
 
-    public HashMap<String, Double> getDrinks() {
-        return drinks;
+    public HashMap<String, Double> getDrinksMap() {
+        return drinksMap;
     }
 
-    public void setDrinks(HashMap<String, Double> drinks) {
-        this.drinks = drinks;
+    public void setDrinksMap(HashMap<String, Double> drinksMap) {
+        this.drinksMap = drinksMap;
     }
 
-    public HashMap<String, Double> getExtraFoods() {
-        return extraFoods;
+    public HashMap<String, Double> getExtraFoodsMap() {
+        return extraFoodsMap;
     }
 
-    public void setExtraFoods(HashMap<String, Double> extraFoods) {
-        this.extraFoods = extraFoods;
+    public void setExtraFoodsMap(HashMap<String, Double> extraFoodsMap) {
+        this.extraFoodsMap = extraFoodsMap;
     }
 }
