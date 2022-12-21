@@ -1,16 +1,15 @@
 import java.util.*;
 
-public class Model
-{
+public class Model {
 
     static final double INCREASE20 = 1.20;
 
-    int capacity,workPersonLoad;
-     double workResturantLoad;
-     HashMap<String, Double> drinksMap = new HashMap<>();
-     HashMap<String, Double> extraFoodsMap = new HashMap<>();
-     HashMap<Dish, Integer> dishesMap = new HashMap<>();
-     HashMap<Recipe, Integer> recipesMap = new HashMap<>();
+    int capacity, workPersonLoad;
+    double workResturantLoad;
+    HashMap<String, Double> drinksMap = new HashMap<>();
+    HashMap<String, Double> extraFoodsMap = new HashMap<>();
+    HashSet<Dish> dishesSet = new HashSet<>();
+    HashSet<Recipe> recipesSet= new HashSet<>();
 
     public int getWorkPersonLoad() {
         return workPersonLoad;
@@ -21,9 +20,10 @@ public class Model
         updateWorkResturantLoad();
     }
 
-    public void updateWorkResturantLoad(){
-        this.workResturantLoad=this.capacity*this.workPersonLoad*INCREASE20;
+    public void updateWorkResturantLoad() {
+        this.workResturantLoad = this.capacity * this.workPersonLoad * INCREASE20;
     }
+
     public double getWorkResturantLoad() {
         return workResturantLoad;
     }

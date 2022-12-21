@@ -4,14 +4,11 @@ import java.util.HashMap;
 public class Dish    //todo override equals
 {
     String name;
-  //  boolean permanent;
-    Date startPeriod,endPeriod;
+    Date startPeriod, endPeriod;
     Recipe recipe;
 
-    public Dish(String name, Recipe recipe/*, boolean permanent*/, String startPeriod, String endPeriod) throws ParseException
-    {
+    public Dish(String name, Recipe recipe/*, boolean permanent*/, String startPeriod, String endPeriod) throws ParseException {
         this.name = name;
-       // this.permanent = permanent;
 
         String[] periodDateStart = startPeriod.split("/");
         this.startPeriod = new Date(periodDateStart[0], periodDateStart[1]);

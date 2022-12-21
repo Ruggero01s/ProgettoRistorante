@@ -1,12 +1,8 @@
 import java.util.HashMap;
-import java.util.Map;
 
 public class Controller {
     Model model = new Model();
     GUI gui = new GUI(this);
-
-    int idDish = 0;
-    int idRecipe = 0;
 
     public void init() {
         gui.init();
@@ -16,11 +12,11 @@ public class Controller {
         Writer.writeDrinks(model.drinksMap);
         Writer.writeExtraFoods(model.extraFoodsMap);
         Writer.writeConfigBase(model.capacity, model.workPersonLoad, model.workResturantLoad);
+        Writer.writeDishes(model.dishesSet);
     }
 
     public void saveConfig() {
         try {
-            String[] inputs = getUserInputs();
             String inputCapacity = gui.cfgInputArea1.getText();
             String inputWorkload = gui.cfgInputArea2.getText();
 
@@ -37,7 +33,10 @@ public class Controller {
 
     public void saveDrinks() {
         try {
-            model.drinksMap.put(gui.cfgInputArea1.getText(), Double.parseDouble(gui.cfgInputArea2.getText()));
+            String inputName = gui.cfgInputArea1.getText();
+            String inputQuantityPerson = gui.cfgInputArea2.getText();
+
+            model.drinksMap.put(inputName, Double.parseDouble(inputQuantityPerson));
             gui.resetInputAreas();
         } catch (NumberFormatException e)//todo gestire
         {
@@ -48,7 +47,10 @@ public class Controller {
 
     public void saveFoods() {
         try {
-            model.extraFoodsMap.put(gui.cfgInputArea1.getText(), Double.parseDouble(gui.cfgInputArea2.getText()));
+            String inputName = gui.cfgInputArea1.getText();
+            String inputQuantityPerson = gui.cfgInputArea2.getText();
+
+            model.extraFoodsMap.put(inputName, Double.parseDouble(inputQuantityPerson));
             gui.resetInputAreas();
         } catch (NumberFormatException e)//todo gestire
         {
@@ -66,27 +68,30 @@ public class Controller {
     }
 
     public void printRecipes() {
-        System.out.println(model.recipesMap);
+        System.out.println(model.recipesSet);
     }
 
     public void printDishes() {
-        System.out.println(model.dishesMap);
+        System.out.println(model.dishesSet);
     }
 
     public void saveRecipe() {
-        try
-        {
+        try {
+            String inputName = gui.cfgInputArea1.getText();
+            String inputIngredients = gui.cfgInputArea3.getText();
+            String inputPortions = gui.cfgInputArea2.getText();
+            String inputWorkload = gui.cfgInputArea4.getText();
+
             HashMap<String, Double> ingredientQuantityMap = new HashMap<>();
-            String text = gui.cfgInputArea3.getText();
+            String text = inputIngredients;
             String[] lines = text.split("\n");
-            for (String line: lines){
+            for (String line : lines) {
                 String[] words = line.split(":");
                 ingredientQuantityMap.put(words[0], Double.parseDouble(words[1]));
             }
-            model.recipesMap.put(new Recipe(gui.cfgInputArea1.getText(), ingredientQuantityMap, Integer.parseInt(gui.cfgInputArea2.getText()), Double.parseDouble(gui.cfgInputArea4.getText())), idRecipe++);
+            model.recipesSet.add(new Recipe(inputName, ingredientQuantityMap, Integer.parseInt(inputPortions), Double.parseDouble(inputWorkload)));
             gui.resetInputAreas();
-        }
-        catch (NumberFormatException e)//todo gestire
+        } catch (NumberFormatException e)//todo gestire
         {
             System.out.println("errore, formato non valido");
             e.printStackTrace();
@@ -94,15 +99,28 @@ public class Controller {
     }
 
     public void saveDish() {
-        try{
-            if(gui.checkboxpermanente) {
-                for (Map.Entry<Recipe, Integer> entry: model.recipesMap.entrySet()) {
-                    if (entry.getKey().id.equals(gui.cfgInputArea2))
-                    model.dishesMap.put(new Dish(gui.cfgInputArea1.getText(), entry.getKey(), "1/1", "31/12"), idDish++);
-                }
-            }
-        }catch (Exception e){
+        try {
+            String inputName = gui.cfgInputArea1.getText();
+            String inputIngredients = gui.cfgInputArea2.getText();
 
-        }
+            String inputStartDate = gui.cfgInputArea3.getText();
+            String inputEndDate = gui.cfgInputArea4.getText();
+
+            if (gui.cfgDishPermanentRadio.isSelected()) {
+                inputStartDate = "1/1";
+                inputEndDate = "31/12";
+            }
+            for (Recipe r : model.recipesSet) {
+                if (r.id.equals(inputIngredients)) {
+                    model.dishesSet.add(new Dish(inputName, r, inputStartDate, inputEndDate));
+                    break;
+                }
+            gui.resetInputAreas();
+            }
+    } catch(Exception e)
+    {
+        System.out.println("errore, saveDish");
+        e.printStackTrace();
     }
+}
 }

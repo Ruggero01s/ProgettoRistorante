@@ -144,9 +144,7 @@ public class Writer
             xmlw.flush(); // svuota il buffer e procede alla scrittura
             xmlw.close(); // chiusura del documento e delle risorse impiegate
             System.out.println(SALUTO);
-        }
-        catch (Exception e)
-        {
+        } catch (Exception e) {
             System.out.println(ERRORE);
             System.out.println(e.getMessage());
         }
