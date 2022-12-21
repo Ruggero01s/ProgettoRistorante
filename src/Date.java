@@ -4,12 +4,11 @@ import java.util.Calendar;
 public class Date {
     Calendar date = Calendar.getInstance();
 
-	public Date (String day,String month, String year) throws ParseException
-	{
-		SimpleDateFormat format = new SimpleDateFormat("dd-MM-yyyy");
-		java.util.Date dateFormat = format.parse(day.concat("-".concat(month).concat("-").concat(year)));
-		this.date.setTime(dateFormat);
-	}
+    public Date(String day, String month) throws ParseException {
+        SimpleDateFormat format = new SimpleDateFormat("dd/MM/yyyy");
+        java.util.Date dateFormat = format.parse(day.concat("/".concat(month).concat("/").concat("1600")));
+        this.date.setTime(dateFormat);
+    }
 
     public String getStringDate() {
 

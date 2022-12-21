@@ -1,35 +1,30 @@
 import javax.xml.stream.XMLOutputFactory;
 import javax.xml.stream.XMLStreamWriter;
 import java.io.FileOutputStream;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
 
-public class Writer
-{
-    private static final String ROOT = "saves/";
-    private static final String PEOPLE_NAME_FILE= "people.xml";
-    private static final String CONFIG_NAME_FILE= "config.xml";
-    private static final String DRINKS_NAME_FILE= "drinks.xml";
-    private static final String EXTRA_FOODS_NAME_FILE= "extraFoods.xml";
+public class Writer {
+    public static final String ROOT = "saves/";
+    public static final String PEOPLE_NAME_FILE = "people.xml";
+    public static final String CONFIG_NAME_FILE = "config.xml";
+    public static final String DRINKS_NAME_FILE = "drinks.xml";
+    public static final String EXTRA_FOODS_NAME_FILE = "extraFoods.xml";
+    public static final String DISHES_NAME_FILE = "dishes.xml";
 
 
     private static final String SALUTO = "\nOutput generato correttamente, arrivederci";
     private static final String ERRORE = "\nErrore nel writer: ";
 
-    public static void writePeople(ArrayList<Person> people)
-    {
+    public static void writePeople(ArrayList<Person> people) {
         XMLOutputFactory xmlof = null;
         XMLStreamWriter xmlw = null;
-        try
-        {
+        try {
             xmlof = XMLOutputFactory.newInstance();
-            xmlw = xmlof.createXMLStreamWriter(new FileOutputStream(ROOT+PEOPLE_NAME_FILE), "utf-8");
+            xmlw = xmlof.createXMLStreamWriter(new FileOutputStream(ROOT + PEOPLE_NAME_FILE), "utf-8");
             xmlw.writeStartDocument("utf-8", "1.0");
             xmlw.writeCharacters("\n");
             xmlw.writeStartElement("people"); // scrittura del tag radice <people>
-            for (Person p: people)
-            {
+            for (Person p : people) {
                 xmlw.writeCharacters("\n\t");
                 xmlw.writeStartElement("person");
                 xmlw.writeAttribute("name", p.getName());
@@ -44,23 +39,19 @@ public class Writer
             xmlw.flush(); // svuota il buffer e procede alla scrittura
             xmlw.close(); // chiusura del documento e delle risorse impiegate
             System.out.println(SALUTO);
-        }
-        catch (Exception e)
-        {
+        } catch (Exception e) {
             System.out.println(ERRORE);
             System.out.println(e.getMessage());
         }
     }
 
-    public static void writeConfigBase(int capacity, double workPersonLoad, double workResturantLoad)
-    {
+    public static void writeConfigBase(int capacity, double workPersonLoad, double workResturantLoad) {
 
         XMLOutputFactory xmlof = null;
         XMLStreamWriter xmlw = null;
-        try
-        {
+        try {
             xmlof = XMLOutputFactory.newInstance();
-            xmlw = xmlof.createXMLStreamWriter(new FileOutputStream(ROOT+CONFIG_NAME_FILE), "utf-8");
+            xmlw = xmlof.createXMLStreamWriter(new FileOutputStream(ROOT + CONFIG_NAME_FILE), "utf-8");
             xmlw.writeStartDocument("utf-8", "1.0");
             xmlw.writeCharacters("\n");
             xmlw.writeStartElement("config"); // scrittura del tag radice <config>
@@ -76,33 +67,28 @@ public class Writer
             xmlw.flush(); // svuota il buffer e procede alla scrittura
             xmlw.close(); // chiusura del documento e delle risorse impiegate
             System.out.println(SALUTO);
-        }
-        catch (Exception e)
-        {
+        } catch (Exception e) {
             System.out.println(ERRORE);
             System.out.println(e.getMessage());
         }
     }
 
-    public static void writeDrinks(HashMap <String,Double> drinks)
-    {
+    public static void writeDrinks(HashMap<String, Double> drinks) {
         XMLOutputFactory xmlof = null;
         XMLStreamWriter xmlw = null;
-        try
-        {
+        try {
             xmlof = XMLOutputFactory.newInstance();
-            xmlw = xmlof.createXMLStreamWriter(new FileOutputStream(ROOT+DRINKS_NAME_FILE), "utf-8");
+            xmlw = xmlof.createXMLStreamWriter(new FileOutputStream(ROOT + DRINKS_NAME_FILE), "utf-8");
             xmlw.writeStartDocument("utf-8", "1.0");
             xmlw.writeCharacters("\n");
             xmlw.writeStartElement("drinks"); // scrittura del tag radice <drinks>
-            for(Map.Entry<String,Double> drink : drinks.entrySet())
-            {
+            for (Map.Entry<String, Double> drink : drinks.entrySet()) {
                 xmlw.writeCharacters("\n\t");
                 xmlw.writeStartElement("drink"); // <drink>
                 xmlw.writeAttribute("name", drink.getKey());
                 xmlw.writeAttribute("liter", Double.toString(drink.getValue()));
                 xmlw.writeEndElement(); // </drink>
-            };
+            }
             xmlw.writeCharacters("\n");
             xmlw.writeEndElement();//</drinks>
 
@@ -110,33 +96,28 @@ public class Writer
             xmlw.flush(); // svuota il buffer e procede alla scrittura
             xmlw.close(); // chiusura del documento e delle risorse impiegate
             System.out.println(SALUTO);
-        }
-        catch (Exception e)
-        {
+        } catch (Exception e) {
             System.out.println(ERRORE);
             System.out.println(e.getMessage());
         }
     }
 
-    public static void writeExtraFoods(HashMap <String,Double> foods)
-    {
+    public static void writeExtraFoods(HashMap<String, Double> foods) {
         XMLOutputFactory xmlof = null;
         XMLStreamWriter xmlw = null;
-        try
-        {
+        try {
             xmlof = XMLOutputFactory.newInstance();
-            xmlw = xmlof.createXMLStreamWriter(new FileOutputStream(ROOT+EXTRA_FOODS_NAME_FILE), "utf-8");
+            xmlw = xmlof.createXMLStreamWriter(new FileOutputStream(ROOT + EXTRA_FOODS_NAME_FILE), "utf-8");
             xmlw.writeStartDocument("utf-8", "1.0");
             xmlw.writeCharacters("\n");
             xmlw.writeStartElement("foods"); // scrittura del tag radice <foods>
-            for(Map.Entry<String,Double> food : foods.entrySet())
-            {
+            for (Map.Entry<String, Double> food : foods.entrySet()) {
                 xmlw.writeCharacters("\n\t");
                 xmlw.writeStartElement("food"); // <food>
                 xmlw.writeAttribute("name", food.getKey());
                 xmlw.writeAttribute("hg", Double.toString(food.getValue()));
                 xmlw.writeEndElement(); // </food>
-            };
+            }
             xmlw.writeCharacters("\n");
             xmlw.writeEndElement();//</foods>
 
@@ -149,4 +130,52 @@ public class Writer
             System.out.println(e.getMessage());
         }
     }
+
+    public static void writeDishes(HashSet<Dish> dishes)
+    {
+        XMLOutputFactory xmlof = null;
+        XMLStreamWriter xmlw = null;
+        try {
+            xmlof = XMLOutputFactory.newInstance();
+            xmlw = xmlof.createXMLStreamWriter(new FileOutputStream(ROOT + DISHES_NAME_FILE), "utf-8");
+            xmlw.writeStartDocument("utf-8", "1.0");
+            xmlw.writeCharacters("\n");
+            xmlw.writeStartElement("dishes"); // scrittura del tag radice <dishes>
+            for (Dish dish : dishes) {
+                xmlw.writeCharacters("\n\t");
+                xmlw.writeStartElement("dish"); // <dish>
+                xmlw.writeAttribute("name", dish.getName());
+                // xmlw.writeAttribute("permanent", Boolean.toString(dish.isPermanent()));
+                xmlw.writeAttribute("startDate", dish.getStartPeriod().getStringDate());
+                xmlw.writeAttribute("endDate", dish.getEndPeriod().getStringDate());
+
+                xmlw.writeCharacters("\n\t\t");
+
+                xmlw.writeStartElement("recipe"); // <recipe>
+                xmlw.writeAttribute("id", dish.getRecipe().getId());
+                xmlw.writeAttribute("portions", Integer.toString(dish.getRecipe().getPortions()));
+                xmlw.writeAttribute("workLoadPortion", Double.toString(dish.getRecipe().getWorkLoadPortion()));
+                for (Map.Entry<String, Double> ingredient : dish.getRecipe().getIngredients().entrySet()) {
+                    xmlw.writeCharacters("\n\t\t\t");
+                    xmlw.writeStartElement("ingredient"); // <ingredient>
+                    xmlw.writeAttribute("name", ingredient.getKey());
+                    xmlw.writeAttribute("quantity", Double.toString(ingredient.getValue()));
+                    xmlw.writeEndElement(); // </ingredient>
+                }
+                xmlw.writeEndElement(); // </recipe>
+                xmlw.writeEndElement(); // </dish>
+            }
+            xmlw.writeCharacters("\n");
+            xmlw.writeEndElement();//</dishes>
+
+            xmlw.writeEndDocument(); // scrittura della fine del documento
+            xmlw.flush(); // svuota il buffer e procede alla scrittura
+            xmlw.close(); // chiusura del documento e delle risorse impiegate
+            System.out.println(SALUTO);
+        } catch (Exception e) {
+            System.out.println(ERRORE);
+            System.out.println(e.getMessage());
+        }
+    }
+
 }
