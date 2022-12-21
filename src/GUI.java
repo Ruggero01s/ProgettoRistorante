@@ -14,10 +14,13 @@ public class GUI
         INIT,
         TITLE,
         LOGIN,
-        CONFIG_MENU,
+        CONFIG_CHOICE,
         CONFIG_BASE,
         CONFIG_DRINKS,
-        CONFIG_EXTRAFOODS
+        CONFIG_EXTRAFOODS,
+        CONFIG_RECIPES,
+        CONFIG_DISHES,
+        CONFIG_MENUS
     }
     STATE stateOld = STATE.INIT;
     JFrame frame = new JFrame("Restaurant");
@@ -33,16 +36,15 @@ public class GUI
 //------------------------------------------------------------------------------------------
     //CONFIG
     JButton cfgBackButton = new JButton("Back");
-
-    //CONFIG_MENU
-    JLabel cfgMenuText = new JLabel("Cosa vuoi configurare?");
-    JButton cfgMenuBaseButton = new JButton("Specifiche ristorante");
-    JButton cfgMenuDrinksButton = new JButton("Bevande");
-    JButton cfgMenuExtraFoodsButton = new JButton("Generi Extra");
-    JButton cfgMenuBackToLogButton = new JButton("Back to Login");
     JButton cfgWriteButton = new JButton("Salva ed esci");
 
-    //------------------------------------------------------------------------------------------
+    //CONFIG_CHOICES
+    JLabel cfgChoiceText = new JLabel("Cosa vuoi configurare?");
+    JButton cfgChoiceBaseButton = new JButton("Specifiche ristorante");
+    JButton cfgChoiceDrinksButton = new JButton("Bevande");
+    JButton cfgChoiceExtraFoodsButton = new JButton("Generi Extra");
+    JButton cfgChoiceBackToLogButton = new JButton("Back to Login");
+//------------------------------------------------------------------------------------------
     //CONFIG_BASE
     JLabel cfgBaseText = new JLabel("Inserisci dati ristorante:");
     JLabel cfgBaseCapacityText = new JLabel("Posti a sedere:");
@@ -57,13 +59,24 @@ public class GUI
     JTextArea cfgDrinksQuantityArea = new JTextArea();
     JButton cfgDrinksSendButton = new JButton("Inserisci");
 //------------------------------------------------------------------------------------------
-    //CONFIG_DRINKS
+    //CONFIG_EXTRAFOODS
     JLabel cfgFoodText = new JLabel("Inserisci dati generi alimentari extra: (nome|quantità)");
     JTextArea cfgFoodNameArea = new JTextArea();
     JTextArea cfgFoodQuantityArea = new JTextArea();
     JButton cfgFoodSendButton = new JButton("Inserisci");
 //------------------------------------------------------------------------------------------
-
+    //CONFIG_RECIPES
+    JLabel cfgRecipeText = new JLabel("Inserisci dati ricetta (nome|porzioni|lista ingredienti:quantità)");
+    JTextArea cfgRecipeNameArea = new JTextArea();
+    JTextArea cfgRecipeIngredientArea = new JTextArea();
+    JButton cfgRecipeSendButton = new JButton("Inserisci");
+    //------------------------------------------------------------------------------------------
+    //CONFIG_DISHES
+    JLabel cfgDishText = new JLabel("Inserisci dati piatto (nome|ricetta)");
+    JTextArea cfgDishNameArea = new JTextArea();
+    JTextArea cfgDishQuantityArea = new JTextArea();
+    JButton cfgDishSendButton = new JButton("Inserisci");
+//------------------------------------------------------------------------------------------
 
 
 
@@ -93,7 +106,7 @@ public class GUI
             //TODO set alignment
 
         //buttons LOGIN
-        logManagerButton.addActionListener(e -> stateChange(STATE.CONFIG_MENU));
+        logManagerButton.addActionListener(e -> stateChange(STATE.CONFIG_CHOICE));
 
     /*  JButton logEmployeeButton = new JButton("Employee");      //TODO
         logManagerButton.addActionListener(e -> state=STATE.CONFIG);
@@ -101,13 +114,13 @@ public class GUI
         logManagerButton.addActionListener(e -> state=STATE.CONFIG);  */
 //------------------------------------------------------------------------------------------
     //CONFIG
-        cfgBackButton.addActionListener(e -> stateChange(STATE.CONFIG_MENU));
-    //CONFIG_MENU
-        cfgMenuBaseButton.addActionListener(e -> stateChange(STATE.CONFIG_BASE));
-        cfgMenuDrinksButton.addActionListener(e -> stateChange(STATE.CONFIG_DRINKS));
-        cfgMenuExtraFoodsButton.addActionListener(e -> stateChange(STATE.CONFIG_EXTRAFOODS));
-        cfgMenuBackToLogButton.addActionListener(e -> stateChange(STATE.LOGIN));
+        cfgBackButton.addActionListener(e -> stateChange(STATE.CONFIG_CHOICE));
         cfgWriteButton.addActionListener(e -> ctrl.writeAll());
+    //CONFIG_MENU
+        cfgChoiceBaseButton.addActionListener(e -> stateChange(STATE.CONFIG_BASE));
+        cfgChoiceDrinksButton.addActionListener(e -> stateChange(STATE.CONFIG_DRINKS));
+        cfgChoiceExtraFoodsButton.addActionListener(e -> stateChange(STATE.CONFIG_EXTRAFOODS));
+        cfgChoiceBackToLogButton.addActionListener(e -> stateChange(STATE.LOGIN));
 //------------------------------------------------------------------------------------------
     //CONFIG_BASE
         //labels CONFIG_BASE
@@ -130,7 +143,7 @@ public class GUI
 //------------------------------------------------------------------------------------------
     //CONFIG_EXTRAFOODS
         //labels CONFIG_EXTRAFOODS
-        //TODO alignments
+             //TODO alignments
         //text area CONFIG_EXTRAFOODS
         cfgFoodNameArea.setLineWrap(true);
         cfgFoodQuantityArea.setLineWrap(true);
@@ -164,14 +177,14 @@ public class GUI
                 frame.getContentPane().repaint();
                 break;
 
-            case CONFIG_MENU:
+            case CONFIG_CHOICE:
                 frame.getContentPane().removeAll();
                 frame.setLayout(new FlowLayout());
-                frame.add(cfgMenuText);
-                frame.add(cfgMenuBaseButton);
-                frame.add(cfgMenuDrinksButton);
-                frame.add(cfgMenuExtraFoodsButton);
-                frame.add(cfgMenuBackToLogButton);
+                frame.add(cfgChoiceText);
+                frame.add(cfgChoiceBaseButton);
+                frame.add(cfgChoiceDrinksButton);
+                frame.add(cfgChoiceExtraFoodsButton);
+                frame.add(cfgChoiceBackToLogButton);
                 frame.add(cfgWriteButton);
                 frame.validate();
                 frame.getContentPane().repaint();
@@ -217,6 +230,29 @@ public class GUI
                 frame.validate();
                 frame.getContentPane().repaint();
                 break;
+
+         /*   case CONFIG_RECIPES:
+                frame.getContentPane().removeAll();
+                frame.setLayout(new FlowLayout());
+                frame.add(cfgRecipeText);
+                frame.add(cfgRecipeNameArea);
+                frame.add(cfgRecipeQuantityArea);
+                frame.add(cfgDrinksSendButton);
+                frame.add(cfgBackButton);
+                frame.validate();
+                frame.getContentPane().repaint();
+                break;
+            case CONFIG_DISHES:
+                frame.getContentPane().removeAll();
+                frame.setLayout(new FlowLayout());
+                frame.add(cfgDrinksText);
+                frame.add(cfgDrinksNameArea);
+                frame.add(cfgDrinksQuantityArea);
+                frame.add(cfgDrinksSendButton);
+                frame.add(cfgBackButton);
+                frame.validate();
+                frame.getContentPane().repaint();
+                break;*/
         }
     }
 }

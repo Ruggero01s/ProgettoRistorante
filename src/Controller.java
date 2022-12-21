@@ -17,34 +17,58 @@ public class Controller
 
     public void saveConfig ()
     {
-        model.setCapacity(Integer.parseInt(gui.cfgBaseCapArea.getText()));
-        model.setWorkPersonLoad(Integer.parseInt(gui.cfgBaseIndivualWorkloadArea.getText()));
+        try
+        {
+            model.setCapacity(Integer.parseInt(gui.cfgBaseCapArea.getText()));
+            model.setWorkPersonLoad(Integer.parseInt(gui.cfgBaseIndivualWorkloadArea.getText()));
+            gui.cfgBaseCapArea.setText("");
+            gui.cfgBaseIndivualWorkloadArea.setText("");
+        }
+        catch (NumberFormatException e)
+        {
+            System.out.println("errore, formato non valido");
+            e.printStackTrace();
+        }
+
     }
 
     public void saveDrinks()
     {
-       model.drinks.put(gui.cfgDrinksNameArea.getText(), Double.parseDouble(gui.cfgDrinksQuantityArea.getText()));
+      try
+      {
+          model.drinks.put(gui.cfgDrinksNameArea.getText(), Double.parseDouble(gui.cfgDrinksQuantityArea.getText()));
+          gui.cfgDrinksNameArea.setText("");
+          gui.cfgDrinksQuantityArea.setText("");
+      }
+      catch (NumberFormatException e)
+      {
+          System.out.println("errore, formato non valido");
+          e.printStackTrace();
+      }
     }
 
     public void saveFoods()
     {
-        model.extraFoods.put(gui.cfgFoodNameArea.getText(), Double.parseDouble(gui.cfgFoodQuantityArea.getText()));
+        try
+        {
+            model.extraFoods.put(gui.cfgFoodNameArea.getText(), Double.parseDouble(gui.cfgFoodQuantityArea.getText()));
+            gui.cfgFoodNameArea.setText("");
+            gui.cfgFoodQuantityArea.setText("");
+        }
+        catch (NumberFormatException e)
+        {
+            System.out.println("errore, formato non valido");
+            e.printStackTrace();
+        }
     }
 
     public void printDrinks()
     {
-        model.getDrinks().forEach((name, quantity) -> {
-            //setText
-            //TODO
-        });
+        System.out.println(model.drinks);
     }
 
     public void printExtraFoods ()
     {
-        model.getExtraFoods().forEach((name, quantity)->
-        {
-            //setText
-            //TODO
-        });
+        System.out.println(model.extraFoods);
     }
 }
