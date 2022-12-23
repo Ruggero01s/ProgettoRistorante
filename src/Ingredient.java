@@ -1,4 +1,4 @@
 public class Ingredient
 {
-	String name;
+	private String name;
 }

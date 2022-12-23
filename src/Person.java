@@ -1,7 +1,7 @@
 public class Person
 {
-    boolean manager, employee, storageWorker;
-    String name;
+    private boolean manager, employee, storageWorker;
+    private String name;
 
     public Person(String name, boolean manager, boolean employee, boolean storageWorker)
     {

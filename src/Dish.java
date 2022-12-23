@@ -3,9 +3,9 @@ import java.util.HashMap;
 
 public class Dish    //todo override equals
 {
-    String name;
-    Date startPeriod, endPeriod;
-    Recipe recipe;
+    private String name;
+    private Date startPeriod, endPeriod;
+    private Recipe recipe;
 
     public Dish(String name, Recipe recipe/*, boolean permanent*/, String startPeriod, String endPeriod) throws ParseException {
         this.name = name;

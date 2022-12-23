@@ -2,10 +2,10 @@ import java.util.HashMap;
 
 public class Recipe //todo override equals
 {
-    String id;
-    HashMap<String, Double> ingredients = new HashMap<>();
-    int portions;
-    double workLoadPortion;
+    private String id;
+    private HashMap<String, Double> ingredients = new HashMap<>();
+    private int portions;
+    private double workLoadPortion;
 
     public Recipe(String id, HashMap<String, Double> ingredients, int portions, double workLoadPortion) {
         this.id = id;
