@@ -3,197 +3,52 @@ import javax.xml.stream.XMLStreamConstants;
 import javax.xml.stream.XMLStreamReader;
 import java.io.FileInputStream;
 import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.HashSet;
 
-public class Reader
-{
+public class Reader {
     private static final String ERRORE = "\nErrore in Input: ";
+    private static final String FILE = "saves/";
+    static ArrayList<Person> listP = new ArrayList<>();
 
-    public static ArrayList<Person> readPeople()
-    {
+    public static ArrayList<Person> readPeople(String filename) {
         XMLInputFactory xmlif = null;
         XMLStreamReader xmlr = null;
 
-        ArrayList<Person> listP = new ArrayList<>();
+        try {
 
-        try
-        {
+            String tagName = "";
+
             xmlif = XMLInputFactory.newInstance();
-            xmlr = xmlif.createXMLStreamReader(new FileInputStream(Writer.ROOT + Writer.PEOPLE_NAME_FILE));
-            while (xmlr.hasNext())
-            { // continua a leggere finche ha eventi a disposizione
-                boolean manager = false, employee = false, storageWorker = false;
+            xmlr = xmlif.createXMLStreamReader(new FileInputStream(FILE + filename));
+            while (xmlr.hasNext()) { // continua a leggere finche ha eventi a disposizione
+                boolean manager = false, employee = false, warehouseman = false;
                 String name = "";
-               if(xmlr.getEventType() == XMLStreamConstants.START_ELEMENT) // inizio di un elemento
-               {
-                   if (xmlr.getLocalName().equals("person")) {
+                // switch sul tipo di evento
+                // if (xmlr.getEventType()==XMLStreamConstants.START_ELEMENT) // inizio di un elemento
+               if(xmlr.getEventType() == XMLStreamConstants.START_ELEMENT) {
+                   tagName = xmlr.getLocalName();
+                   if (tagName.equals("person")) {
                        name = xmlr.getAttributeValue(0);
                        String mana = xmlr.getAttributeValue(1);
                        String empl = xmlr.getAttributeValue(2);
-                       String stor = xmlr.getAttributeValue(3);
+                       String ware = xmlr.getAttributeValue(3);
                        if (mana.equals("true")) manager = true;
                        else manager = false;
                        if (empl.equals("true")) employee = true;
                        else employee = false;
-                       if (stor.equals("true")) storageWorker = true;
-                       else storageWorker = false;
-                       listP.add(new Person(name, manager, employee, storageWorker));
+                       if (ware.equals("true")) warehouseman = true;
+                       else warehouseman = false;
+                       listP.add(new Person(name, manager, employee, warehouseman));
                    }
                }
+
                 xmlr.next();
             }
-        }
-        catch (Exception e)
-        {
-            System.out.println(ERRORE + Writer.PEOPLE_NAME_FILE);
+        } catch (Exception e) {
+            System.out.println(ERRORE + filename);
             System.out.println(e.getMessage());
         }
         return listP;
     }
 
-    public static void readConfig(Model model)
-    {
-        XMLInputFactory xmlif = null;
-        XMLStreamReader xmlr = null;
 
-        try
-        {
-            xmlif = XMLInputFactory.newInstance();
-            xmlr = xmlif.createXMLStreamReader(new FileInputStream(Writer.ROOT + Writer.CONFIG_NAME_FILE));
-            while (xmlr.hasNext())
-            { // continua a leggere finche ha eventi a disposizione
-                if(xmlr.getEventType() == XMLStreamConstants.START_ELEMENT) // inizio di un elemento
-                {
-                    if (xmlr.getLocalName().equals("baseConfig"))
-                    {
-                        model.setCapacity(Integer.parseInt(xmlr.getAttributeValue(0)));
-                        model.setWorkPersonLoad(Integer.parseInt(xmlr.getAttributeValue(1)));
-                    }
-                }
-                xmlr.next();
-            }
-        }
-        catch (Exception e)
-        {
-            System.out.println(ERRORE + Writer.CONFIG_NAME_FILE);
-            System.out.println(e.getMessage());
-        }
-    }
-
-    public static HashMap<String,Double> readDrinks()
-    {
-        XMLInputFactory xmlif = null;
-        XMLStreamReader xmlr = null;
-
-        HashMap<String,Double> drinks = new HashMap<>();
-
-        try
-        {
-            xmlif = XMLInputFactory.newInstance();
-            xmlr = xmlif.createXMLStreamReader(new FileInputStream(Writer.ROOT + Writer.DRINKS_NAME_FILE));
-            while (xmlr.hasNext())
-            { // continua a leggere finche ha eventi a disposizione
-                if(xmlr.getEventType() == XMLStreamConstants.START_ELEMENT) // inizio di un elemento
-                {
-                    if (xmlr.getLocalName().equals("drink"))
-                        drinks.put(xmlr.getAttributeValue(0),Double.parseDouble(xmlr.getAttributeValue(1)));
-
-                }
-                xmlr.next();
-            }
-        }
-        catch (Exception e)
-        {
-            System.out.println(ERRORE + Writer.DRINKS_NAME_FILE);
-            System.out.println(e.getMessage());
-        }
-        return drinks;
-    }
-
-    public static HashMap<String,Double> readExtraFoods()
-    {
-        XMLInputFactory xmlif = null;
-        XMLStreamReader xmlr = null;
-
-        HashMap<String,Double> foods = new HashMap<>();
-
-        try
-        {
-            xmlif = XMLInputFactory.newInstance();
-            xmlr = xmlif.createXMLStreamReader(new FileInputStream(Writer.ROOT + Writer.EXTRA_FOODS_NAME_FILE));
-            while (xmlr.hasNext())
-            { // continua a leggere finche ha eventi a disposizione
-                if(xmlr.getEventType() == XMLStreamConstants.START_ELEMENT) // inizio di un elemento
-                {
-                    if (xmlr.getLocalName().equals("food"))
-                        foods.put(xmlr.getAttributeValue(0),Double.parseDouble(xmlr.getAttributeValue(1)));
-
-                }
-                xmlr.next();
-            }
-        }
-        catch (Exception e)
-        {
-            System.out.println(ERRORE + Writer.EXTRA_FOODS_NAME_FILE);
-            System.out.println(e.getMessage());
-        }
-        return foods;
-    }
-
-    public static HashSet <Dish> readDishes()
-    {
-        XMLInputFactory xmlif = null;
-        XMLStreamReader xmlr = null;
-
-        HashSet<Dish> dishes = new HashSet<>();
-
-        try
-        {
-            xmlif = XMLInputFactory.newInstance();
-            xmlr = xmlif.createXMLStreamReader(new FileInputStream(Writer.ROOT + Writer.DISHES_NAME_FILE));
-            while (xmlr.hasNext())
-            {
-                // continua a leggere finche ha eventi a disposizione
-                String name="",id="",startPeriod="",endPeriod="";
-                int portions=0;
-                double workLoadPortion=0;
-                HashMap <String, Double> ingredients = new HashMap<>();
-
-                if(xmlr.getEventType() == XMLStreamConstants.START_ELEMENT) // inizio di un elemento
-                {
-                    switch (xmlr.getLocalName())
-                    {
-                        case "dish":
-                           name=xmlr.getAttributeValue(0);
-                           startPeriod = xmlr.getAttributeValue(1);
-                           endPeriod = xmlr.getAttributeValue(2);
-                            break;
-                        case "recipe":
-                            id=xmlr.getAttributeValue(0);
-                            portions = Integer.parseInt(xmlr.getAttributeValue(1));
-                            workLoadPortion = Double.parseDouble(xmlr.getAttributeValue(2));
-                            break;
-                        case "ingredient":
-                            ingredients.put(xmlr.getAttributeValue(0),Double.parseDouble(xmlr.getAttributeValue(1)));
-                            break;
-                    }
-                }
-                if (xmlr.getEventType() == XMLStreamConstants.END_ELEMENT)
-                    if(xmlr.getLocalName()=="dish")
-                    {
-                        dishes.add(new Dish(name,new Recipe(id,ingredients,portions,workLoadPortion),startPeriod,endPeriod));
-                        ingredients.clear();
-                    }
-
-                xmlr.next();
-            }
-        }
-        catch (Exception e)
-        {
-            System.out.println(ERRORE + Writer.DISHES_NAME_FILE);
-            System.out.println(e.getMessage());
-        }
-        return dishes;
-    }
 }
