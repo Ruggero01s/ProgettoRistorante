@@ -182,7 +182,8 @@ public class GUI {
         stateChange(STATE.TITLE);
     }
 
-    public void stateChange(STATE newState) {
+    public void stateChange(STATE newState)
+    {
         resetInputAreas();
         frame.getContentPane().removeAll();
         switch (newState) //TODO fare schermate guardabili
@@ -281,6 +282,33 @@ public class GUI {
                 break;
         }
         frame.validate();
+        frame.getContentPane().repaint();
+    }
+
+    public void errorSetter(String code){
+        switch(code)
+        {
+            case "minZero":
+                JOptionPane.showMessageDialog(frame, "Numero inserito < 0",
+                        "Err", JOptionPane.ERROR_MESSAGE);
+                break;
+            case "NumberFormatException":
+                JOptionPane.showMessageDialog(frame, "Formato incorretto",
+                        "Err", JOptionPane.ERROR_MESSAGE);
+                break;
+            case "noRecipe":
+                JOptionPane.showMessageDialog(frame, "Ricetta non trovata",
+                        "Err", JOptionPane.ERROR_MESSAGE);
+                break;
+            case "noDish":
+                JOptionPane.showMessageDialog(frame, "Piatto non trovato",
+                        "Err", JOptionPane.ERROR_MESSAGE);
+                break;
+            case "invalidDate":
+                JOptionPane.showMessageDialog(frame, "Date non valide",
+                        "Err", JOptionPane.ERROR_MESSAGE);
+                break;
+        }
         frame.getContentPane().repaint();
     }
 

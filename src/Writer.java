@@ -222,18 +222,13 @@ public class Writer
 				xmlw.writeAttribute("name", menu.getName());
 				xmlw.writeAttribute("startDate", menu.getStartPeriod().getStringDate());
 				xmlw.writeAttribute("endDate", menu.getEndPeriod().getStringDate());
-                xmlw.writeAttribute("workThematicMenuLoad", Double.toString(menu.getWorkThematicMenuLoad()));
-				/*
-				for (Map.Entry<String, Double> ingredient : dish.getRecipe().getIngredients().entrySet())
+				for (Dish dish: menu.getDishes())
 				{
 					xmlw.writeCharacters("\n\t\t");
-					xmlw.writeStartElement("ingredient"); // <ingredient>
-					xmlw.writeAttribute("name", ingredient.getKey());
-					xmlw.writeAttribute("quantity", Double.toString(ingredient.getValue()));
-					xmlw.writeEndElement(); // </ingredient>
+					xmlw.writeStartElement("dish"); // <dish>
+					xmlw.writeAttribute("name", dish.getName());
+					xmlw.writeEndElement(); // </dish>
 				}
-				*/
-				 //todo decidere come gestire il salvataggio ricorsivo
 				xmlw.writeEndElement(); // </menu>
 			}
 			xmlw.writeCharacters("\n");

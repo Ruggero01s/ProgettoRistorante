@@ -10,6 +10,8 @@ public class Model {
     HashMap<String, Double> extraFoodsMap = new HashMap<>();
     HashSet<Dish> dishesSet = new HashSet<>();
     HashSet<Recipe> recipesSet= new HashSet<>();
+    HashSet<ThematicMenu> thematicMenusSet= new HashSet<>();
+
 
     public int getWorkPersonLoad() {
         return workPersonLoad;

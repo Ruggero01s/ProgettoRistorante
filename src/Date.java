@@ -8,7 +8,7 @@ public class Date
 	public Date(String day, String month) throws ParseException
 	{
 		SimpleDateFormat format = new SimpleDateFormat("dd/MM/yyyy");
-		java.util.Date dateFormat = format.parse(day.concat("/".concat(month).concat("/").concat("1600")));
+		java.util.Date dateFormat = format.parse(day.concat("/".concat(month).concat("/").concat("1444")));
 		this.date.setTime(dateFormat);
 	}
 	
@@ -20,7 +20,7 @@ public class Date
 		dateFormat.setTime(this.date.getTimeInMillis());
 		return format.format(dateFormat);
 	}
- 
+ /*
 	public void test()
 	{
 		DateFormat Date = DateFormat.getDateInstance(); //inizializzazione
@@ -29,5 +29,5 @@ public class Date
 		String currentDate = Date.format(calendar.getTime()); //format la rende una stringa
 		System.out.println("Data corta: " + currentDate);
 	}
-	
+	*/
 }

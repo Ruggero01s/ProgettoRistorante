@@ -54,10 +54,9 @@ public class Controller
 				gui.resetInputAreas();
 			}
 		}
-		catch (NumberFormatException e)//todo gestire
+		catch (NumberFormatException e)
 		{
-			System.out.println("errore, formato non valido");
-			e.printStackTrace();
+			gui.errorSetter("NumberFormatException");
 		}
 		
 	}
@@ -68,14 +67,20 @@ public class Controller
 		{
 			String inputName = gui.cfgInputArea1.getText();
 			String inputQuantityPerson = gui.cfgInputArea2.getText();
-			
-			model.drinksMap.put(inputName, Double.parseDouble(inputQuantityPerson));
-			gui.resetInputAreas();
+
+			double quantity = Double.parseDouble(inputQuantityPerson);
+
+			if(quantity<= 0)
+				gui.errorSetter("minZero");
+			else
+			{
+				model.drinksMap.put(inputName, quantity);
+				gui.resetInputAreas();
+			}
 		}
-		catch (NumberFormatException e)//todo gestire
+		catch (NumberFormatException e)
 		{
-			System.out.println("errore, formato non valido");
-			e.printStackTrace();
+			gui.errorSetter("NumberFormatException");
 		}
 	}
 	
@@ -84,14 +89,20 @@ public class Controller
 		{
 			String inputName = gui.cfgInputArea1.getText();
 			String inputQuantityPerson = gui.cfgInputArea2.getText();
-			
-			model.extraFoodsMap.put(inputName, Double.parseDouble(inputQuantityPerson));
-			gui.resetInputAreas();
+
+			double quantity =Double.parseDouble(inputQuantityPerson);
+
+			if(quantity<= 0)
+				gui.errorSetter("minZero");
+			else
+			{
+				model.extraFoodsMap.put(inputName, Double.parseDouble(inputQuantityPerson));
+				gui.resetInputAreas();
+			}
 		}
-		catch (NumberFormatException e)//todo gestire
+		catch (NumberFormatException e)
 		{
-			System.out.println("errore, formato non valido");
-			e.printStackTrace();
+			gui.errorSetter("NumberFormatException");
 		}
 	}
 	
@@ -119,6 +130,7 @@ public class Controller
 	{
 		try
 		{
+			boolean err=false;
 			String inputName = gui.cfgInputArea1.getText();
 			String inputIngredients = gui.cfgInputArea3.getText();
 			String inputPortions = gui.cfgInputArea2.getText();
@@ -130,15 +142,27 @@ public class Controller
 			for (String line : lines)
 			{
 				String[] words = line.split(":");
-				ingredientQuantityMap.put(words[0], Double.parseDouble(words[1]));
+				double quantity=Double.parseDouble(words[1]);
+				if(quantity<=0)
+				{
+					err = true;
+					break;
+				}
+				ingredientQuantityMap.put(words[0],quantity );
 			}
-			model.recipesSet.add(new Recipe(inputName, ingredientQuantityMap, Integer.parseInt(inputPortions), Double.parseDouble(inputWorkload)));
-			gui.resetInputAreas();
+			int portions=Integer.parseInt(inputPortions);
+			double workLoad = Double.parseDouble(inputWorkload);
+			if(portions<=0 || workLoad<=0 || err)
+				gui.errorSetter("minZero");
+			else
+			{
+				model.recipesSet.add(new Recipe(inputName, ingredientQuantityMap, portions, workLoad));
+				gui.resetInputAreas();
+			}
 		}
-		catch (NumberFormatException e)//todo gestire
+		catch (NumberFormatException e)
 		{
-			System.out.println("errore, formato non valido");
-			e.printStackTrace();
+			gui.errorSetter("NumberFormatException");
 		}
 	}
     
@@ -176,8 +200,7 @@ public class Controller
 
 		}catch (ParseException e)
 		{
-			System.out.println("errore, saveDish");
-			e.printStackTrace();
+			gui.errorSetter("noRecipe");
 		}
 	}
 
