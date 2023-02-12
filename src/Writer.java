@@ -204,7 +204,7 @@ public class Writer
 		}
 	}
 	
-	public static void writeThematicMenu(ArrayList<ThematicMenu> menus)
+	public static void writeThematicMenu(HashSet<ThematicMenu> menus)
 	{
 		XMLOutputFactory xmlof = null;
 		XMLStreamWriter xmlw = null;

@@ -1,5 +1,6 @@
 import javax.swing.*;
 import java.awt.*;
+import java.text.ParseException;
 import java.util.ArrayList;
 
 public class GUI {
@@ -63,33 +64,32 @@ public class GUI {
     JButton cfgBaseSendButton = new JButton("Conferma");
 //------------------------------------------------------------------------------------------
     //CONFIG_DRINKS
-    JLabel cfgDrinksText = new JLabel("Inserisci dati bevanda: (nome|quantità)");
+    JLabel cfgDrinksText = new JLabel("Inserisci dati bevanda: (nome | quantità)");
     JButton cfgDrinksSendButton = new JButton("Inserisci");
 //------------------------------------------------------------------------------------------
     //CONFIG_EXTRAFOODS
-    JLabel cfgFoodText = new JLabel("Inserisci dati generi alimentari extra: (nome|quantità)");
+    JLabel cfgFoodText = new JLabel("Inserisci dati generi alimentari extra: (nome | quantità)");
     JButton cfgFoodSendButton = new JButton("Inserisci");
 //------------------------------------------------------------------------------------------
     //CONFIG_RECIPES
-    JLabel cfgRecipeText = new JLabel("Inserisci dati ricetta (nome|porzioni|lista ingredienti:quantità)");
+    JLabel cfgRecipeText = new JLabel("Inserisci dati ricetta (nome | porzioni | lista ingredienti:quantità | workload/person)");
     JButton cfgRecipeSendButton = new JButton("Inserisci");
 //------------------------------------------------------------------------------------------
     //CONFIG_DISHES
-    JLabel cfgDishText = new JLabel("Inserisci dati piatto (nome|ricetta)");
+    JLabel cfgDishText = new JLabel("Inserisci dati piatto (nome | ricetta | data inizio | data fine)");
     JButton cfgDishSendButton = new JButton("Inserisci");
     JRadioButton cfgDishPermanentRadio = new JRadioButton("Permanente");
 //------------------------------------------------------------------------------------------
     //CONFIG_MENUS
-    JLabel cfgMenuText = new JLabel("Inserisci Menu (nome|piatti)");
+    JLabel cfgMenuText = new JLabel("Inserisci Menu (nome | piatti | data inizio | data fine)");
     JButton cfgMenuSendButton = new JButton("Inserisci");
     JRadioButton cfgMenuPermanentRadio = new JRadioButton("Permanente");
 //------------------------------------------------------------------------------------------
 
-
     public void init() {
         //frame
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        frame.setSize(600, 600);
+        frame.setSize(600, 200);
         frame.setVisible(true);
         frame.getContentPane().setBackground(Color.GRAY); //TODO
         frame.setLayout(new BorderLayout());
@@ -170,7 +170,13 @@ public class GUI {
         //labels CONFIG_MENUS
         //TODO alignments
         //buttons CONFIG_DISHES
-       // cfgMenuSendButton.addActionListener(e -> ctrl.saveMenu());
+         cfgMenuSendButton.addActionListener(e -> {
+             try {
+                 ctrl.saveMenu();
+             } catch (ParseException ex) {
+                 throw new RuntimeException(ex);
+             }
+         });
 //------------------------------------------------------------------------------------------
 //==========================================================================================
         stateChange(STATE.TITLE);
@@ -202,6 +208,7 @@ public class GUI {
                 frame.add(cfgChoiceExtraFoodsButton);
                 frame.add(cfgChoiceRecipesButton);
                 frame.add(cfgChoiceDishesButton);
+                frame.add(cfgChoiceMenuButton);
                 frame.add(cfgChoiceBackToLogButton);
                 frame.add(cfgWriteButton);
                 break;

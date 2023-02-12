@@ -1,11 +1,3 @@
 <?xml version="1.0" encoding="utf-8"?>
 <dishes>
-	<dish name="Fettuccine" startDate="01/01/1600" endDate="31/12/1600">
-		<recipe id="pasta" portions="4" workLoadPortion="0.2">
-			<ingredient name="sale" quantity="10.0"></ingredient>
-			<ingredient name="farina" quantity="500.0"></ingredient></recipe></dish>
-	<dish name="Fettuccine stagionali" startDate="14/01/1600" endDate="25/04/1600">
-		<recipe id="pasta" portions="4" workLoadPortion="0.2">
-			<ingredient name="sale" quantity="10.0"></ingredient>
-			<ingredient name="farina" quantity="500.0"></ingredient></recipe></dish>
 </dishes>

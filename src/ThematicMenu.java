@@ -1,3 +1,4 @@
+import java.text.ParseException;
 import java.util.ArrayList;
 
 public class ThematicMenu
@@ -7,11 +8,12 @@ public class ThematicMenu
 	private ArrayList <Dish> dishes = new ArrayList<>();
 	private double workThematicMenuLoad;
 	
-	public ThematicMenu(String name, Date startPeriod, Date endPeriod, ArrayList<Dish> dishes)
-	{
+	public ThematicMenu(String name, String startPeriod, String endPeriod, ArrayList<Dish> dishes) throws ParseException {
 		this.name = name;
-		this.startPeriod = startPeriod;
-		this.endPeriod = endPeriod;
+		String[] startPezzi = startPeriod.split("/");
+		String[] endPezzi = endPeriod.split("/");
+		this.startPeriod = new Date(startPezzi[0],startPezzi[1]);
+		this.endPeriod = new Date(endPezzi[0],endPezzi[1]);
 		this.dishes = dishes;
 		calcWorkThematicMenuLoad(); //calcola in automatico il workThematicMenuLoad
 	}
