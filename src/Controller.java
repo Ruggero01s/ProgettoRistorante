@@ -2,6 +2,7 @@ import javax.swing.*;
 import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Map;
 
 public class Controller
 {
@@ -329,5 +330,40 @@ public class Controller
 			}
 		}
 		return dishes;
+	}
+
+	public void updateRecipeStringList()
+	{
+		String[] recipes = new String[model.getRecipesSet().size()];
+		int i=0;
+		for (Recipe r: model.getRecipesSet())
+		{
+			recipes[i]=(r.getId());
+			i++;
+		}
+		DefaultComboBoxModel<String> model = new DefaultComboBoxModel<>( recipes );
+		sui.cfgDishComboBox.setModel(model);
+	}
+	public void updateDishStringList()
+	{
+		String[] dishes = new String[model.getDishesSet().size()];
+		int i=0;
+		for (Dish d: model.getDishesSet())
+		{
+			dishes[i]=(d.getName());
+			i++;
+		}
+		DefaultComboBoxModel<String> model = new DefaultComboBoxModel<>( dishes );
+		sui.cfgMenuComboBox.setModel(model);
+	}
+
+	public void updateDrinkList()
+	{
+		String out="";
+		for (Map.Entry<String, Double> drink : model.getDrinksMap().entrySet())
+		{
+			out = out + drink.getKey() + ":" + drink.getValue().toString() + "\n";
+		}
+		sui.setDrinkList(out);
 	}
 }

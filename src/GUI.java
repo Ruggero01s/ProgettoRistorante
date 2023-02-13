@@ -318,16 +318,28 @@ public class GUI {
                 break;
 
             case CONFIG_MENUS:
-                frame.setLayout(new FlowLayout());
-                frame.add(cfgMenuText);
-                frame.add(cfgInputArea1);
-                frame.add(cfgInputArea2);
-                frame.add(cfgInputArea3);
-                frame.add(cfgInputArea4);
-                frame.add(cfgMenuPermanentRadio);
-                frame.add(cfgMenuSendButton);
-                frame.add(cfgMenuClearButton);
-                frame.add(cfgBackButton);
+                ctrl.updateDishStringList();
+                if (dishString.length!=0)
+                {
+                    comboBox = new JComboBox<>(dishString);
+                    comboBox.addActionListener(e -> {
+                        String selectedItem = (String) comboBox.getSelectedItem();
+                        cfgInputArea2.setText(cfgInputArea2.getText() + selectedItem + "\n");
+                    });
+                    frame.setLayout(new FlowLayout());
+                    frame.add(cfgMenuText);
+                    frame.add(cfgInputArea1);
+                    frame.add(cfgInputArea2);
+                    frame.add(comboBox);
+                    frame.add(cfgInputArea3);
+                    frame.add(cfgInputArea4);
+                    frame.add(cfgMenuPermanentRadio);
+                    frame.add(cfgMenuSendButton);
+                    frame.add(cfgMenuClearButton);
+                    frame.add(cfgBackButton);
+                }
+                else
+                    errorSetter("0Dish");
                 break;
         }
         frame.validate();

@@ -3,47 +3,29 @@ import java.awt.*;
 import java.awt.event.*;
 import java.text.ParseException;
 
-public class SimpleUI extends JFrame {
-    // UI components
-    private JLabel label1;
-    private JButton managerButton;
-    private JButton employeeButton;
-    private JButton warehouseWorkerButton;
-    private JPanel loginPanel;
-    private JTabbedPane tabbedPane;
-    private JLabel label2;
-    private JTextArea textArea2;
-    private JLabel label3;
-    private JTextArea textArea3;
-    private JButton button3;
-    private JButton button4;
-    private JLabel label4;
-    private JTextArea textArea4;
-    private JLabel label5;
-    private JTextArea textArea5;
-    private JLabel label6;
-    private JTextArea textArea6;
-    private JLabel label7;
-    private JTextArea textArea7;
-    private JButton button5;
-    private JButton button6;
-    private JLabel label8;
-    private JTextArea textArea8;
-    private JLabel label9;
-    private JTextArea textArea9;
-    private JLabel label10;
-    private JTextArea textArea10;
-    private JLabel label11;
-    private JTextArea textArea11;
-    private JRadioButton radioButton1;
-    private JButton button7;
-    private JButton button8;
-    private JPanel panel1;
-    private JPanel panel2;
-    private JPanel panel3;
+public class SimpleUI extends JFrame
+{
+    private GridBagConstraints c = new GridBagConstraints();
+    private GridBagConstraints titlePadding = new GridBagConstraints();
+    public JPanel panel1 = new JPanel(new GridBagLayout());
+    public JPanel panel2 = new JPanel(new GridBagLayout());
+    public JPanel panel3 = new JPanel(new GridBagLayout());
+    public JPanel panel4 = new JPanel(new GridBagLayout());
+    public JPanel panel5 = new JPanel(new GridBagLayout());
+    public JPanel panel6 = new JPanel(new GridBagLayout());
+    public JPanel panel7 = new JPanel(new GridBagLayout());
+    JButton buttonBack1 = new JButton("Back");
+    JButton buttonBack2 = new JButton("Back");
+    JButton buttonBack3 = new JButton("Back");
+    JButton buttonBack4 = new JButton("Back");
+    JButton buttonBack5 = new JButton("Back");
+    JButton buttonBack6 = new JButton("Back");
+    JButton buttonBack7 = new JButton("Back");
+
 
     // Enum for the different states of the frame
-    private enum State {
+    private enum State
+    {
         LOGIN,
         MANAGER,
         EMPLOYEE,
@@ -52,8 +34,116 @@ public class SimpleUI extends JFrame {
 
     // Current state of the frame
     private State state;
+    private Controller ctrl;
 
-    public SimpleUI() {
+    JLabel label1 = new JLabel("Select your role:");
+    JButton managerButton = new JButton("Manager");
+    JButton employeeButton = new JButton("Employee");
+    JButton warehouseWorkerButton = new JButton("Warehouse Worker");
+    JPanel loginPanel = new JPanel(new GridBagLayout());
+    JTabbedPane tabbedPane = new JTabbedPane();
+    JLabel titleText = new JLabel("Title");
+    JLabel titleSubText = new JLabel("Subtitle");
+    JButton titleLogButton = new JButton("Login");
+//------------------------------------------------------------------------------------------
+
+    //CONFIG general
+
+    JButton cfgWriteButton = new JButton("Salva ed esci");
+
+    //------------------------------------------------------------------------------------------
+    //CONFIG_BASE
+    JLabel cfgBaseText = new JLabel("Inserisci dati ristorante:");
+    JLabel cfgBaseCapacityText = new JLabel("Posti a sedere:");
+    JLabel cfgBaseIndiviualWorkloadAreaText = new JLabel("Carico lavoro max:");
+    JButton cfgBaseSendButton = new JButton("Conferma");
+    JButton cfgBaseClearButton = new JButton("Clear Cap&IndWork");
+    JTextArea cfgBaseInputCap = new JTextArea();
+    JTextArea cfgBaseInputIndWork = new JTextArea();
+
+    public String getDrinkList() {
+        return drinkList;
+    }
+
+    public void setDrinkList(String drinkList) {
+        this.drinkList = drinkList;
+        cfgDrinksAreaOut.setText(this.drinkList);
+    }
+
+    //------------------------------------------------------------------------------------------
+    //CONFIG_DRINKS
+    String drinkList;
+    JLabel cfgDrinksText = new JLabel("Inserisci dati bevanda: (nome : quantità (L))");
+    JLabel cfgDrinksTextOut = new JLabel("Elenco dati bevanda: (nome : quantità (L))");
+    JTextArea cfgDrinksAreaOut = new JTextArea(drinkList);
+    JButton cfgDrinksSendButton = new JButton("Inserisci");
+    JButton cfgDrinksClearButton = new JButton("Clear Drinks");
+    JTextArea cfgDrinksInput = new JTextArea();
+    //------------------------------------------------------------------------------------------
+    //CONFIG_EXTRAFOODS
+    JLabel cfgFoodText = new JLabel("Inserisci dati generi alimentari extra: (nome : quantità (Hg)");
+    JLabel cfgFoodTextOut = new JLabel("Elenco dati generi alimentari extra: (nome : quantità (Hg)");
+    JButton cfgFoodSendButton = new JButton("Inserisci");
+    JButton cfgFoodClearButton = new JButton("Clear ExtraFoods");
+    JTextArea cfgFoodsInput = new JTextArea();
+    //------------------------------------------------------------------------------------------
+    //CONFIG_RECIPES
+    JLabel cfgRecipeTextTitle = new JLabel("Inserisci dati ricetta");
+    JLabel cfgRecipeTextName = new JLabel("Inserisci nome: ");
+    JTextArea cfgRecipeNameInput = new JTextArea();
+    JLabel cfgRecipeTextPortions = new JLabel("Inserisci porzioni: ");
+    JTextArea cfgRecipePortionsInput = new JTextArea();
+    JLabel cfgRecipeTextIngredients = new JLabel("Inserisci ingredienti (ingredienti:quantità (g)): ");
+    JTextArea cfgRecipeIngredientsInput = new JTextArea();
+    JLabel cfgRecipeTextWorkLoad = new JLabel("Inserisci workload/person: ");
+    JTextArea cfgRecipeWorkLoadInput = new JTextArea();
+    JButton cfgRecipeSendButton = new JButton("Conferma ricetta");
+    //------------------------------------------------------------------------------------------
+    //CONFIG_DISHES
+    JLabel cfgDishTextTitle = new JLabel("Inserisci dati piatto");
+    JLabel cfgDishTextName = new JLabel("Inserisci nome: ");
+    JLabel cfgDishTextOut = new JLabel("Elenco piatti inseriti: ");
+    JLabel cfgDishTextRecipe = new JLabel("Seleziona ricetta: ");
+    JLabel cfgDishTextDate = new JLabel("Inserisci data di inizio e fine: ");
+    JButton cfgDishSendButton = new JButton("Conferma piatto");
+
+    JRadioButton cfgDishPermanentRadio = new JRadioButton("Permanente");
+    JButton cfgDishClearButton = new JButton("Clear Dishes");
+
+    JTextArea cfgDishNameInput = new JTextArea();
+
+    String[] recipeString = {};
+
+    JComboBox<String> cfgDishComboBox = new JComboBox<>(recipeString);
+
+    JTextArea cfgDishSDateInput = new JTextArea();
+    JTextArea cfgDishEDateInput = new JTextArea();
+
+    //------------------------------------------------------------------------------------------
+    //CONFIG_MENUS
+    JLabel cfgMenuTextTitle = new JLabel("Inserisci dati menu");
+    JLabel cfgMenuTextName = new JLabel("Inserisci nome: ");
+    JLabel cfgMenuTextOut = new JLabel("Elenco menu inseriti: ");
+    JLabel cfgMenuTextDish = new JLabel("Seleziona od inserisci piatti: ");
+    JLabel cfgMenuTextDate = new JLabel("Inserisci data di inizio e fine: ");
+
+    JButton cfgMenuSendButton = new JButton("Conferma menu");
+
+    JRadioButton cfgMenuPermanentRadio = new JRadioButton("Permanente");
+    JButton cfgMenuClearButton = new JButton("Clear Menus");
+
+    String[] dishString = {};
+    JComboBox<String> cfgMenuComboBox = new JComboBox<>(dishString);
+
+    //------------------------------------------------------------------------------------------
+    JTextArea cfgMenuNameInput = new JTextArea();
+    JTextArea cfgMenuDishesInput = new JTextArea();
+    JTextArea cfgMenuSDateInput = new JTextArea();
+    JTextArea cfgMenuEDateInput = new JTextArea();
+
+    public SimpleUI(Controller ctrl)
+    {
+        this.ctrl = ctrl;
         // Set up the UI components
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setSize(600, 600);
