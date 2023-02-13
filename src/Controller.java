@@ -1,3 +1,4 @@
+import javax.swing.*;
 import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -5,11 +6,11 @@ import java.util.HashMap;
 public class Controller
 {
 	static Model model = new Model();
-	GUI gui = new GUI(this);
+	SimpleUI sui = new SimpleUI(this);
 	
 	public void init()
 	{
-		gui.init();
+		sui.init();
 		loadModel();
 	}
 
@@ -24,7 +25,9 @@ public class Controller
 			model.getRecipesSet().add(d.getRecipe());
 		}
 		model.setThematicMenusSet(Reader.readThematicMenu());
-
+		updateRecipeStringList();
+		updateDishStringList();
+		updateDrinkList();
 	}
 
 	public void clearInfo(String name)
@@ -46,6 +49,8 @@ public class Controller
 			case "dishes.xml":
 				model.getDishesSet().clear();
 				Writer.writeDishes(model.getDishesSet());
+				updateRecipeStringList();
+				updateDishStringList();
 				break;
 			case "thematicMenu.xml":
 				model.getThematicMenusSet().clear();
@@ -71,24 +76,25 @@ public class Controller
 	{
 		try
 		{
-			String inputCapacity = gui.cfgInputArea1.getText();
-			String inputWorkload = gui.cfgInputArea2.getText();
+			String inputCapacity = sui.cfgBaseInputCap.getText();
+			String inputWorkload = sui.cfgBaseInputIndWork.getText();
 
 			int capacity = Integer.parseInt(inputCapacity);
 			int workload= Integer.parseInt(inputWorkload);
 
 			if(capacity<= 0 || workload<= 0)
-				gui.errorSetter("minZero");
+				sui.errorSetter("minZero");
 			else
 			{
 				model.setCapacity(capacity);
 				model.setWorkPersonLoad(workload);
-				gui.resetInputAreas();
+				sui.cfgBaseInputCap.setText("");
+				sui.cfgBaseInputIndWork.setText("");
 			}
 		}
 		catch (NumberFormatException e)
 		{
-			gui.errorSetter("NumberFormatException");
+			sui.errorSetter("NumberFormatException");
 		}
 		
 	}
@@ -97,44 +103,40 @@ public class Controller
 	{
 		try
 		{
-			String inputName = gui.cfgInputArea1.getText();
-			String inputQuantityPerson = gui.cfgInputArea2.getText();
-
-			double quantity = Double.parseDouble(inputQuantityPerson);
+			String[] input = sui.cfgDrinksInput.getText().split(":");
+			double quantity = Double.parseDouble(input[1]);
 
 			if(quantity<= 0)
-				gui.errorSetter("minZero");
+				sui.errorSetter("minZero");
 			else
 			{
-				model.getDrinksMap().put(inputName, quantity);
-				gui.resetInputAreas();
+				model.getDrinksMap().put(input[0], quantity);
+				sui.cfgDrinksInput.setText("");
+				updateDrinkList();
 			}
 		}
 		catch (NumberFormatException e)
 		{
-			gui.errorSetter("NumberFormatException");
+			sui.errorSetter("NumberFormatException");
 		}
 	}
 	
 	public void saveFoods(){
 		try
 		{
-			String inputName = gui.cfgInputArea1.getText();
-			String inputQuantityPerson = gui.cfgInputArea2.getText();
-
-			double quantity =Double.parseDouble(inputQuantityPerson);
-
+			String[] input = sui.cfgFoodsInput.getText().split(":");
+			double quantity = Double.parseDouble(input[1]);
 			if(quantity<= 0)
-				gui.errorSetter("minZero");
+				sui.errorSetter("minZero");
 			else
 			{
-				model.getExtraFoodsMap().put(inputName, Double.parseDouble(inputQuantityPerson));
-				gui.resetInputAreas();
+				model.getExtraFoodsMap().put(input[0], quantity);
+				sui.cfgFoodsInput.setText("");
 			}
 		}
 		catch (NumberFormatException e)
 		{
-			gui.errorSetter("NumberFormatException");
+			sui.errorSetter("NumberFormatException");
 		}
 	}
 	
@@ -163,10 +165,10 @@ public class Controller
 		try
 		{
 			boolean err=false;
-			String inputName = gui.cfgInputArea1.getText();
-			String inputIngredients = gui.cfgInputArea3.getText();
-			String inputPortions = gui.cfgInputArea2.getText();
-			String inputWorkload = gui.cfgInputArea4.getText();
+			String inputName = sui.cfgRecipeNameInput.getText();
+			String inputIngredients = sui.cfgRecipeIngredientsInput.getText();
+			String inputPortions = sui.cfgRecipePortionsInput.getText();
+			String inputWorkload = sui.cfgRecipeWorkLoadInput.getText();
 			
 			HashMap<String, Double> ingredientQuantityMap = new HashMap<>();
 			String[] lines = inputIngredients.split("\n");
@@ -185,35 +187,40 @@ public class Controller
 			int portions=Integer.parseInt(inputPortions);
 			double workLoad = Double.parseDouble(inputWorkload);
 			if(portions<=0 || workLoad<=0 || err)
-				gui.errorSetter("minZero");
+				sui.errorSetter("minZero");
 			else
 			{
 				model.getRecipesSet().add(new Recipe(inputName, ingredientQuantityMap, portions, workLoad));
-				gui.resetInputAreas();
+				updateRecipeStringList();
+				sui.cfgRecipeNameInput.setText("");
+				sui.cfgRecipeIngredientsInput.setText("");
+				sui.cfgRecipePortionsInput.setText("");
+				sui.cfgRecipeWorkLoadInput.setText("");
+
 			}
 		}
 		catch (NumberFormatException e)
 		{
-			gui.errorSetter("NumberFormatException");
+			sui.errorSetter("NumberFormatException");
 		}
 	}
     
     public void saveDish() {
 		try
 		{
-			String inputName = gui.cfgInputArea1.getText();
-			String inputIngredients = gui.cfgInputArea2.getText();
+			String inputName = sui.cfgDishNameInput.getText();
+			String inputIngredients = (String) sui.cfgDishComboBox.getSelectedItem();
 			
-			String inputStartDate = gui.cfgInputArea3.getText();
-			String inputEndDate = gui.cfgInputArea4.getText();
+			String inputStartDate = sui.cfgDishSDateInput.getText();
+			String inputEndDate = sui.cfgDishEDateInput.getText();
 
-			if (gui.cfgDishPermanentRadio.isSelected())
+			if (sui.cfgDishPermanentRadio.isSelected())
 			{
 				inputStartDate = "01/01";
 				inputEndDate = "31/12";
 			}
 			if(!checkDate(inputStartDate) || !checkDate(inputEndDate)) {
-				gui.errorSetter("invalidDate");
+				sui.errorSetter("invalidDate");
 				return;
 			}
 				boolean found = false;
@@ -221,40 +228,41 @@ public class Controller
 					found = false;
 					if (r.getId().equals(inputIngredients)) {
 						model.getDishesSet().add(new Dish(inputName, r, inputStartDate, inputEndDate));
+						updateDishStringList();
+						sui.cfgDishNameInput.setText("");
+						sui.cfgDishSDateInput.setText("");
+						sui.cfgDishEDateInput.setText("");
 						found = true;
 						break;
 					}
 				}
 				if (!found)
-					gui.errorSetter("noRecipe");
-				else
-					gui.resetInputAreas();
-
+					sui.errorSetter("noRecipe");
 		}catch (ParseException e)
 		{
-			gui.errorSetter("invalidDate");
+			sui.errorSetter("invalidDate");
 		}
 	}
 
 	public void saveMenu() throws ParseException
 	{
-		String inputName = gui.cfgInputArea1.getText();
-		String inputs = gui.cfgInputArea2.getText();
+		String inputName = sui.cfgMenuNameInput.getText();
+		String inputs = sui.cfgMenuDishesInput.getText();
 
 		String[] inputList = inputs.split("\n");
 
-		String inputStartDate = gui.cfgInputArea3.getText();
-		String inputEndDate = gui.cfgInputArea4.getText();
+		String inputStartDate = sui.cfgMenuSDateInput.getText();
+		String inputEndDate = sui.cfgMenuEDateInput.getText();
 
 		ArrayList<Dish> dishesForMenu = new ArrayList<>();
 
-		if (gui.cfgMenuPermanentRadio.isSelected())
+		if (sui.cfgMenuPermanentRadio.isSelected())
 		{
 			inputStartDate = "01/01";
 			inputEndDate = "31/12";
 		}
 		if(!checkDate(inputStartDate) || !checkDate(inputEndDate)) {
-			gui.errorSetter("invalidDate");
+			sui.errorSetter("invalidDate");
 			return;
 		}
 
@@ -262,19 +270,22 @@ public class Controller
 		for (String s: inputList)
 		{
 			found = false;
-			for (Dish d : model.getDishesSet())
-			{
-				if (d.getName().equals(s))
-				{
-					dishesForMenu.add(d);
-					found=true;
-					break;
+			if(!s.equals("")) {
+				for (Dish d : model.getDishesSet()) {
+					if (d.getName().equals(s)) {
+						dishesForMenu.add(d);
+						found = true;
+						sui.cfgMenuNameInput.setText("");
+						sui.cfgMenuDishesInput.setText("");
+						sui.cfgMenuSDateInput.setText("");
+						sui.cfgMenuEDateInput.setText("");
+						break;
+					}
 				}
 			}
 		}
-		gui.resetInputAreas();
 		if(!found)
-			gui.errorSetter("noDish");
+			sui.errorSetter("noDish");
 		else
 		{
 				model.getThematicMenusSet().add(new ThematicMenu(inputName, inputStartDate, inputEndDate, dishesForMenu));

@@ -67,13 +67,13 @@ public class GUI {
     //CONFIG_DRINKS
     JLabel cfgDrinksText = new JLabel("Inserisci dati bevanda: (nome | quantità)");
     JButton cfgDrinksSendButton = new JButton("Inserisci");
-    JButton cfgDrinksClearButton = new JButton("Clear");
+    JButton cfgDrinksClearButton = new JButton("Clear Drinks");
 
     //------------------------------------------------------------------------------------------
     //CONFIG_EXTRAFOODS
     JLabel cfgFoodText = new JLabel("Inserisci dati generi alimentari extra: (nome | quantità)");
     JButton cfgFoodSendButton = new JButton("Inserisci");
-    JButton cfgFoodClearButton = new JButton("Clear");
+    JButton cfgFoodClearButton = new JButton("Clear ExtraFoods");
 
     //------------------------------------------------------------------------------------------
     //CONFIG_RECIPES
@@ -84,7 +84,7 @@ public class GUI {
     JLabel cfgDishText = new JLabel("Inserisci dati piatto (nome | ricetta | data inizio | data fine)");
     JButton cfgDishSendButton = new JButton("Inserisci");
     JRadioButton cfgDishPermanentRadio = new JRadioButton("Permanente");
-    JButton cfgDishClearButton = new JButton("Clear");
+    JButton cfgDishClearButton = new JButton("Clear Dishes");
     //------------------------------------------------------------------------------------------
     //CONFIG_MENUS
     JLabel cfgMenuText = new JLabel("Inserisci Menu (nome | piatti | data inizio | data fine)");
@@ -94,7 +94,22 @@ public class GUI {
 
 //------------------------------------------------------------------------------------------
 
+    // TEST COMBO
+    String[] recipeString = {};
+    String[] dishString = {};
+
+    JComboBox<String> comboBox = new JComboBox<>();
+
+
+
+
     public void init() {
+        //test
+
+
+
+
+
         //frame
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.setSize(600, 200);
@@ -114,7 +129,7 @@ public class GUI {
         titleText.setVerticalAlignment(SwingConstants.CENTER);
 
         titleSubText.setHorizontalAlignment(SwingConstants.CENTER);
-        titleSubText.setVerticalAlignment(SwingConstants.TOP); //?
+        titleSubText.setVerticalAlignment(SwingConstants.CENTER); //?
         titleSubText.setVerticalTextPosition(SwingConstants.TOP); //?
 
         //buttons TITLE
@@ -123,14 +138,15 @@ public class GUI {
         //LOGIN
         //labels LOGIN
         //TODO set alignment
+        logText.setHorizontalAlignment(SwingConstants.CENTER);
 
         //buttons LOGIN
         logManagerButton.addActionListener(e -> stateChange(STATE.CONFIG_CHOICE));
 
-    /*  JButton logEmployeeButton = new JButton("Employee");      //TODO
-        logManagerButton.addActionListener(e -> state=STATE.CONFIG);
+        JButton logEmployeeButton = new JButton("Employee");      //TODO
+       // logManagerButton.addActionListener(e -> state=STATE.CONFIG);
         JButton logWarehouseButton = new JButton("Storage Worker");
-        logManagerButton.addActionListener(e -> state=STATE.CONFIG);  */
+      //  logManagerButton.addActionListener(e -> state=STATE.CONFIG);
 //------------------------------------------------------------------------------------------
         //CONFIG
         cfgBackButton.addActionListener(e -> stateChange(STATE.CONFIG_CHOICE));
@@ -207,8 +223,14 @@ public class GUI {
                 frame.setLayout(new BorderLayout());
                 frame.add(BorderLayout.NORTH, titleText);
                 frame.add(BorderLayout.CENTER, titleSubText);
-                frame.add(BorderLayout.SOUTH, titleLogButton);
+                frame.add(BorderLayout.BEFORE_FIRST_LINE, titleLogButton);
                 break;
+/*
+            case LOGIN:
+                frame.setLayout(new BorderLayout());
+                frame.add(BorderLayout.NORTH,logText);
+                frame.add(BorderLayout.AFTER_LAST_LINE,logManagerButton);
+                break;*/
 
             case LOGIN:
                 frame.setLayout(new FlowLayout());
@@ -277,16 +299,22 @@ public class GUI {
                 break;
 
             case CONFIG_DISHES:
-                frame.setLayout(new FlowLayout());
-                frame.add(cfgDishText);
-                frame.add(cfgInputArea1);
-                frame.add(cfgInputArea2);
-                frame.add(cfgInputArea3);
-                frame.add(cfgInputArea4);
-                frame.add(cfgDishPermanentRadio);
-                frame.add(cfgDishSendButton);
-                frame.add(cfgDishClearButton);
-                frame.add(cfgBackButton);
+                if (recipeString.length!=0)
+                {
+                    comboBox = new JComboBox<>(recipeString);
+                    frame.setLayout(new FlowLayout());
+                    frame.add(cfgDishText);
+                    frame.add(cfgInputArea1);
+                    frame.add(comboBox);
+                    frame.add(cfgInputArea3);
+                    frame.add(cfgInputArea4);
+                    frame.add(cfgDishPermanentRadio);
+                    frame.add(cfgDishSendButton);
+                    frame.add(cfgDishClearButton);
+                    frame.add(cfgBackButton);
+                }
+                else
+                    errorSetter("noRecipe");
                 break;
 
             case CONFIG_MENUS:
@@ -318,11 +346,16 @@ public class GUI {
                         "Err", JOptionPane.ERROR_MESSAGE);
                 break;
             case "noRecipe":
-                JOptionPane.showMessageDialog(frame, "Ricetta non trovata",
+                JOptionPane.showMessageDialog(frame, "Inserisci prima una ricetta!",
                         "Err", JOptionPane.ERROR_MESSAGE);
+                stateChange(STATE.CONFIG_CHOICE);
                 break;
             case "noDish":
                 JOptionPane.showMessageDialog(frame, "Piatto non trovato",
+                        "Err", JOptionPane.ERROR_MESSAGE);
+                break;
+            case "0Dish":
+                JOptionPane.showMessageDialog(frame, "Inserisci almeno un piatto!",
                         "Err", JOptionPane.ERROR_MESSAGE);
                 break;
             case "invalidDate":
