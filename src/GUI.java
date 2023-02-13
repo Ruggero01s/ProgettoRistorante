@@ -62,28 +62,36 @@ public class GUI {
     JLabel cfgBaseCapacityText = new JLabel("Posti a sedere:");
     JLabel cfgBaseIndiviualWorkloadAreaText = new JLabel("Carico lavoro max:");
     JButton cfgBaseSendButton = new JButton("Conferma");
+    JButton cfgBaseClearButton = new JButton("Clear");
 //------------------------------------------------------------------------------------------
     //CONFIG_DRINKS
     JLabel cfgDrinksText = new JLabel("Inserisci dati bevanda: (nome | quantità)");
     JButton cfgDrinksSendButton = new JButton("Inserisci");
-//------------------------------------------------------------------------------------------
+    JButton cfgDrinksClearButton = new JButton("Clear");
+
+    //------------------------------------------------------------------------------------------
     //CONFIG_EXTRAFOODS
     JLabel cfgFoodText = new JLabel("Inserisci dati generi alimentari extra: (nome | quantità)");
     JButton cfgFoodSendButton = new JButton("Inserisci");
-//------------------------------------------------------------------------------------------
+    JButton cfgFoodClearButton = new JButton("Clear");
+
+    //------------------------------------------------------------------------------------------
     //CONFIG_RECIPES
     JLabel cfgRecipeText = new JLabel("Inserisci dati ricetta (nome | porzioni | lista ingredienti:quantità | workload/person)");
     JButton cfgRecipeSendButton = new JButton("Inserisci");
-//------------------------------------------------------------------------------------------
+    //------------------------------------------------------------------------------------------
     //CONFIG_DISHES
     JLabel cfgDishText = new JLabel("Inserisci dati piatto (nome | ricetta | data inizio | data fine)");
     JButton cfgDishSendButton = new JButton("Inserisci");
     JRadioButton cfgDishPermanentRadio = new JRadioButton("Permanente");
-//------------------------------------------------------------------------------------------
+    JButton cfgDishClearButton = new JButton("Clear");
+    //------------------------------------------------------------------------------------------
     //CONFIG_MENUS
     JLabel cfgMenuText = new JLabel("Inserisci Menu (nome | piatti | data inizio | data fine)");
     JButton cfgMenuSendButton = new JButton("Inserisci");
     JRadioButton cfgMenuPermanentRadio = new JRadioButton("Permanente");
+    JButton cfgMenuClearButton = new JButton("Clear");
+
 //------------------------------------------------------------------------------------------
 
     public void init() {
@@ -141,18 +149,22 @@ public class GUI {
         //TODO setAlignment
         //buttons CONFIG_BASE
         cfgBaseSendButton.addActionListener(e -> ctrl.saveConfig());
+        cfgBaseClearButton.addActionListener(e -> ctrl.clearInfo("config.xml"));
 //------------------------------------------------------------------------------------------
         //CONFIG_DRINKS
         //labels CONFIG_DRINKS
         //TODO alignments
         //buttons CONFIG_DRINKS
         cfgDrinksSendButton.addActionListener(e -> ctrl.saveDrinks()); //todo addDrink? vedere se cambiare nome
+        cfgDrinksClearButton.addActionListener(e -> ctrl.clearInfo("drinks.xml"));
+
 //------------------------------------------------------------------------------------------
         //CONFIG_EXTRAFOODS
         //labels CONFIG_EXTRAFOODS
         //TODO alignments
         //buttons CONFIG_EXTRAFOODS
         cfgFoodSendButton.addActionListener(e -> ctrl.saveFoods()); //todo addFood? vedere se cambiare nome
+        cfgFoodClearButton.addActionListener(e -> ctrl.clearInfo("extraFoods.xml"));
 //------------------------------------------------------------------------------------------
         //CONFIG_RECIPE
         //labels CONFIG_RECIPE
@@ -165,6 +177,8 @@ public class GUI {
         //TODO alignments
         //buttons CONFIG_DISHES
         cfgDishSendButton.addActionListener(e -> ctrl.saveDish()); //todo
+        cfgDishClearButton.addActionListener(e -> ctrl.clearInfo("dishes.xml"));
+
 //------------------------------------------------------------------------------------------
         //CONFIG_MENUS
         //labels CONFIG_MENUS
@@ -177,6 +191,7 @@ public class GUI {
                  throw new RuntimeException(ex);
              }
          });
+        cfgMenuClearButton.addActionListener(e -> ctrl.clearInfo("thematicMenu.xml"));
 //------------------------------------------------------------------------------------------
 //==========================================================================================
         stateChange(STATE.TITLE);
@@ -225,6 +240,7 @@ public class GUI {
                 frame.add(cfgInputArea2);
 
                 frame.add(cfgBaseSendButton);
+                frame.add(cfgBaseClearButton);
                 frame.add(cfgBackButton);
                 break;
 
@@ -234,6 +250,7 @@ public class GUI {
                 frame.add(cfgInputArea1);
                 frame.add(cfgInputArea2);
                 frame.add(cfgFoodSendButton);
+                frame.add(cfgFoodClearButton);
                 frame.add(cfgBackButton);
                 break;
 
@@ -243,6 +260,7 @@ public class GUI {
                 frame.add(cfgInputArea1);
                 frame.add(cfgInputArea2);
                 frame.add(cfgDrinksSendButton);
+                frame.add(cfgDrinksClearButton);
                 frame.add(cfgBackButton);
                 break;
 
@@ -254,6 +272,7 @@ public class GUI {
                 frame.add(cfgInputArea3);
                 frame.add(cfgInputArea4);
                 frame.add(cfgRecipeSendButton);
+                frame.add(cfgFoodClearButton);
                 frame.add(cfgBackButton);
                 break;
 
@@ -266,6 +285,7 @@ public class GUI {
                 frame.add(cfgInputArea4);
                 frame.add(cfgDishPermanentRadio);
                 frame.add(cfgDishSendButton);
+                frame.add(cfgDishClearButton);
                 frame.add(cfgBackButton);
                 break;
 
@@ -278,6 +298,7 @@ public class GUI {
                 frame.add(cfgInputArea4);
                 frame.add(cfgMenuPermanentRadio);
                 frame.add(cfgMenuSendButton);
+                frame.add(cfgMenuClearButton);
                 frame.add(cfgBackButton);
                 break;
         }

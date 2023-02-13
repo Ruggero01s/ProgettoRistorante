@@ -57,4 +57,22 @@ public class Dish    //todo override equals
     public void setRecipe(Recipe recipe) {
         this.recipe = recipe;
     }
+
+    public boolean equals(Object d) {
+        if (d == this) return true;
+        if (!(d instanceof Dish)) {
+            return false;
+        }
+
+        Dish dish = (Dish) d;
+
+        return this.name.equals(dish.getName());
+    }
+
+    @Override
+    public int hashCode() {
+        int result = 17;
+        result = 31 * result + name.hashCode();
+        return result;
+    }
 }

@@ -16,23 +16,55 @@ public class Controller
 	private void loadModel()
 	{
 		Reader.readConfig(model);
-		model.drinksMap=Reader.readDrinks();
-		model.extraFoodsMap = Reader.readExtraFoods();
-		model.dishesSet = Reader.readDishes();
-		for (Dish d: model.dishesSet)
+		model.setDrinksMap(Reader.readDrinks());
+		model.setExtraFoodsMap(Reader.readExtraFoods());
+		model.setDishesSet(Reader.readDishes());
+		for (Dish d: model.getDishesSet())
 		{
-			model.recipesSet.add(d.getRecipe());
+			model.getRecipesSet().add(d.getRecipe());
 		}
-		model.thematicMenusSet = Reader.readThematicMenu();
+		model.setThematicMenusSet(Reader.readThematicMenu());
 
+	}
+
+	public void clearInfo(String name)
+	{
+		switch (name){
+			case "config.xml":
+				model.setCapacity(0);
+				model.setWorkPersonLoad(0);
+				Writer.writeConfigBase(model.getCapacity(), model.getWorkPersonLoad());
+				break;
+			case "drinks.xml":
+				model.getDrinksMap().clear();
+				Writer.writeDrinks(model.getDrinksMap());
+				break;
+			case "extraFoods.xml":
+				model.getExtraFoodsMap().clear();
+				Writer.writeExtraFoods(model.getExtraFoodsMap());
+				break;
+			case "dishes.xml":
+				model.getDishesSet().clear();
+				Writer.writeDishes(model.getDishesSet());
+				break;
+			case "thematicMenu.xml":
+				model.getThematicMenusSet().clear();
+				Writer.writeThematicMenu(model.getThematicMenusSet());
+				break;
+		}
 	}
 
 	public void writeAll()
 	{
-		Writer.writeDrinks(model.drinksMap);
-		Writer.writeExtraFoods(model.extraFoodsMap);
-		Writer.writeConfigBase(model.capacity, model.workPersonLoad, model.workResturantLoad);
-		Writer.writeDishes(model.dishesSet);
+		if(!model.getDrinksMap().isEmpty())
+			Writer.writeDrinks(model.getDrinksMap());
+		if(!model.getExtraFoodsMap().isEmpty())
+			Writer.writeExtraFoods(model.getExtraFoodsMap());
+		Writer.writeConfigBase(model.getCapacity(), model.getWorkPersonLoad());
+		if(!model.getDishesSet().isEmpty())
+			Writer.writeDishes(model.getDishesSet());
+		if(!model.getThematicMenusSet().isEmpty())
+			Writer.writeThematicMenu(model.getThematicMenusSet());
 	}
 	
 	public void saveConfig()
@@ -43,7 +75,7 @@ public class Controller
 			String inputWorkload = gui.cfgInputArea2.getText();
 
 			int capacity = Integer.parseInt(inputCapacity);
-			int workload=Integer.parseInt(inputWorkload);
+			int workload= Integer.parseInt(inputWorkload);
 
 			if(capacity<= 0 || workload<= 0)
 				gui.errorSetter("minZero");
@@ -180,7 +212,7 @@ public class Controller
 				inputStartDate = "01/01";
 				inputEndDate = "31/12";
 			}
-			if(checkDate(inputStartDate) || checkDate(inputEndDate)) {
+			if(!checkDate(inputStartDate) || !checkDate(inputEndDate)) {
 				gui.errorSetter("invalidDate");
 				return;
 			}
@@ -216,7 +248,7 @@ public class Controller
 
 		ArrayList<Dish> dishesForMenu = new ArrayList<>();
 
-		if (gui.cfgDishPermanentRadio.isSelected())
+		if (gui.cfgMenuPermanentRadio.isSelected())
 		{
 			inputStartDate = "01/01";
 			inputEndDate = "31/12";
@@ -240,6 +272,7 @@ public class Controller
 				}
 			}
 		}
+		gui.resetInputAreas();
 		if(!found)
 			gui.errorSetter("noDish");
 		else

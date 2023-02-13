@@ -68,7 +68,7 @@ public class Reader
                     if (xmlr.getLocalName().equals("baseConfig"))
                     {
                         model.setCapacity(Integer.parseInt(xmlr.getAttributeValue(0)));
-                        model.setWorkPersonLoad(Integer.parseInt(xmlr.getAttributeValue(1)));
+                        model.setWorkPersonLoad((int) Double.parseDouble(xmlr.getAttributeValue(1)));
                     }
                 }
                 xmlr.next();
