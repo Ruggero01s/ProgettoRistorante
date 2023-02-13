@@ -61,31 +61,37 @@ public class SimpleUI extends JFrame
     JTextArea cfgBaseInputCap = new JTextArea();
     JTextArea cfgBaseInputIndWork = new JTextArea();
 
-    public String getDrinkList() {
-        return drinkList;
-    }
-
-    public void setDrinkList(String drinkList) {
+    public void setDrinkList(String drinkList)
+    {
         this.drinkList = drinkList;
         cfgDrinksAreaOut.setText(this.drinkList);
     }
-
+    
+    public void setFoodsList(String foodsList)
+    {
+        this.foodsList = foodsList;
+        cfgFoodsAreaOut.setText(this.foodsList);
+    }
+    
     //------------------------------------------------------------------------------------------
     //CONFIG_DRINKS
-    String drinkList;
+    private String drinkList;
     JLabel cfgDrinksText = new JLabel("Inserisci dati bevanda: (nome : quantità (L))");
-    JLabel cfgDrinksTextOut = new JLabel("Elenco dati bevanda: (nome : quantità (L))");
+    JLabel cfgDrinksTextOut = new JLabel("Elenco dati bevande: (nome : quantità (L))");
     JTextArea cfgDrinksAreaOut = new JTextArea(drinkList);
     JButton cfgDrinksSendButton = new JButton("Inserisci");
     JButton cfgDrinksClearButton = new JButton("Clear Drinks");
     JTextArea cfgDrinksInput = new JTextArea();
     //------------------------------------------------------------------------------------------
     //CONFIG_EXTRAFOODS
+    private String foodsList;
     JLabel cfgFoodText = new JLabel("Inserisci dati generi alimentari extra: (nome : quantità (Hg)");
     JLabel cfgFoodTextOut = new JLabel("Elenco dati generi alimentari extra: (nome : quantità (Hg)");
     JButton cfgFoodSendButton = new JButton("Inserisci");
     JButton cfgFoodClearButton = new JButton("Clear ExtraFoods");
     JTextArea cfgFoodsInput = new JTextArea();
+    JLabel cfgFoodsTextOut = new JLabel("Elenco dati cibi extra: (nome : quantità (Hg))");
+    JTextArea cfgFoodsAreaOut = new JTextArea(foodsList);
     //------------------------------------------------------------------------------------------
     //CONFIG_RECIPES
     JLabel cfgRecipeTextTitle = new JLabel("Inserisci dati ricetta");
@@ -171,6 +177,8 @@ public class SimpleUI extends JFrame
         cfgMenuEDateInput.setLineWrap(true);
         cfgDrinksAreaOut.setLineWrap(true);
         cfgDrinksAreaOut.setEditable(false);
+        cfgFoodsAreaOut.setLineWrap(true);
+        cfgFoodsAreaOut.setEditable(false);
 
         cfgWriteButton.addActionListener(e -> ctrl.writeAll());
         cfgBaseClearButton.addActionListener(e -> ctrl.clearInfo("config.xml"));
@@ -266,6 +274,13 @@ public class SimpleUI extends JFrame
         panel2.add(cfgDrinksAreaOut,c);
         c.gridx = 0;
         c.gridy = 3;
+        panel2.add(cfgFoodsTextOut,c);
+        cfgFoodsAreaOut.setMaximumSize(new Dimension(20,100));
+        c.gridx = 1;
+        c.gridy = 3;
+        panel2.add(cfgFoodsAreaOut,c);
+        c.gridx = 0;
+        c.gridy = 4;
         panel2.add(buttonBack2,c);
 
         //Recipes panel

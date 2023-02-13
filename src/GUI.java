@@ -105,10 +105,7 @@ public class GUI {
 
     public void init() {
         //test
-
-
-
-
+        
 
         //frame
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);

@@ -29,6 +29,7 @@ public class Controller
 		updateRecipeStringList();
 		updateDishStringList();
 		updateDrinkList();
+		updateFoodList();
 	}
 
 	public void clearInfo(String name)
@@ -133,6 +134,7 @@ public class Controller
 			{
 				model.getExtraFoodsMap().put(input[0], quantity);
 				sui.cfgFoodsInput.setText("");
+				updateFoodList();
 			}
 		}
 		catch (NumberFormatException e)
@@ -365,5 +367,14 @@ public class Controller
 			out = out + drink.getKey() + ":" + drink.getValue().toString() + "\n";
 		}
 		sui.setDrinkList(out);
+	}
+	public void updateFoodList()
+	{
+		String out="";
+		for (Map.Entry<String, Double> food : model.getExtraFoodsMap().entrySet())
+		{
+			out = out + food.getKey() + ":" + food.getValue().toString() + "\n";
+		}
+		sui.setFoodsList(out);
 	}
 }
