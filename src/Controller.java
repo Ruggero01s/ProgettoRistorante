@@ -106,7 +106,7 @@ public class Controller
 				gui.errorSetter("minZero");
 			else
 			{
-				model.drinksMap.put(inputName, quantity);
+				model.getDrinksMap().put(inputName, quantity);
 				gui.resetInputAreas();
 			}
 		}
@@ -128,7 +128,7 @@ public class Controller
 				gui.errorSetter("minZero");
 			else
 			{
-				model.extraFoodsMap.put(inputName, Double.parseDouble(inputQuantityPerson));
+				model.getExtraFoodsMap().put(inputName, Double.parseDouble(inputQuantityPerson));
 				gui.resetInputAreas();
 			}
 		}
@@ -140,22 +140,22 @@ public class Controller
 	
 	public void printDrinks()
 	{
-		System.out.println(model.drinksMap);
+		System.out.println(model.getDrinksMap());
 	}
 	
 	public void printExtraFoods()
 	{
-		System.out.println(model.extraFoodsMap);
+		System.out.println(model.getExtraFoodsMap());
 	}
 	
 	public void printRecipes()
 	{
-		System.out.println(model.recipesSet);
+		System.out.println(model.getRecipesSet());
 	}
 	
 	public void printDishes()
 	{
-		System.out.println(model.dishesSet);
+		System.out.println(model.getDishesSet());
 	}
 	
 	public void saveRecipe()
@@ -188,7 +188,7 @@ public class Controller
 				gui.errorSetter("minZero");
 			else
 			{
-				model.recipesSet.add(new Recipe(inputName, ingredientQuantityMap, portions, workLoad));
+				model.getRecipesSet().add(new Recipe(inputName, ingredientQuantityMap, portions, workLoad));
 				gui.resetInputAreas();
 			}
 		}
@@ -217,10 +217,10 @@ public class Controller
 				return;
 			}
 				boolean found = false;
-				for (Recipe r : model.recipesSet) {
+				for (Recipe r : model.getRecipesSet()) {
 					found = false;
 					if (r.getId().equals(inputIngredients)) {
-						model.dishesSet.add(new Dish(inputName, r, inputStartDate, inputEndDate));
+						model.getDishesSet().add(new Dish(inputName, r, inputStartDate, inputEndDate));
 						found = true;
 						break;
 					}
@@ -232,7 +232,7 @@ public class Controller
 
 		}catch (ParseException e)
 		{
-			gui.errorSetter("noRecipe");
+			gui.errorSetter("invalidDate");
 		}
 	}
 
@@ -262,7 +262,7 @@ public class Controller
 		for (String s: inputList)
 		{
 			found = false;
-			for (Dish d : model.dishesSet)
+			for (Dish d : model.getDishesSet())
 			{
 				if (d.getName().equals(s))
 				{
@@ -277,7 +277,7 @@ public class Controller
 			gui.errorSetter("noDish");
 		else
 		{
-				model.thematicMenusSet.add(new ThematicMenu(inputName, inputStartDate, inputEndDate, dishesForMenu));
+				model.getThematicMenusSet().add(new ThematicMenu(inputName, inputStartDate, inputEndDate, dishesForMenu));
 		}
 	}
 
@@ -308,10 +308,11 @@ public class Controller
 		return false;
 	}
 
-	public static ArrayList<Dish> stringListToDishList(ArrayList<String> lista){
+	public static ArrayList<Dish> stringListToDishList(ArrayList<String> list )
+	{
 		ArrayList<Dish> dishes = new ArrayList<>();
-		for (String s: lista) {
-			for (Dish d: model.dishesSet) {
+		for (String s: list) {
+			for (Dish d: model.getDishesSet()) {
 				if (d.getName().equals(s))
 					dishes.add(d);
 			}

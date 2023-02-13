@@ -67,8 +67,7 @@ public class Writer
 			xmlw.writeCharacters("\n\t");
 			xmlw.writeStartElement("baseConfig"); // <baseconfig>
 			xmlw.writeAttribute("capacity", Integer.toString(capacity));
-			xmlw.writeAttribute("workPersonLoad", Double.toString(workPersonLoad));
-			xmlw.writeAttribute("workResturantLoad", Double.toString(workResturantLoad));
+			xmlw.writeAttribute("workPersonLoad", Integer.toString(workPersonLoad));
 			xmlw.writeEndElement(); // </baseconfig>
 			xmlw.writeCharacters("\n");
 			xmlw.writeEndElement();//</config>
@@ -153,7 +152,7 @@ public class Writer
 	}
 	
 	
-	public static void writeDishes(HashSet<Dish> dishes)
+	public static void writeDishes(Set<Dish> dishes)
 	{
 		XMLOutputFactory xmlof = null;
 		XMLStreamWriter xmlw = null;
@@ -245,5 +244,4 @@ public class Writer
 			System.out.println(e.getMessage());
 		}
 	}
-	
 }

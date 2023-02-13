@@ -75,5 +75,23 @@ public class ThematicMenu
 		for (Dish dish: dishes)
 			this.workThematicMenuLoad+=dish.getRecipe().getWorkLoadPortion();
 	}
-	
+
+	public boolean equals(Object o) {
+		if (o == this) return true;
+		if (!(o instanceof ThematicMenu))
+		{
+			return false;
+		}
+
+		ThematicMenu menu = (ThematicMenu) o;
+
+		return this.name.equals(menu.getName());
+	}
+
+	@Override
+	public int hashCode() {
+		int result = 17;
+		result = 31 * result + name.hashCode();
+		return result;
+	}
 }

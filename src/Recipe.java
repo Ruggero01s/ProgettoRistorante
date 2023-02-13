@@ -45,4 +45,23 @@ public class Recipe //todo override equals
     public void setWorkLoadPortion(double workLoadPortion) {
         this.workLoadPortion = workLoadPortion;
     }
+
+    public boolean equals(Object r) {
+        if (r == this) return true;
+        if (!(r instanceof Recipe)) {
+            return false;
+        }
+
+        Recipe recipe = (Recipe) r;
+
+        return this.id.equals((recipe.id)) && this.portions == recipe.portions;
+    }
+
+    @Override
+    public int hashCode() {
+        int result = 17;
+        result = 31 * result + id.hashCode();
+        result = 31 * result + ((Integer)portions).hashCode();
+        return result;
+    }
 }

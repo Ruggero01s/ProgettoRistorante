@@ -95,11 +95,8 @@ public class Reader
             while (xmlr.hasNext())
             { // continua a leggere finche ha eventi a disposizione
                 if(xmlr.getEventType() == XMLStreamConstants.START_ELEMENT) // inizio di un elemento
-                {
                     if (xmlr.getLocalName().equals("drink"))
                         drinks.put(xmlr.getAttributeValue(0),Double.parseDouble(xmlr.getAttributeValue(1)));
-
-                }
                 xmlr.next();
             }
         }
@@ -125,11 +122,8 @@ public class Reader
             while (xmlr.hasNext())
             { // continua a leggere finche ha eventi a disposizione
                 if(xmlr.getEventType() == XMLStreamConstants.START_ELEMENT) // inizio di un elemento
-                {
                     if (xmlr.getLocalName().equals("food"))
                         foods.put(xmlr.getAttributeValue(0),Double.parseDouble(xmlr.getAttributeValue(1)));
-
-                }
                 xmlr.next();
             }
         }
@@ -152,13 +146,14 @@ public class Reader
         {
             xmlif = XMLInputFactory.newInstance();
             xmlr = xmlif.createXMLStreamReader(new FileInputStream(Writer.ROOT + Writer.DISHES_NAME_FILE));
+            String name="",id="",startPeriod="",endPeriod="";
+            int portions=0;
+            double workLoadPortion=0;
+            HashMap <String, Double> ingredients = new HashMap<>();
             while (xmlr.hasNext())
             {
                 // continua a leggere finche ha eventi a disposizione
-                String name="",id="",startPeriod="",endPeriod="";
-                int portions=0;
-                double workLoadPortion=0;
-                HashMap <String, Double> ingredients = new HashMap<>();
+
 
                 if(xmlr.getEventType() == XMLStreamConstants.START_ELEMENT) // inizio di un elemento
                 {
@@ -207,11 +202,11 @@ public class Reader
         {
             xmlif = XMLInputFactory.newInstance();
             xmlr = xmlif.createXMLStreamReader(new FileInputStream(Writer.ROOT + Writer.MENU_NAME_FILE));
+            String name="",startPeriod="",endPeriod="";
+            ArrayList <String> dishes = new ArrayList<>();
             while (xmlr.hasNext())
             {
                 // continua a leggere finche ha eventi a disposizione
-                String name="",startPeriod="",endPeriod="";
-                ArrayList <String> dishes = new ArrayList<>();
                 if(xmlr.getEventType() == XMLStreamConstants.START_ELEMENT) // inizio di un elemento
                 {
                     switch (xmlr.getLocalName())
