@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <dishes>
-	<dish name="Spaghett" startDate="01/01/1444" endDate="31/12/1444">
-		<recipe id="pasta" portions="4" workLoadPortion="2.0"></recipe></dish>
 	<dish name="Polpett" startDate="01/01/1444" endDate="31/12/1444">
-		<recipe id="Polpettine" portions="4" workLoadPortion="2.0"></recipe></dish>
+		<recipe id="polpette"></recipe></dish>
+	<dish name="PastaCoTonno" startDate="01/04/1444" endDate="06/07/1444">
+		<recipe id="pastaTonno"></recipe></dish>
 </dishes>

@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <menus>
 	<menu name="Italia" startDate="01/01/1444" endDate="31/12/1444">
-		<dish name="Spaghett"></dish>
+		<dish name="PastaCoTonno"></dish>
 		<dish name="Polpett"></dish></menu>
 </menus>

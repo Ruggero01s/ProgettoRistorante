@@ -1,4 +1,4 @@
 <?xml version="1.0" encoding="utf-8"?>
 <config>
-	<baseConfig capacity="20" workPersonLoad="5"></baseConfig>
+	<baseConfig capacity="20" workPersonLoad="6"></baseConfig>
 </config>

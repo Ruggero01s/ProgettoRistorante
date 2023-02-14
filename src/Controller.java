@@ -1,7 +1,9 @@
 import javax.swing.*;
+import java.awt.*;
 import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Map;
 
 public class Controller
@@ -30,6 +32,10 @@ public class Controller
 		updateDishStringList();
 		updateDrinkList();
 		updateFoodList();
+		updateMenuOut();
+		sui.cfgResBaseOut.setText("Capacità: "+ model.getCapacity() + "\n" + "IndividualWorkload: " + model.getWorkPersonLoad() + "\n" + "Restaurant Worlkload: "+ model.getWorkResturantLoad());
+		sui.cfgBaseInputCap.setText(Integer.toString(model.getCapacity()));
+		sui.cfgBaseInputIndWork.setText(Integer.toString(model.getWorkPersonLoad()));
 	}
 
 	public void clearInfo(String name)
@@ -57,6 +63,7 @@ public class Controller
 			case "thematicMenu.xml":
 				model.getThematicMenusSet().clear();
 				Writer.writeThematicMenu(model.getThematicMenusSet());
+				updateMenuOut();
 				break;
 		}
 	}
@@ -90,8 +97,8 @@ public class Controller
 			{
 				model.setCapacity(capacity);
 				model.setWorkPersonLoad(workload);
-				sui.cfgBaseInputCap.setText("");
-				sui.cfgBaseInputIndWork.setText("");
+				sui.cfgResBaseOut.setText("Capacità: "+ model.getCapacity() + "\n" + "IndividualWorkload: " +
+						model.getWorkPersonLoad() + "\n" + "Restaurant Worlkload: "+ model.getWorkResturantLoad());
 			}
 		}
 		catch (NumberFormatException e)
@@ -194,12 +201,11 @@ public class Controller
 			else
 			{
 				model.getRecipesSet().add(new Recipe(inputName, ingredientQuantityMap, portions, workLoad));
-				updateRecipeStringList();
 				sui.cfgRecipeNameInput.setText("");
 				sui.cfgRecipeIngredientsInput.setText("");
 				sui.cfgRecipePortionsInput.setText("");
 				sui.cfgRecipeWorkLoadInput.setText("");
-
+				updateRecipeStringList();
 			}
 		}
 		catch (NumberFormatException e)
@@ -291,7 +297,8 @@ public class Controller
 			sui.errorSetter("noDish");
 		else
 		{
-				model.getThematicMenusSet().add(new ThematicMenu(inputName, inputStartDate, inputEndDate, dishesForMenu));
+			model.getThematicMenusSet().add(new ThematicMenu(inputName, inputStartDate, inputEndDate, dishesForMenu));
+			updateMenuOut();
 		}
 	}
 
@@ -345,6 +352,13 @@ public class Controller
 		}
 		DefaultComboBoxModel<String> model = new DefaultComboBoxModel<>( recipes );
 		sui.cfgDishComboBox.setModel(model);
+
+		String compactedArray="";
+		for (String s: recipes) {
+			compactedArray=(compactedArray + s + "\n");
+		}
+		sui.cfgResRecipesOut.setText(compactedArray);
+		sui.setRecipeList(compactedArray);
 	}
 	public void updateDishStringList()
 	{
@@ -357,6 +371,13 @@ public class Controller
 		}
 		DefaultComboBoxModel<String> model = new DefaultComboBoxModel<>( dishes );
 		sui.cfgMenuComboBox.setModel(model);
+
+		String compactedArray="";
+		for (String s: dishes) {
+			compactedArray=(compactedArray + s + "\n");
+		}
+		sui.cfgResDishesOut.setText(compactedArray);
+		sui.setDishList(compactedArray);
 	}
 
 	public void updateDrinkList()
@@ -367,6 +388,7 @@ public class Controller
 			out = out + drink.getKey() + ":" + drink.getValue().toString() + "\n";
 		}
 		sui.setDrinkList(out);
+		sui.cfgResDrinksOut.setText(out);
 	}
 	public void updateFoodList()
 	{
@@ -376,5 +398,6 @@ public class Controller
 			out = out + food.getKey() + ":" + food.getValue().toString() + "\n";
 		}
 		sui.setFoodsList(out);
+		sui.cfgResFoodsOut.setText(out);
 	}
 }
