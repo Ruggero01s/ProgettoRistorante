@@ -445,4 +445,63 @@ public class Controller
 		sui.setFoodsList(out);
 		sui.cfgResFoodsOut.setText(out);
 	}
+
+	public Date inputToDate(String input) throws ParseException {
+		String[] bookDates;
+		bookDates = input.split("/");
+		return new Date(bookDates[0],bookDates[1]);
+	}
+	public void seeBookings(Date data){
+		ArrayList<Booking> dayBookings = new ArrayList<>(model.getBookingMap().get(data));
+		String out="";
+		for (Booking b: dayBookings) {
+			out = (out + "\n" + b.getName() +"\t" + "n. " + b.getNumber() + "\t" + b.getWorkload());
+		}
+		sui.empSeeBookAreaOut.setText(out);
+	}
+
+	public void manageBooking(String name, Date date, int number, int workload, HashMap<Dish,Integer> order)
+	{
+		ArrayList <Booking> day= new ArrayList<>();
+		if (!model.getBookingMap().containsKey(date))
+		{
+			day.add(new Booking(name, number, workload, order));
+			model.getBookingMap().put(date,day);
+		}
+		else
+		{
+			int capacity=number,work=workload;
+			day = model.getBookingMap().get(date);
+			for (Booking b : day)
+			{
+				capacity+=b.getNumber();
+				work+=b.getWorkload();
+			}
+			if(capacity<=model.getCapacity() && work<= model.getWorkResturantLoad())
+			{
+				day.add(new Booking(name, number, workload, order));
+				model.getBookingMap().put(date, day);
+			}
+			else
+				sui.errorSetter("fullRestaurant");
+		}
+	}
+
+	public static HashMap<Dish,Integer> dishToMap (HashMap<String,Integer> map)
+	{
+		HashMap<Dish,Integer> out = new HashMap<>();
+		for (Map.Entry<String, Integer> s : map.entrySet())
+		{
+			for(Dish dish: model.getDishesSet())
+			{
+				if(dish.getName().equals(s.getKey()))
+				{
+					out.put(dish,s.getValue());
+					break;
+				}
+			}
+		}
+		return out;
+	}
+
 }

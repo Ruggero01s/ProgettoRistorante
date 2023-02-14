@@ -12,7 +12,8 @@ public class Writer
 	public static final String EXTRA_FOODS_NAME_FILE = "extraFoods.xml";
 	public static final String RECIPES_NAME_FILE = "recipes.xml";
 	public static final String DISHES_NAME_FILE = "dishes.xml";
-    public static final String MENU_NAME_FILE = "thematicMenu.xml";
+    public static final String MENUS_NAME_FILE = "thematicMenus.xml";
+	public static final String BOOKINGS_NAME_FILE = "bookings.xml";
 	
 	
 	private static final String SALUTO = "\nOutput generato correttamente, arrivederci";
@@ -263,6 +264,56 @@ public class Writer
 			xmlw.writeCharacters("\n");
 			xmlw.writeEndElement();//</menus>
 			
+			xmlw.writeEndDocument(); // scrittura della fine del documento
+			xmlw.flush(); // svuota il buffer e procede alla scrittura
+			xmlw.close(); // chiusura del documento e delle risorse impiegate
+			System.out.println(SALUTO);
+		}
+		catch (Exception e)
+		{
+			System.out.println(ERRORE);
+			System.out.println(e.getMessage());
+		}
+	}
+
+	public static void writeBookings(HashMap <Date,ArrayList<Booking>> bookings)
+	{
+		XMLOutputFactory xmlof = null;
+		XMLStreamWriter xmlw = null;
+		try
+		{
+			xmlof = XMLOutputFactory.newInstance();
+			xmlw = xmlof.createXMLStreamWriter(new FileOutputStream(ROOT + BOOKINGS_NAME_FILE), "utf-8");
+			xmlw.writeStartDocument("utf-8", "1.0");
+			xmlw.writeCharacters("\n");
+			xmlw.writeStartElement("bookings"); // scrittura del tag radice <bookings>
+			for (Map.Entry<Date,ArrayList<Booking>> booking : bookings.entrySet())
+			{
+				xmlw.writeCharacters("\n\t");
+				xmlw.writeStartElement("booking"); // <booking>
+				xmlw.writeAttribute("date", booking.getKey().toString());
+				for (Booking b: booking.getValue())
+				{
+					xmlw.writeCharacters("\n\t\t");
+					xmlw.writeStartElement("book"); // <book>
+					xmlw.writeAttribute("name", b.getName());
+					xmlw.writeAttribute("number", Integer.toString(b.getNumber()));
+					xmlw.writeAttribute("workload",Integer.toString(b.getWorkload()));
+					for (Map.Entry<Dish, Integer> dish : b.getOrder().entrySet())
+					{
+						xmlw.writeCharacters("\n\t\t\t");
+						xmlw.writeStartElement("order"); // <order>
+						xmlw.writeAttribute("dish", dish.getKey().getName());
+						xmlw.writeAttribute("quantity", Integer.toString(dish.getValue()));
+						xmlw.writeEndElement(); // </order>
+					}
+					xmlw.writeEndElement(); // </book>
+				}
+				xmlw.writeEndElement(); // </booking>
+			}
+			xmlw.writeCharacters("\n");
+			xmlw.writeEndElement();//</bookings>
+
 			xmlw.writeEndDocument(); // scrittura della fine del documento
 			xmlw.flush(); // svuota il buffer e procede alla scrittura
 			xmlw.close(); // chiusura del documento e delle risorse impiegate

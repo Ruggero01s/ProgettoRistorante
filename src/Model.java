@@ -11,7 +11,7 @@ public class Model {
     private Set<Dish> dishesSet = new HashSet<>();
     private Set<Recipe> recipesSet= new HashSet<>();
     private Set<ThematicMenu> thematicMenusSet= new HashSet<>();
-
+    private HashMap<Date,ArrayList<Booking>>  bookingMap = new HashMap<>();
 
     public int getWorkPersonLoad() {
         return workPersonLoad;

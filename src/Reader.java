@@ -279,4 +279,62 @@ public class Reader
         }
         return menu;
     }
+
+    public static HashMap <Date,ArrayList<Booking>> readBooking()
+    {
+        XMLInputFactory xmlif = null;
+        XMLStreamReader xmlr = null;
+
+        HashMap <Date,ArrayList<Booking>> bookings = new HashMap<>();
+        try
+        {
+            xmlif = XMLInputFactory.newInstance();
+            xmlr = xmlif.createXMLStreamReader(new FileInputStream(Writer.ROOT + Writer.BOOKINGS_NAME_FILE));
+            String name="",date="";
+            String [] dateString={};
+            int number=0, workload=0;
+            ArrayList<Booking> book = new ArrayList<>();
+            HashMap<String, Integer> order = new HashMap<>();
+            while (xmlr.hasNext())
+            {
+                // continua a leggere finche ha eventi a disposizione
+                if(xmlr.getEventType() == XMLStreamConstants.START_ELEMENT) // inizio di un elemento
+                {
+                    switch (xmlr.getLocalName())
+                    {
+                        case "booking":
+                            dateString = xmlr.getAttributeValue(0).split("/");
+                            break;
+                        case "book":
+                            name = xmlr.getAttributeValue(0);
+                            number = Integer.parseInt(xmlr.getAttributeValue(1));
+                            workload = Integer.parseInt(xmlr.getAttributeValue(2));
+                            break;
+                        case "order":
+                            order.put(xmlr.getAttributeValue(0),Integer.parseInt(xmlr.getAttributeValue(1)));
+                            break;
+                    }
+                }
+                if (xmlr.getEventType() == XMLStreamConstants.END_ELEMENT)
+                    switch (xmlr.getLocalName())
+                    {
+                        case "bookings":
+                            bookings.put(new Date(dateString[0],dateString[1]),book);
+                            book.clear();
+                            break;
+                        case "book":
+                            book.add(new Booking(name,number,workload,Controller.dishToMap(order)));
+                            order.clear();
+                            break;
+                    }
+                xmlr.next();
+            }
+        }
+        catch (Exception e)
+        {
+            System.out.println(ERRORE + Writer.BOOKINGS_NAME_FILE);
+            System.out.println(e.getMessage());
+        }
+        return bookings;
+    }
 }
