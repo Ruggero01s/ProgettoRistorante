@@ -135,6 +135,57 @@ public class Reader
         return foods;
     }
 
+    public static HashSet <Recipe> readRecipes()
+    {
+        XMLInputFactory xmlif = null;
+        XMLStreamReader xmlr = null;
+
+        HashSet<Recipe> recipes = new HashSet<>();
+
+        try
+        {
+            xmlif = XMLInputFactory.newInstance();
+            xmlr = xmlif.createXMLStreamReader(new FileInputStream(Writer.ROOT + Writer.RECIPES_NAME_FILE));
+            String id="";
+            int portions=0;
+            double workLoadPortion=0;
+            HashMap <String, Double> ingredients = new HashMap<>();
+            while (xmlr.hasNext())
+            {
+                // continua a leggere finche ha eventi a disposizione
+
+                if(xmlr.getEventType() == XMLStreamConstants.START_ELEMENT) // inizio di un elemento
+                {
+                    switch (xmlr.getLocalName())
+                    {
+                        case "recipe":
+                            id=xmlr.getAttributeValue(0);
+                            portions = Integer.parseInt(xmlr.getAttributeValue(1));
+                            workLoadPortion = Double.parseDouble(xmlr.getAttributeValue(2));
+                            break;
+                        case "ingredient":
+                            ingredients.put(xmlr.getAttributeValue(0),Double.parseDouble(xmlr.getAttributeValue(1)));
+                            break;
+                    }
+                }
+                if (xmlr.getEventType() == XMLStreamConstants.END_ELEMENT)
+                    if(xmlr.getLocalName().equals("recipe"))
+                    {
+                        recipes.add(new Recipe(id,ingredients,portions,workLoadPortion));
+                        ingredients.clear();
+                    }
+
+                xmlr.next();
+            }
+        }
+        catch (Exception e)
+        {
+            System.out.println(ERRORE + Writer.RECIPES_NAME_FILE);
+            System.out.println(e.getMessage());
+        }
+        return recipes;
+    }
+
     public static HashSet <Dish> readDishes()
     {
         XMLInputFactory xmlif = null;
@@ -147,9 +198,6 @@ public class Reader
             xmlif = XMLInputFactory.newInstance();
             xmlr = xmlif.createXMLStreamReader(new FileInputStream(Writer.ROOT + Writer.DISHES_NAME_FILE));
             String name="",id="",startPeriod="",endPeriod="";
-            int portions=0;
-            double workLoadPortion=0;
-            HashMap <String, Double> ingredients = new HashMap<>();
             while (xmlr.hasNext())
             {
                 // continua a leggere finche ha eventi a disposizione
@@ -166,19 +214,13 @@ public class Reader
                             break;
                         case "recipe":
                             id=xmlr.getAttributeValue(0);
-                            portions = Integer.parseInt(xmlr.getAttributeValue(1));
-                            workLoadPortion = Double.parseDouble(xmlr.getAttributeValue(2));
-                            break;
-                        case "ingredient":
-                            ingredients.put(xmlr.getAttributeValue(0),Double.parseDouble(xmlr.getAttributeValue(1)));
                             break;
                     }
                 }
                 if (xmlr.getEventType() == XMLStreamConstants.END_ELEMENT)
                     if(xmlr.getLocalName().equals("dish"))
                     {
-                        dishes.add(new Dish(name,new Recipe(id,ingredients,portions,workLoadPortion),startPeriod,endPeriod));
-                        ingredients.clear();
+                        dishes.add(new Dish(name,Controller.stringToRecipe(id),startPeriod,endPeriod));
                     }
 
                 xmlr.next();

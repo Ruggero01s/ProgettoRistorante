@@ -22,6 +22,7 @@ public class Controller
 		Reader.readConfig(model);
 		model.setDrinksMap(Reader.readDrinks());
 		model.setExtraFoodsMap(Reader.readExtraFoods());
+		model.setRecipesSet(Reader.readRecipes());
 		model.setDishesSet(Reader.readDishes());
 		for (Dish d: model.getDishesSet())
 		{
@@ -40,26 +41,37 @@ public class Controller
 
 	public void clearInfo(String name)
 	{
-		switch (name){
+		switch (name)
+		{
 			case "config.xml":
 				model.setCapacity(0);
 				model.setWorkPersonLoad(0);
 				Writer.writeConfigBase(model.getCapacity(), model.getWorkPersonLoad());
+				sui.cfgResBaseOut.setText("""
+						Capacità: 0
+						IndividualWorkload: 0
+						Restaurant Worlkload: 0""");
+				sui.cfgBaseInputCap.setText(Integer.toString(0));
+				sui.cfgBaseInputIndWork.setText(Integer.toString(0));
 				break;
 			case "drinks.xml":
 				model.getDrinksMap().clear();
 				Writer.writeDrinks(model.getDrinksMap());
+				updateDrinkList();
 				break;
 			case "extraFoods.xml":
 				model.getExtraFoodsMap().clear();
 				Writer.writeExtraFoods(model.getExtraFoodsMap());
+				updateFoodList();
 				break;
+			case "recipes.xml":
+				model.getRecipesSet().clear();
+				Writer.writeRecipes(model.getRecipesSet());
+				updateRecipeStringList();	//il break non serve perchè se cancello le ricette devo cancellare anche i menu ed i dish
 			case "dishes.xml":
 				model.getDishesSet().clear();
 				Writer.writeDishes(model.getDishesSet());
-				updateRecipeStringList();
 				updateDishStringList();
-				break;
 			case "thematicMenu.xml":
 				model.getThematicMenusSet().clear();
 				Writer.writeThematicMenu(model.getThematicMenusSet());
@@ -70,14 +82,15 @@ public class Controller
 
 	public void writeAll()
 	{
-		if(!model.getDrinksMap().isEmpty())
+		//if(!model.getDrinksMap().isEmpty())
 			Writer.writeDrinks(model.getDrinksMap());
-		if(!model.getExtraFoodsMap().isEmpty())
+		//if(!model.getExtraFoodsMap().isEmpty())
 			Writer.writeExtraFoods(model.getExtraFoodsMap());
 		Writer.writeConfigBase(model.getCapacity(), model.getWorkPersonLoad());
-		if(!model.getDishesSet().isEmpty())
+		Writer.writeRecipes(model.getRecipesSet());
+		//if(!model.getDishesSet().isEmpty())
 			Writer.writeDishes(model.getDishesSet());
-		if(!model.getThematicMenusSet().isEmpty())
+		//if(!model.getThematicMenusSet().isEmpty())
 			Writer.writeThematicMenu(model.getThematicMenusSet());
 	}
 	
@@ -340,6 +353,25 @@ public class Controller
 		}
 		return dishes;
 	}
+	public void updateMenuOut ()
+	{
+		String out="";
+		for (ThematicMenu m: model.getThematicMenusSet()) {
+			out=out+m.getName()+"\n";
+		}
+		sui.cfgResMenuOut.setText(out);
+		sui.setMenuList(out);
+	}
+
+	public static Recipe stringToRecipe(String id)
+	{
+			for (Recipe r :model.getRecipesSet() )
+			{
+				if (r.getId().equals(id))
+					return r;
+			}
+		return null; //non dovrebbe succedere
+	}
 
 	public void updateRecipeStringList()
 	{
@@ -390,6 +422,7 @@ public class Controller
 		sui.setDrinkList(out);
 		sui.cfgResDrinksOut.setText(out);
 	}
+
 	public void updateFoodList()
 	{
 		String out="";

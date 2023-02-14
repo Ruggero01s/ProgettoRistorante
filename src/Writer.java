@@ -10,6 +10,7 @@ public class Writer
 	public static final String CONFIG_NAME_FILE = "config.xml";
 	public static final String DRINKS_NAME_FILE = "drinks.xml";
 	public static final String EXTRA_FOODS_NAME_FILE = "extraFoods.xml";
+	public static final String RECIPES_NAME_FILE = "recipes.xml";
 	public static final String DISHES_NAME_FILE = "dishes.xml";
     public static final String MENU_NAME_FILE = "thematicMenu.xml";
 	
@@ -150,8 +151,49 @@ public class Writer
 			System.out.println(e.getMessage());
 		}
 	}
-	
-	
+
+	public static void writeRecipes(Set <Recipe> recipes)
+	{
+		XMLOutputFactory xmlof = null;
+		XMLStreamWriter xmlw = null;
+		try
+		{
+			xmlof = XMLOutputFactory.newInstance();
+			xmlw = xmlof.createXMLStreamWriter(new FileOutputStream(ROOT + RECIPES_NAME_FILE), "utf-8");
+			xmlw.writeStartDocument("utf-8", "1.0");
+			xmlw.writeCharacters("\n");
+			xmlw.writeStartElement("recipes"); // scrittura del tag radice <recipes>
+			for (Recipe recipe : recipes)
+			{
+				xmlw.writeCharacters("\n\t");
+				xmlw.writeStartElement("recipe"); // <recipe>
+				xmlw.writeAttribute("id", recipe.getId());
+				xmlw.writeAttribute("portions", Integer.toString(recipe.getPortions()));
+				xmlw.writeAttribute("workLoadPortion", Double.toString(recipe.getWorkLoadPortion()));
+				for (Map.Entry<String, Double> ingredient : recipe.getIngredients().entrySet())
+				{
+					xmlw.writeCharacters("\n\t\t");
+					xmlw.writeStartElement("ingredient"); // <ingredient>
+					xmlw.writeAttribute("name", ingredient.getKey());
+					xmlw.writeAttribute("quantity", Double.toString(ingredient.getValue()));
+					xmlw.writeEndElement(); // </ingredient>
+				}
+				xmlw.writeEndElement(); // </recipe>
+			}
+			xmlw.writeCharacters("\n");
+			xmlw.writeEndElement();//</recipes>
+			xmlw.writeEndDocument(); // scrittura della fine del documento
+			xmlw.flush(); // svuota il buffer e procede alla scrittura
+			xmlw.close(); // chiusura del documento e delle risorse impiegate
+			System.out.println(SALUTO);
+		}
+		catch (Exception e)
+		{
+			System.out.println(ERRORE);
+			System.out.println(e.getMessage());
+		}
+	}
+
 	public static void writeDishes(Set<Dish> dishes)
 	{
 		XMLOutputFactory xmlof = null;
@@ -170,21 +212,9 @@ public class Writer
 				xmlw.writeAttribute("name", dish.getName());
 				xmlw.writeAttribute("startDate", dish.getStartPeriod().getStringDate());
 				xmlw.writeAttribute("endDate", dish.getEndPeriod().getStringDate());
-				
 				xmlw.writeCharacters("\n\t\t");
-				
 				xmlw.writeStartElement("recipe"); // <recipe>
 				xmlw.writeAttribute("id", dish.getRecipe().getId());
-				xmlw.writeAttribute("portions", Integer.toString(dish.getRecipe().getPortions()));
-				xmlw.writeAttribute("workLoadPortion", Double.toString(dish.getRecipe().getWorkLoadPortion()));
-				for (Map.Entry<String, Double> ingredient : dish.getRecipe().getIngredients().entrySet())
-				{
-					xmlw.writeCharacters("\n\t\t\t");
-					xmlw.writeStartElement("ingredient"); // <ingredient>
-					xmlw.writeAttribute("name", ingredient.getKey());
-					xmlw.writeAttribute("quantity", Double.toString(ingredient.getValue()));
-					xmlw.writeEndElement(); // </ingredient>
-				}
 				xmlw.writeEndElement(); // </recipe>
 				xmlw.writeEndElement(); // </dish>
 			}

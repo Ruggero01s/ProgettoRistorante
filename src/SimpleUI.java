@@ -76,13 +76,13 @@ public class SimpleUI extends JFrame {
     //CONFIG_EXTRAFOODS
     private String foodsList;
     JLabel cfgFoodText = new JLabel("Inserisci dati generi alimentari extra: (nome : quantità (Hg)");
-    JLabel cfgFoodTextOut = new JLabel("Elenco dati generi alimentari extra: (nome : quantità (Hg)");
     JButton cfgFoodSendButton = new JButton("Inserisci");
     JTextArea cfgFoodsInput = new JTextArea();
     JLabel cfgFoodsTextOut = new JLabel("Elenco dati cibi extra: (nome : quantità (Hg))");
     JTextArea cfgFoodsAreaOut = new JTextArea(foodsList);
     //------------------------------------------------------------------------------------------
     //CONFIG_RECIPES
+    private String recipeList;
     JLabel cfgRecipeTextTitle = new JLabel("Inserisci dati ricetta");
     JLabel cfgRecipeTextName = new JLabel("Inserisci nome: ");
     JTextArea cfgRecipeNameInput = new JTextArea();
@@ -92,7 +92,15 @@ public class SimpleUI extends JFrame {
     JTextArea cfgRecipeIngredientsInput = new JTextArea();
     JLabel cfgRecipeTextWorkLoad = new JLabel("Inserisci workload/person: ");
     JTextArea cfgRecipeWorkLoadInput = new JTextArea();
+    JLabel cfgRecipeTextOut = new JLabel("Elenco ricette: ");
+    JTextArea cfgRecipeAreaOut = new JTextArea();
     JButton cfgRecipeSendButton = new JButton("Conferma ricetta");
+
+    public void setRecipeList(String list) {
+        this.recipeList = list;
+        cfgRecipeAreaOut.setText(this.recipeList);
+    }
+
     //------------------------------------------------------------------------------------------
     //CONFIG_DISHES
     JLabel cfgDishTextTitle = new JLabel("Inserisci dati piatto");
@@ -100,10 +108,18 @@ public class SimpleUI extends JFrame {
     JLabel cfgDishTextOut = new JLabel("Elenco piatti inseriti: ");
     JLabel cfgDishTextRecipe = new JLabel("Seleziona ricetta: ");
     JLabel cfgDishTextDate = new JLabel("Inserisci data di inizio e fine: ");
+    JTextArea cfgDishAreaOut = new JTextArea();
     JButton cfgDishSendButton = new JButton("Conferma piatto");
 
     JRadioButton cfgDishPermanentRadio = new JRadioButton("Permanente");
     JTextArea cfgDishNameInput = new JTextArea();
+
+    String dishList;
+
+    public void setDishList(String list) {
+        this.dishList = list;
+        cfgDishAreaOut.setText(this.dishList);
+    }
 
     String[] recipeString = {};
 
@@ -114,13 +130,21 @@ public class SimpleUI extends JFrame {
 
     //------------------------------------------------------------------------------------------
     //CONFIG_MENUS
+    private String menuList;
     JLabel cfgMenuTextTitle = new JLabel("Inserisci dati menu");
     JLabel cfgMenuTextName = new JLabel("Inserisci nome: ");
     JLabel cfgMenuTextOut = new JLabel("Elenco menu inseriti: ");
+    JTextArea cfgMenuAreaOut = new JTextArea();
     JLabel cfgMenuTextDish = new JLabel("Seleziona od inserisci piatti: ");
     JLabel cfgMenuTextDate = new JLabel("Inserisci data di inizio e fine: ");
 
     JButton cfgMenuSendButton = new JButton("Conferma menu");
+
+    public void setMenuList (String list)
+    {
+        this.menuList = list;
+        cfgMenuAreaOut.setText(this.menuList);
+    }
 
     JRadioButton cfgMenuPermanentRadio = new JRadioButton("Permanente");
     JTextArea cfgMenuNameInput = new JTextArea();
@@ -345,13 +369,19 @@ public class SimpleUI extends JFrame {
         panel3.add(cfgRecipeTextWorkLoad, c);
         c.gridx = 1;
         c.gridy = 4;
-        panel3.add(cfgRecipeWorkLoadInput,c);
+        panel3.add(cfgRecipeWorkLoadInput, c);
         c.gridx = 0;
         c.gridy = 5;
-        panel3.add(buttonBack3,c);
-        c.gridx = 3;
+        panel3.add(cfgRecipeTextOut, c);
+        c.gridx = 1;
         c.gridy = 5;
-        panel3.add(cfgRecipeSendButton,c);
+        panel3.add(cfgRecipeAreaOut, c);
+        c.gridx = 0;
+        c.gridy = 6;
+        panel3.add(buttonBack3, c);
+        c.gridx = 3;
+        c.gridy = 6;
+        panel3.add(cfgRecipeSendButton, c);
         cfgRecipeSendButton.addActionListener(e -> ctrl.saveRecipe());
 
         //Dishes panel
@@ -381,13 +411,19 @@ public class SimpleUI extends JFrame {
         panel4.add(cfgDishEDateInput, c);
         c.gridx = 1;
         c.gridy = 3;
-        panel4.add(cfgDishPermanentRadio,c);
+        panel4.add(cfgDishPermanentRadio, c);
         c.gridx = 0;
         c.gridy = 4;
-        panel4.add(buttonBack4,c);
-        c.gridx = 3;
+        panel4.add(cfgDishTextOut, c);
+        c.gridx = 1;
         c.gridy = 4;
-        panel4.add(cfgDishSendButton,c);
+        panel4.add(cfgDishAreaOut, c);
+        c.gridx = 0;
+        c.gridy = 5;
+        panel4.add(buttonBack4, c);
+        c.gridx = 3;
+        c.gridy = 5;
+        panel4.add(cfgDishSendButton, c);
         cfgDishSendButton.addActionListener(e -> ctrl.saveDish());
 
         //Menu panel
