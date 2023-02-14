@@ -4,25 +4,6 @@ import java.awt.event.*;
 import java.text.ParseException;
 
 public class SimpleUI extends JFrame {
-    private GridBagConstraints c = new GridBagConstraints();
-    private GridBagConstraints titlePadding = new GridBagConstraints();
-    private GridBagConstraints endPadding = new GridBagConstraints();
-    public JPanel panel1 = new JPanel(new GridBagLayout());
-    public JPanel panel2 = new JPanel(new GridBagLayout());
-    public JPanel panel3 = new JPanel(new GridBagLayout());
-    public JPanel panel4 = new JPanel(new GridBagLayout());
-    public JPanel panel5 = new JPanel(new GridBagLayout());
-    public JPanel panel6 = new JPanel(new GridBagLayout());
-    public JPanel panel7 = new JPanel(new GridBagLayout());
-    JButton buttonBack1 = new JButton("Back");
-    JButton buttonBack2 = new JButton("Back");
-    JButton buttonBack3 = new JButton("Back");
-    JButton buttonBack4 = new JButton("Back");
-    JButton buttonBack5 = new JButton("Back");
-    JButton buttonBack6 = new JButton("Back");
-    JButton buttonBack7 = new JButton("Back");
-
-
     // Enum for the different states of the frame
     private enum State {
         LOGIN,
@@ -35,17 +16,37 @@ public class SimpleUI extends JFrame {
     private State state;
     private Controller ctrl;
 
-    JLabel label1 = new JLabel("Select your role:");
+
+    //GENERAL
     JButton managerButton = new JButton("Manager");
     JButton employeeButton = new JButton("Employee");
     JButton warehouseWorkerButton = new JButton("Warehouse Worker");
     JPanel loginPanel = new JPanel(new GridBagLayout());
-    JTabbedPane tabbedPane = new JTabbedPane();
+    JTabbedPane cfgTabbedPane = new JTabbedPane();
     JLabel titleText = new JLabel("Title");
-    JLabel titleSubText = new JLabel("Subtitle");
-    JButton titleLogButton = new JButton("Login");
+    private GridBagConstraints c = new GridBagConstraints();
+    private GridBagConstraints titlePadding = new GridBagConstraints();
+    private GridBagConstraints endPadding = new GridBagConstraints();
+    JPanel cfgBasePanel = new JPanel(new GridBagLayout());
+    JPanel cfgDrinksFoodsPanel = new JPanel(new GridBagLayout());
+    JPanel cfgRecipesPanel = new JPanel(new GridBagLayout());
+    JPanel cfgDishesPanel = new JPanel(new GridBagLayout());
+    JPanel cfgMenuPanel = new JPanel(new GridBagLayout());
+    JPanel cfgResPanel = new JPanel(new GridBagLayout());
+    JPanel cfgWriteClearPanel = new JPanel(new GridBagLayout());
+    JButton buttonBack1 = new JButton("Back");
+    JButton buttonBack2 = new JButton("Back");
+    JButton buttonBack3 = new JButton("Back");
+    JButton buttonBack4 = new JButton("Back");
+    JButton buttonBack5 = new JButton("Back");
+    JButton buttonBack6 = new JButton("Back");
+    JButton buttonBack7 = new JButton("Back");
+    JButton buttonBack8 = new JButton("Back");
+    JButton buttonBack9 = new JButton("Back");
+    JButton buttonBack10 = new JButton("Back");
+    JButton buttonBack11 = new JButton("Back");
 
-//------------------------------------------------------------------------------------------
+    //------------------------------------------------------------------------------------------
     //CONFIG_BASE
     JLabel cfgBaseText = new JLabel("Inserisci dati ristorante:");
     JLabel cfgBaseCapacityText = new JLabel("Posti a sedere:");
@@ -82,7 +83,6 @@ public class SimpleUI extends JFrame {
     JTextArea cfgFoodsAreaOut = new JTextArea(foodsList);
     //------------------------------------------------------------------------------------------
     //CONFIG_RECIPES
-    private String recipeList;
     JLabel cfgRecipeTextTitle = new JLabel("Inserisci dati ricetta");
     JLabel cfgRecipeTextName = new JLabel("Inserisci nome: ");
     JTextArea cfgRecipeNameInput = new JTextArea();
@@ -95,12 +95,11 @@ public class SimpleUI extends JFrame {
     JLabel cfgRecipeTextOut = new JLabel("Elenco ricette: ");
     JTextArea cfgRecipeAreaOut = new JTextArea();
     JButton cfgRecipeSendButton = new JButton("Conferma ricetta");
-
+    private String recipeList;//commento todo
     public void setRecipeList(String list) {
         this.recipeList = list;
         cfgRecipeAreaOut.setText(this.recipeList);
     }
-
     //------------------------------------------------------------------------------------------
     //CONFIG_DISHES
     JLabel cfgDishTextTitle = new JLabel("Inserisci dati piatto");
@@ -110,21 +109,15 @@ public class SimpleUI extends JFrame {
     JLabel cfgDishTextDate = new JLabel("Inserisci data di inizio e fine: ");
     JTextArea cfgDishAreaOut = new JTextArea();
     JButton cfgDishSendButton = new JButton("Conferma piatto");
-
     JRadioButton cfgDishPermanentRadio = new JRadioButton("Permanente");
     JTextArea cfgDishNameInput = new JTextArea();
-
     String dishList;
-
     public void setDishList(String list) {
         this.dishList = list;
         cfgDishAreaOut.setText(this.dishList);
     }
-
     String[] recipeString = {};
-
     JComboBox<String> cfgDishComboBox = new JComboBox<>(recipeString);
-
     JTextArea cfgDishSDateInput = new JTextArea();
     JTextArea cfgDishEDateInput = new JTextArea();
 
@@ -137,15 +130,11 @@ public class SimpleUI extends JFrame {
     JTextArea cfgMenuAreaOut = new JTextArea();
     JLabel cfgMenuTextDish = new JLabel("Seleziona od inserisci piatti: ");
     JLabel cfgMenuTextDate = new JLabel("Inserisci data di inizio e fine: ");
-
     JButton cfgMenuSendButton = new JButton("Conferma menu");
-
-    public void setMenuList (String list)
-    {
+    public void setMenuList(String list) {
         this.menuList = list;
         cfgMenuAreaOut.setText(this.menuList);
     }
-
     JRadioButton cfgMenuPermanentRadio = new JRadioButton("Permanente");
     JTextArea cfgMenuNameInput = new JTextArea();
     JTextArea cfgMenuDishesInput = new JTextArea();
@@ -156,7 +145,6 @@ public class SimpleUI extends JFrame {
 
     //------------------------------------------------------------------------------------------
     //CONFIG_RESOCONTO
-
     JLabel cfgResText = new JLabel("Reseconto:");
     JLabel cfgResBaseText = new JLabel("Dati ristorante:");
     JLabel cfgResDrinksText = new JLabel("Dati bevande:");
@@ -171,7 +159,6 @@ public class SimpleUI extends JFrame {
     JTextArea cfgResDishesOut = new JTextArea();
     JTextArea cfgResMenuOut = new JTextArea();
 
-
     //------------------------------------------------------------------------------------------
     //CONFIG_WRITING AND CLEAR
     JButton cfgBaseClearButton = new JButton("Clear Cap&IndWork");
@@ -181,10 +168,28 @@ public class SimpleUI extends JFrame {
     JButton cfgDishClearButton = new JButton("Clear Dishes");
     JButton cfgMenuClearButton = new JButton("Clear Menus");
     JButton cfgWriteButton = new JButton("Salva ed esci");
+//------------------------------------------------------------------------------------------
+//============================================================================================
+//============================================================================================
+    //EMPLOYEE
+    //EMPLOYEE GENERAL
+    JTabbedPane empTabbedPane = new JTabbedPane();
+    public JPanel empSeeBookingsPanel = new JPanel(new GridBagLayout());
+    public JPanel empNewBookingPanel = new JPanel(new GridBagLayout());
+    public JPanel empStatsPanel = new JPanel(new GridBagLayout());
+    public JPanel empExtra = new JPanel(new GridBagLayout());
+//-------------------------------------------------------------------------------------------
+    //EMPLOY SEE BOOKINGS
+    JLabel empSeeBookText = new JLabel("Prenotazioni:");
+    JTextArea empSeeBookDateInput = new JTextArea();
+    JTextArea empSeeBookAreaOut = new JTextArea();
+    JButton empSeeBookSend = new JButton("Vedi prenotazioni");
 
-    //------------------------------------------------------------------------------------------
-
-
+//-------------------------------------------------------------------------------------------
+    //EMPLOY NEW BOOKING
+    JLabel empNewBookText = new JLabel("Prenotazioni:");
+    JTextArea empNewBookInput = new JTextArea();
+//-------------------------------------------------------------------------------------------
     public SimpleUI(Controller ctrl) {
         this.ctrl = ctrl;
         // Set up the UI components
@@ -195,8 +200,58 @@ public class SimpleUI extends JFrame {
         setLayout(new BorderLayout());
     }
 
-    public void init() {
+    ActionListener back = e -> {
+        state = State.LOGIN;
+        updateUI();
+    };
 
+    public void init() {
+        logInit();
+        cfgInit();
+        empInit();
+        c.insets = new Insets(5, 5, 5, 5); // Top, left, bottom, right padding
+        titlePadding.insets = new Insets(0, 5, 20, 5);
+        endPadding.insets = new Insets(20, 5, 0, 5);
+        c.fill = GridBagConstraints.HORIZONTAL;
+        endPadding.fill = GridBagConstraints.HORIZONTAL;
+        // Set the initial state
+        state = State.LOGIN;
+        updateUI();
+    }
+
+    private void logInit() {
+        // Add the UI components to the login panel
+        c.gridx = 0;
+        c.gridy = 0;
+        loginPanel.add(titleText, c);
+
+        c.gridx = 0;
+        c.gridy = 1;
+        loginPanel.add(managerButton, c);
+
+        c.gridx = 1;
+        c.gridy = 1;
+        loginPanel.add(employeeButton, c);
+
+        c.gridx = 2;
+        c.gridy = 1;
+        loginPanel.add(warehouseWorkerButton, c);
+
+        managerButton.addActionListener(e -> {
+            state = State.MANAGER;
+            updateUI();
+        });
+        employeeButton.addActionListener(e -> {
+            state = State.EMPLOYEE;
+            updateUI();
+        });
+        warehouseWorkerButton.addActionListener(e -> {
+            state = State.WAREHOUSE_WORKER;
+            updateUI();
+        });
+    }
+
+    private void cfgInit() {
         cfgBaseInputCap.setLineWrap(true);
         cfgBaseInputIndWork.setLineWrap(true);
         cfgDrinksInput.setLineWrap(true);
@@ -249,226 +304,198 @@ public class SimpleUI extends JFrame {
             cfgMenuDishesInput.setText(cfgMenuDishesInput.getText() + selectedItem + "\n");
         });
 
-        // Set the initial state
-        state = State.LOGIN;
-
-        // Set up the constraints for the GridBagLayout
-
-        c.insets = new Insets(5, 5, 5, 5); // Top, left, bottom, right padding
-        titlePadding.insets = new Insets(0, 5, 20, 5);
-        endPadding.insets = new Insets(20, 5, 0, 5);
-        c.fill = GridBagConstraints.HORIZONTAL;
-        endPadding.fill = GridBagConstraints.HORIZONTAL;
-
-        // Add the UI components to the login panel
-        c.gridx = 0;
-        c.gridy = 0;
-        loginPanel.add(titleText, c);
-
-        c.gridx = 0;
-        c.gridy = 1;
-        loginPanel.add(managerButton, c);
-
-        c.gridx = 1;
-        c.gridy = 1;
-        loginPanel.add(employeeButton, c);
-
-        c.gridx = 2;
-        c.gridy = 1;
-        loginPanel.add(warehouseWorkerButton, c);
-
         // general config manager
 
         c.gridx = 0;
         c.gridy = 0;
-        panel1.add(cfgBaseText, titlePadding);
+        cfgBasePanel.add(cfgBaseText, titlePadding);
         c.gridx = 0;
         c.gridy = 1;
-        panel1.add(cfgBaseCapacityText, c);
+        cfgBasePanel.add(cfgBaseCapacityText, c);
         c.gridx = 1;
         c.gridy = 1;
-        panel1.add(cfgBaseInputCap, c);
+        cfgBasePanel.add(cfgBaseInputCap, c);
         c.gridx = 0;
         c.gridy = 2;
-        panel1.add(cfgBaseIndiviualWorkloadAreaText, c);
+        cfgBasePanel.add(cfgBaseIndiviualWorkloadAreaText, c);
         c.gridx = 1;
         c.gridy = 2;
-        panel1.add(cfgBaseInputIndWork, c);
+        cfgBasePanel.add(cfgBaseInputIndWork, c);
         c.gridx = 0;
         c.gridy = 3;
-        panel1.add(buttonBack1, c);
+        cfgBasePanel.add(buttonBack1, c);
         c.gridx = 1;
         c.gridy = 3;
         cfgBaseSendButton.addActionListener(e -> ctrl.saveConfig());
-        panel1.add(cfgBaseSendButton, c);
+        cfgBasePanel.add(cfgBaseSendButton, c);
 
         // Drinks & Food
 
         c.gridx = 0;
         c.gridy = 0;
-        panel2.add(cfgDrinksText, c);
+        cfgDrinksFoodsPanel.add(cfgDrinksText, c);
         c.gridx = 1;
         c.gridy = 0;
-        panel2.add(cfgDrinksInput, c);
+        cfgDrinksFoodsPanel.add(cfgDrinksInput, c);
         c.gridx = 2;
         c.gridy = 0;
         cfgDrinksSendButton.addActionListener(e -> ctrl.saveDrinks());
-        panel2.add(cfgDrinksSendButton, c);
+        cfgDrinksFoodsPanel.add(cfgDrinksSendButton, c);
         c.gridx = 0;
         c.gridy = 1;
-        panel2.add(cfgFoodText, c);
+        cfgDrinksFoodsPanel.add(cfgFoodText, c);
         c.gridx = 1;
         c.gridy = 1;
-        panel2.add(cfgFoodsInput, c);
+        cfgDrinksFoodsPanel.add(cfgFoodsInput, c);
         c.gridx = 2;
         c.gridy = 1;
         cfgFoodSendButton.addActionListener(e -> ctrl.saveFoods());
-        panel2.add(cfgFoodSendButton, c);
+        cfgDrinksFoodsPanel.add(cfgFoodSendButton, c);
         c.gridx = 0;
         c.gridy = 2;
-        panel2.add(cfgDrinksTextOut, c);
+        cfgDrinksFoodsPanel.add(cfgDrinksTextOut, c);
         cfgDrinksAreaOut.setMaximumSize(new Dimension(20, 100));
         c.gridx = 1;
         c.gridy = 2;
-        panel2.add(cfgDrinksAreaOut, c);
+        cfgDrinksFoodsPanel.add(cfgDrinksAreaOut, c);
         c.gridx = 0;
         c.gridy = 3;
-        panel2.add(cfgFoodsTextOut, c);
+        cfgDrinksFoodsPanel.add(cfgFoodsTextOut, c);
         cfgFoodsAreaOut.setMaximumSize(new Dimension(20, 100));
         c.gridx = 1;
         c.gridy = 3;
-        panel2.add(cfgFoodsAreaOut, c);
+        cfgDrinksFoodsPanel.add(cfgFoodsAreaOut, c);
         c.gridx = 0;
         c.gridy = 4;
-        panel2.add(buttonBack2, c);
+        cfgDrinksFoodsPanel.add(buttonBack2, c);
 
         //Recipes panel
         c.gridx = 0;
         c.gridy = 0;
-        panel3.add(cfgRecipeTextTitle, titlePadding);
+        cfgRecipesPanel.add(cfgRecipeTextTitle, titlePadding);
         c.gridx = 0;
         c.gridy = 1;
-        panel3.add(cfgRecipeTextName, c);
+        cfgRecipesPanel.add(cfgRecipeTextName, c);
         c.gridx = 1;
         c.gridy = 1;
-        panel3.add(cfgRecipeNameInput, c);
+        cfgRecipesPanel.add(cfgRecipeNameInput, c);
         c.gridx = 0;
         c.gridy = 2;
-        panel3.add(cfgRecipeTextIngredients, c);
+        cfgRecipesPanel.add(cfgRecipeTextIngredients, c);
         c.gridx = 1;
         c.gridy = 2;
-        panel3.add(cfgRecipeIngredientsInput, c);
+        cfgRecipesPanel.add(cfgRecipeIngredientsInput, c);
         c.gridx = 0;
         c.gridy = 3;
-        panel3.add(cfgRecipeTextPortions, c);
+        cfgRecipesPanel.add(cfgRecipeTextPortions, c);
         c.gridx = 1;
         c.gridy = 3;
-        panel3.add(cfgRecipePortionsInput, c);
+        cfgRecipesPanel.add(cfgRecipePortionsInput, c);
         c.gridx = 0;
         c.gridy = 4;
-        panel3.add(cfgRecipeTextWorkLoad, c);
+        cfgRecipesPanel.add(cfgRecipeTextWorkLoad, c);
         c.gridx = 1;
         c.gridy = 4;
-        panel3.add(cfgRecipeWorkLoadInput, c);
+        cfgRecipesPanel.add(cfgRecipeWorkLoadInput, c);
         c.gridx = 0;
         c.gridy = 5;
-        panel3.add(cfgRecipeTextOut, c);
+        cfgRecipesPanel.add(cfgRecipeTextOut, c);
         c.gridx = 1;
         c.gridy = 5;
-        panel3.add(cfgRecipeAreaOut, c);
+        cfgRecipesPanel.add(cfgRecipeAreaOut, c);
         c.gridx = 0;
         c.gridy = 6;
-        panel3.add(buttonBack3, c);
+        cfgRecipesPanel.add(buttonBack3, c);
         c.gridx = 3;
         c.gridy = 6;
-        panel3.add(cfgRecipeSendButton, c);
+        cfgRecipesPanel.add(cfgRecipeSendButton, c);
         cfgRecipeSendButton.addActionListener(e -> ctrl.saveRecipe());
 
         //Dishes panel
         c.gridx = 0;
         c.gridy = 0;
-        panel4.add(cfgDishTextTitle, titlePadding);
+        cfgDishesPanel.add(cfgDishTextTitle, titlePadding);
         c.gridx = 0;
         c.gridy = 1;
-        panel4.add(cfgDishTextName, c);
+        cfgDishesPanel.add(cfgDishTextName, c);
         c.gridx = 1;
         c.gridy = 1;
-        panel4.add(cfgDishNameInput, c);
+        cfgDishesPanel.add(cfgDishNameInput, c);
         c.gridx = 0;
         c.gridy = 2;
-        panel4.add(cfgDishTextRecipe, c);
+        cfgDishesPanel.add(cfgDishTextRecipe, c);
         c.gridx = 1;
         c.gridy = 2;
-        panel4.add(cfgDishComboBox, c);
+        cfgDishesPanel.add(cfgDishComboBox, c);
         c.gridx = 0;
         c.gridy = 3;
-        panel4.add(cfgDishTextDate, c);
+        cfgDishesPanel.add(cfgDishTextDate, c);
         c.gridx = 2;
         c.gridy = 3;
-        panel4.add(cfgDishSDateInput, c);
+        cfgDishesPanel.add(cfgDishSDateInput, c);
         c.gridx = 3;
         c.gridy = 3;
-        panel4.add(cfgDishEDateInput, c);
+        cfgDishesPanel.add(cfgDishEDateInput, c);
         c.gridx = 1;
         c.gridy = 3;
-        panel4.add(cfgDishPermanentRadio, c);
+        cfgDishesPanel.add(cfgDishPermanentRadio, c);
         c.gridx = 0;
         c.gridy = 4;
-        panel4.add(cfgDishTextOut, c);
+        cfgDishesPanel.add(cfgDishTextOut, c);
         c.gridx = 1;
         c.gridy = 4;
-        panel4.add(cfgDishAreaOut, c);
+        cfgDishesPanel.add(cfgDishAreaOut, c);
         c.gridx = 0;
         c.gridy = 5;
-        panel4.add(buttonBack4, c);
+        cfgDishesPanel.add(buttonBack4, c);
         c.gridx = 3;
         c.gridy = 5;
-        panel4.add(cfgDishSendButton, c);
+        cfgDishesPanel.add(cfgDishSendButton, c);
         cfgDishSendButton.addActionListener(e -> ctrl.saveDish());
 
         //Menu panel
         c.gridx = 0;
         c.gridy = 0;
-        panel5.add(cfgMenuTextTitle, titlePadding);
+        cfgMenuPanel.add(cfgMenuTextTitle, titlePadding);
         c.gridx = 0;
         c.gridy = 1;
-        panel5.add(cfgMenuTextName, c);
+        cfgMenuPanel.add(cfgMenuTextName, c);
         c.gridx = 1;
         c.gridy = 1;
-        panel5.add(cfgMenuNameInput, c);
+        cfgMenuPanel.add(cfgMenuNameInput, c);
         c.gridx = 0;
         c.gridy = 2;
-        panel5.add(cfgMenuTextDish, c);
+        cfgMenuPanel.add(cfgMenuTextDish, c);
         c.gridx = 1;
         c.gridy = 2;
-        panel5.add(cfgMenuComboBox, c);
+        cfgMenuPanel.add(cfgMenuComboBox, c);
         c.gridx = 2;
         c.gridy = 2;
-        panel5.add(cfgMenuDishesInput, c);
+        cfgMenuPanel.add(cfgMenuDishesInput, c);
         c.gridx = 0;
         c.gridy = 3;
-        panel5.add(cfgMenuTextDate, c);
+        cfgMenuPanel.add(cfgMenuTextDate, c);
         c.gridx = 1;
         c.gridy = 3;
-        panel5.add(cfgMenuPermanentRadio, c);
+        cfgMenuPanel.add(cfgMenuPermanentRadio, c);
         c.gridx = 2;
         c.gridy = 3;
-        panel5.add(cfgMenuSDateInput, c);
+        cfgMenuPanel.add(cfgMenuSDateInput, c);
         c.gridx = 3;
         c.gridy = 3;
-        panel5.add(cfgMenuEDateInput, c);
+        cfgMenuPanel.add(cfgMenuEDateInput, c);
         c.gridx = 0;
         c.gridy = 4;
-        panel5.add(cfgMenuTextOut, c);
+        cfgMenuPanel.add(cfgMenuTextOut, c);
         c.gridx = 1;
         c.gridy = 4;
-        panel5.add(cfgMenuAreaOut, c);
+        cfgMenuPanel.add(cfgMenuAreaOut, c);
         c.gridx = 0;
         c.gridy = 5;
-        panel5.add(buttonBack5, c);
+        cfgMenuPanel.add(buttonBack5, c);
         c.gridx = 3;
         c.gridy = 5;
-        panel5.add(cfgMenuSendButton, c);
+        cfgMenuPanel.add(cfgMenuSendButton, c);
         cfgMenuSendButton.addActionListener(e -> {
             try {
                 ctrl.saveMenu();
@@ -480,94 +507,89 @@ public class SimpleUI extends JFrame {
         //Resconto tab
         c.gridx = 0;
         c.gridy = 0;
-        panel6.add(cfgResText, titlePadding);
+        cfgResPanel.add(cfgResText, titlePadding);
         c.gridx = 0;
         c.gridy = 1;
-        panel6.add(cfgResBaseText, c);
+        cfgResPanel.add(cfgResBaseText, c);
         c.gridx = 1;
         c.gridy = 1;
-        panel6.add(cfgResBaseOut, c);
+        cfgResPanel.add(cfgResBaseOut, c);
 
         c.gridx = 0;
         c.gridy = 2;
-        panel6.add(cfgResDrinksText, c);
+        cfgResPanel.add(cfgResDrinksText, c);
         c.gridx = 1;
         c.gridy = 2;
-        panel6.add(cfgResDrinksOut, c);
+        cfgResPanel.add(cfgResDrinksOut, c);
 
         c.gridx = 0;
         c.gridy = 3;
-        panel6.add(cfgResFoodsText, c);
+        cfgResPanel.add(cfgResFoodsText, c);
         c.gridx = 1;
         c.gridy = 3;
-        panel6.add(cfgResFoodsOut, c);
+        cfgResPanel.add(cfgResFoodsOut, c);
 
         c.gridx = 0;
         c.gridy = 4;
-        panel6.add(cfgResRecipesText, c);
+        cfgResPanel.add(cfgResRecipesText, c);
         c.gridx = 1;
         c.gridy = 4;
-        panel6.add(cfgResRecipesOut, c);
+        cfgResPanel.add(cfgResRecipesOut, c);
 
         c.gridx = 0;
         c.gridy = 5;
-        panel6.add(cfgResDishesText, c);
+        cfgResPanel.add(cfgResDishesText, c);
         c.gridx = 1;
         c.gridy = 5;
-        panel6.add(cfgResDishesOut, c);
+        cfgResPanel.add(cfgResDishesOut, c);
 
         c.gridx = 0;
         c.gridy = 6;
-        panel6.add(cfgResMenuText, c);
+        cfgResPanel.add(cfgResMenuText, c);
         c.gridx = 1;
         c.gridy = 6;
-        panel6.add(cfgResMenuOut, c);
+        cfgResPanel.add(cfgResMenuOut, c);
 
         c.gridx = 6;
         c.gridy = 7;
-        panel6.add(buttonBack6, c);
+        cfgResPanel.add(buttonBack6, c);
 
 
         // Write and Save
         c.gridx = 0;
         c.gridy = 0;
-        panel7.add(cfgBaseClearButton, c);
+        cfgWriteClearPanel.add(cfgBaseClearButton, c);
         c.gridx = 0;
         c.gridy = 1;
-        panel7.add(cfgDrinksClearButton, c);
+        cfgWriteClearPanel.add(cfgDrinksClearButton, c);
         c.gridx = 0;
         c.gridy = 2;
-        panel7.add(cfgFoodClearButton, c);
+        cfgWriteClearPanel.add(cfgFoodClearButton, c);
         c.gridx = 1;
         c.gridy = 0;
-        panel7.add(cfgRecipeClearButton, c);
+        cfgWriteClearPanel.add(cfgRecipeClearButton, c);
         c.gridx = 1;
         c.gridy = 1;
-        panel7.add(cfgDishClearButton, c);
+        cfgWriteClearPanel.add(cfgDishClearButton, c);
         c.gridx = 1;
         c.gridy = 2;
-        panel7.add(cfgMenuClearButton, c);
+        cfgWriteClearPanel.add(cfgMenuClearButton, c);
         endPadding.gridx = 1;
         endPadding.gridy = 3;
-        panel7.add(cfgWriteButton, endPadding);
+        cfgWriteClearPanel.add(cfgWriteButton, endPadding);
         endPadding.gridx = 0;
         endPadding.gridy = 3;
-        panel7.add(buttonBack7, endPadding);
+        cfgWriteClearPanel.add(buttonBack7, endPadding);
 
         // Add the panels to the tabbed pane
-        tabbedPane.addTab("Specifiche", panel1);
-        tabbedPane.addTab("Drinks&Foods", panel2);
-        tabbedPane.addTab("Recipes", panel3);
-        tabbedPane.addTab("Dishes", panel4);
-        tabbedPane.addTab("Menus", panel5);
-        tabbedPane.addTab("Resoconto", panel6);
-        tabbedPane.addTab("Write&Save", panel7);
+        cfgTabbedPane.addTab("Specifiche", cfgBasePanel);
+        cfgTabbedPane.addTab("Drinks&Foods", cfgDrinksFoodsPanel);
+        cfgTabbedPane.addTab("Recipes", cfgRecipesPanel);
+        cfgTabbedPane.addTab("Dishes", cfgDishesPanel);
+        cfgTabbedPane.addTab("Menus", cfgMenuPanel);
+        cfgTabbedPane.addTab("Resoconto", cfgResPanel);
+        cfgTabbedPane.addTab("Write&Save", cfgWriteClearPanel);
 
-
-        ActionListener back = e -> {
-            state = State.LOGIN;
-            updateUI();
-        };
         //listener back button
         buttonBack1.addActionListener(back);
         buttonBack2.addActionListener(back);
@@ -576,21 +598,51 @@ public class SimpleUI extends JFrame {
         buttonBack5.addActionListener(back);
         buttonBack6.addActionListener(back);
         buttonBack7.addActionListener(back);
-        managerButton.addActionListener(e -> {
-            state = State.MANAGER;
-            updateUI();
-        });
-        employeeButton.addActionListener(e -> {
-            state = State.EMPLOYEE;
-            updateUI();
-        });
-        warehouseWorkerButton.addActionListener(e -> {
-            state = State.WAREHOUSE_WORKER;
-            updateUI();
+    }
+
+    private void empInit() {
+        c.gridx = 0;
+        c.gridy = 0;
+        empSeeBookingsPanel.add(empSeeBookText);
+        c.gridx = 1;
+        c.gridy = 0;
+        empSeeBookingsPanel.add(empSeeBookDateInput);
+        c.gridx = 0;
+        c.gridy = 2;
+        empSeeBookingsPanel.add(empSeeBookAreaOut);
+        c.gridx = 0;
+        c.gridy = 3;
+        empSeeBookingsPanel.add(buttonBack8);
+        c.gridx = 1;
+        c.gridy = 3;
+        empSeeBookingsPanel.add(empSeeBookSend);
+
+        c.gridx = 0;
+        c.gridy = 0;
+        empNewBookingPanel.add(empNewBookText);
+        c.gridx = 0;
+        c.gridy = 1;
+        empNewBookingPanel.add(empNewBookInput);
+
+        buttonBack8.addActionListener(back);
+        buttonBack9.addActionListener(back);
+        buttonBack10.addActionListener(back);
+        buttonBack11.addActionListener(back);
+
+
+        empSeeBookSend.addActionListener(e->{
+            String s = empSeeBookDateInput.getText().trim();
+            if(Controller.checkDate(s)) {
+                try {
+                    ctrl.seeBookings(ctrl.inputToDate(s));
+                } catch (ParseException ex) {
+                   errorSetter("invalidDate");
+                }
+            };
         });
 
-        // Set up the initial UI
-        updateUI();
+        empTabbedPane.add("Bookings", empSeeBookingsPanel);
+        empTabbedPane.add("New Bookings", empSeeBookingsPanel);
     }
 
     // Method to update the UI based on the current state
@@ -602,11 +654,11 @@ public class SimpleUI extends JFrame {
         if (state == State.LOGIN) {
             getContentPane().add(loginPanel);
         } else if (state == State.MANAGER) {
-            getContentPane().add(tabbedPane);
+            getContentPane().add(cfgTabbedPane);
         } else if (state == State.EMPLOYEE) {
-            // Add the components for the employee state
+            getContentPane().add(empTabbedPane);
         } else if (state == State.WAREHOUSE_WORKER) {
-            // Add the components for the warehouse worker state
+            // todo Add the components for the warehouse worker state
         }
 
         // Refresh the frame
@@ -638,6 +690,18 @@ public class SimpleUI extends JFrame {
                 break;
             case "invalidDate":
                 JOptionPane.showMessageDialog(getContentPane(), "Date non valide",
+                        "Err", JOptionPane.ERROR_MESSAGE);
+                break;
+            case "fullRestaurant":
+                JOptionPane.showMessageDialog(getContentPane(), "Ristorante pieno o troppo carico",
+                        "Err", JOptionPane.ERROR_MESSAGE);
+                break;
+            case "thiccMenu":
+                JOptionPane.showMessageDialog(getContentPane(), "Il menù è troppo impegnativo, riduci il suo carico",
+                        "Err", JOptionPane.ERROR_MESSAGE);
+                break;
+            case "nameSameAsDish":
+                JOptionPane.showMessageDialog(getContentPane(), "Il menù è troppo impegnativo, riduci il suo carico",
                         "Err", JOptionPane.ERROR_MESSAGE);
                 break;
         }

@@ -243,7 +243,7 @@ public class Reader
         try
         {
             xmlif = XMLInputFactory.newInstance();
-            xmlr = xmlif.createXMLStreamReader(new FileInputStream(Writer.ROOT + Writer.MENU_NAME_FILE));
+            xmlr = xmlif.createXMLStreamReader(new FileInputStream(Writer.ROOT + Writer.MENUS_NAME_FILE));
             String name="",startPeriod="",endPeriod="";
             ArrayList <String> dishes = new ArrayList<>();
             while (xmlr.hasNext())
@@ -274,7 +274,7 @@ public class Reader
         }
         catch (Exception e)
         {
-            System.out.println(ERRORE + Writer.MENU_NAME_FILE);
+            System.out.println(ERRORE + Writer.MENUS_NAME_FILE);
             System.out.println(e.getMessage());
         }
         return menu;

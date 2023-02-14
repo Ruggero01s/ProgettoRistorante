@@ -310,7 +310,19 @@ public class Controller
 			sui.errorSetter("noDish");
 		else
 		{
-			model.getThematicMenusSet().add(new ThematicMenu(inputName, inputStartDate, inputEndDate, dishesForMenu));
+			ThematicMenu temp = new ThematicMenu(inputName, inputStartDate, inputEndDate, dishesForMenu);
+			if(temp.getWorkThematicMenuLoad()<=((double)model.getWorkPersonLoad()*4/3)) {
+				boolean valid = true;
+				for (String s : sui.dishString) {
+					if (s.equals(temp.getName())) {
+						valid = false;
+						break;
+					}
+				}
+				if (valid)
+					model.getThematicMenusSet().add(temp);
+				else sui.errorSetter("sameNameAsDish");
+			}else sui.errorSetter("thiccMenu");;
 			updateMenuOut();
 		}
 	}

@@ -5,7 +5,7 @@ public class Model {
     static final double INCREASE20 = 1.20;
 
     private int capacity=0, workPersonLoad=0;
-    private double workResturantLoad;
+    private double workloadRestaurant;
     private HashMap<String, Double> drinksMap = new HashMap<>();
     private HashMap<String, Double> extraFoodsMap = new HashMap<>();
     private Set<Dish> dishesSet = new HashSet<>();
@@ -22,12 +22,24 @@ public class Model {
         updateWorkResturantLoad();
     }
 
+    public void setWorkloadRestaurant(double workloadRestaurant) {
+        this.workloadRestaurant = workloadRestaurant;
+    }
+
+    public HashMap<Date, ArrayList<Booking>> getBookingMap() {
+        return bookingMap;
+    }
+
+    public void setBookingMap(HashMap<Date, ArrayList<Booking>> bookingMap) {
+        this.bookingMap = bookingMap;
+    }
+
     public void updateWorkResturantLoad() {
-        this.workResturantLoad = this.capacity * this.workPersonLoad * INCREASE20;
+        this.workloadRestaurant = this.capacity * this.workPersonLoad * INCREASE20;
     }
 
     public double getWorkResturantLoad() {
-        return workResturantLoad;
+        return workloadRestaurant;
     }
 
     public int getCapacity() {

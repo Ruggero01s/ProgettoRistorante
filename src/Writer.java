@@ -240,7 +240,7 @@ public class Writer
 		try
 		{
 			xmlof = XMLOutputFactory.newInstance();
-			xmlw = xmlof.createXMLStreamWriter(new FileOutputStream(ROOT + MENU_NAME_FILE), "utf-8");
+			xmlw = xmlof.createXMLStreamWriter(new FileOutputStream(ROOT + MENUS_NAME_FILE), "utf-8");
 			xmlw.writeStartDocument("utf-8", "1.0");
 			xmlw.writeCharacters("\n");
 			xmlw.writeStartElement("menus"); // scrittura del tag radice <menus>

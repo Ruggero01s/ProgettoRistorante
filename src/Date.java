@@ -14,7 +14,6 @@ public class Date
 	
 	public String getStringDate()
 	{
-		
 		SimpleDateFormat format = new SimpleDateFormat("dd/MM/yyyy");
 		java.util.Date dateFormat = new java.util.Date();
 		dateFormat.setTime(this.date.getTimeInMillis());
