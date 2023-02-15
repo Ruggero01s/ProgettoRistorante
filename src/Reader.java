@@ -10,7 +10,13 @@ public class Reader
 {
     private static final String ERRORE = "\nErrore in Input: ";
 
-    public static ArrayList<Person> readPeople()
+    Controller ctrl;
+
+    public Reader (Controller ctrl)
+    {
+        this.ctrl=ctrl;
+    }
+    public ArrayList<Person> readPeople()
     {
         XMLInputFactory xmlif = null;
         XMLStreamReader xmlr = null;
@@ -52,7 +58,7 @@ public class Reader
         return listP;
     }
 
-    public static void readConfig(Model model)
+    public void readConfig(Model model)
     {
         XMLInputFactory xmlif = null;
         XMLStreamReader xmlr = null;
@@ -81,7 +87,7 @@ public class Reader
         }
     }
 
-    public static HashMap<String,Double> readDrinks()
+    public HashMap<String,Double> readDrinks()
     {
         XMLInputFactory xmlif = null;
         XMLStreamReader xmlr = null;
@@ -108,7 +114,7 @@ public class Reader
         return drinks;
     }
 
-    public static HashMap<String,Double> readExtraFoods()
+    public HashMap<String,Double> readExtraFoods()
     {
         XMLInputFactory xmlif = null;
         XMLStreamReader xmlr = null;
@@ -135,7 +141,7 @@ public class Reader
         return foods;
     }
 
-    public static HashSet <Recipe> readRecipes()
+    public HashSet <Recipe> readRecipes()
     {
         XMLInputFactory xmlif = null;
         XMLStreamReader xmlr = null;
@@ -186,7 +192,7 @@ public class Reader
         return recipes;
     }
 
-    public static HashSet <Dish> readDishes()
+    public HashSet <Dish> readDishes()
     {
         XMLInputFactory xmlif = null;
         XMLStreamReader xmlr = null;
@@ -221,7 +227,7 @@ public class Reader
                     if(xmlr.getLocalName().equals("dish"))
                     {
                         dishes.add(new Dish(name,
-                                Controller.stringToRecipe(id),startPeriod,endPeriod));
+                                ctrl.stringToRecipe(id),startPeriod,endPeriod));
                     }
 
                 xmlr.next();
@@ -235,7 +241,7 @@ public class Reader
         return dishes;
     }
 
-    public static HashSet <ThematicMenu> readThematicMenu()
+    public HashSet <ThematicMenu> readThematicMenu()
     {
         XMLInputFactory xmlif = null;
         XMLStreamReader xmlr = null;
@@ -267,7 +273,7 @@ public class Reader
                 if (xmlr.getEventType() == XMLStreamConstants.END_ELEMENT)
                     if(xmlr.getLocalName().equals("menu"))
                     {
-                        menu.add(new ThematicMenu(name,startPeriod,endPeriod, Controller.stringListToDishList(dishes)));
+                        menu.add(new ThematicMenu(name,startPeriod,endPeriod, ctrl.stringListToDishList(dishes)));
                         dishes.clear();
                     }
                 xmlr.next();
@@ -281,7 +287,7 @@ public class Reader
         return menu;
     }
 
-    public static HashMap <DateOur,ArrayList<Booking>> readBooking()
+    public HashMap <DateOur,ArrayList<Booking>> readBooking()
     {
         XMLInputFactory xmlif = null;
         XMLStreamReader xmlr = null;
@@ -327,7 +333,7 @@ public class Reader
                             book.clear();
                             break;
                         case "book":
-                            book.add(new Booking(name,number,workload,Controller.dishToMap(order)));
+                            book.add(new Booking(name,number,workload,ctrl.dishToMap(order)));
                             order.clear();
                             break;
                     }

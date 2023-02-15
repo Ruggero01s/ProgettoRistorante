@@ -536,9 +536,10 @@ public class Controller
 		}
 	}
 
+	ArrayList <Booking> day= new ArrayList<>();
 	public boolean manageBooking(String name, DateOur date, int number, int workload, HashMap<Dish,Integer> order)
 	{
-		ArrayList <Booking> day= new ArrayList<>();
+
 		if (!model.getBookingMap().containsKey(date))
 		{
 			day.add(new Booking(name, number, workload, order));
