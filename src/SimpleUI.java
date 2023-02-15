@@ -745,6 +745,8 @@ public class SimpleUI extends JFrame {
             }
         });
 
+        //todo sistemare visione prenotzioni
+
         empNewBookMenuBox.addActionListener(e ->
         {
             String selectedItem = (String) empNewBookMenuBox.getSelectedItem();
@@ -759,7 +761,7 @@ public class SimpleUI extends JFrame {
            ctrl.writeBookings();
         });
 
-        empSeeBookWrite.addActionListener(e -> {
+        empSeeBookClear.addActionListener(e -> {
             ctrl.clearInfo("bookings");
         });
 

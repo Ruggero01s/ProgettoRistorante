@@ -7,28 +7,30 @@ import java.util.Map;
 
 public class Controller
 {
-	static Model model = new Model();
+	Model model = new Model();
 	SimpleUI sui = new SimpleUI(this);
+	Reader reader = new Reader(this);
 	
 	public void init()
 	{
 		sui.init();
+
 		loadModel();
 	}
 
 	private void loadModel()
 	{
-		Reader.readConfig(model);
-		model.setDrinksMap(Reader.readDrinks());
-		model.setExtraFoodsMap(Reader.readExtraFoods());
-		model.setRecipesSet(Reader.readRecipes());
-		model.setDishesSet(Reader.readDishes());
+		reader.readConfig(model);
+		model.setDrinksMap(reader.readDrinks());
+		model.setExtraFoodsMap(reader.readExtraFoods());
+		model.setRecipesSet(reader.readRecipes());
+		model.setDishesSet(reader.readDishes());
 		for (Dish d: model.getDishesSet())
 		{
 			model.getRecipesSet().add(d.getRecipe());
 		}
-		model.setThematicMenusSet(Reader.readThematicMenu());
-		model.setBookingMap(Reader.readBooking());
+		model.setThematicMenusSet(reader.readThematicMenu());
+		model.setBookingMap(reader.readBooking());
 		updateRecipeStringList();
 		updateDishStringList();
 		updateDrinkList();
@@ -339,7 +341,7 @@ public class Controller
 		return false;
 	}
 
-	public static ArrayList<Dish> stringListToDishList(ArrayList<String> list ) {
+	public ArrayList<Dish> stringListToDishList(ArrayList<String> list ) {
 		ArrayList<Dish> dishes = new ArrayList<>();
 		for (String s: list) {
 			for (Dish d: model.getDishesSet()) {
@@ -359,7 +361,7 @@ public class Controller
 		sui.setMenuList(out);
 	}
 
-	public static Recipe stringToRecipe(String id) {
+	public Recipe stringToRecipe(String id) {
 			for (Recipe r :model.getRecipesSet() )
 			{
 				if (r.getId().equals(id))
@@ -440,8 +442,7 @@ public class Controller
 		String[] bookDates;
 		try {
 			bookDates = input.split("/");
-			DateOur data = new DateOur(bookDates[0],bookDates[1]);
-			return data;
+			return new DateOur(bookDates[0],bookDates[1]);
 		}
 		catch (ParseException e) {
 			sui.errorSetter("invalidDate");
@@ -541,7 +542,7 @@ public class Controller
 		if (!model.getBookingMap().containsKey(date))
 		{
 			day.add(new Booking(name, number, workload, order));
-			model.getBookingMap().put(date,new ArrayList<Booking>(Arrays.asList(new Booking(name, number, workload, order))));
+			model.getBookingMap().put(date,day);
 			return true;
 		}
 		else
@@ -567,7 +568,7 @@ public class Controller
 		}
 	}
 
-	public static HashMap<Dish,Integer> dishToMap (HashMap<String,Integer> map)	{
+	public HashMap<Dish,Integer> dishToMap (HashMap<String,Integer> map)	{
 		HashMap<Dish,Integer> out = new HashMap<>();
 		for (Map.Entry<String, Integer> s : map.entrySet())
 		{
