@@ -56,12 +56,14 @@ public class SimpleUI extends JFrame {
     JTextArea cfgBaseInputCap = new JTextArea();
     JTextArea cfgBaseInputIndWork = new JTextArea();
 
-    public void setDrinkList(String drinkList) {
+    public void setDrinkList(String drinkList)
+    {
         this.drinkList = drinkList;
         cfgDrinksAreaOut.setText(this.drinkList);
     }
 
-    public void setFoodsList(String foodsList) {
+    public void setFoodsList(String foodsList)
+    {
         this.foodsList = foodsList;
         cfgFoodsAreaOut.setText(this.foodsList);
     }
@@ -358,7 +360,8 @@ public class SimpleUI extends JFrame {
         buttonBack6.addActionListener(back);
         buttonBack7.addActionListener(back);
 
-        cfgMenuComboBox.addActionListener(e -> {
+        cfgMenuComboBox.addActionListener(e ->
+        {
             String selectedItem = (String) cfgMenuComboBox.getSelectedItem();
             cfgMenuDishesInput.setText(cfgMenuDishesInput.getText() + selectedItem + "\n");
         });
@@ -736,13 +739,10 @@ public class SimpleUI extends JFrame {
 
         empSeeBookSend.addActionListener(e->{
             String s = empSeeBookDateInput.getText().trim();
-            if(Controller.checkDate(s)) {
-                try {
+            if(Controller.checkDate(s))
+            {
                     ctrl.seeBookings(ctrl.inputToDate(s));
-                } catch (ParseException ex) {
-                   errorSetter("invalidDate");
-                }
-            };
+            }
         });
 
         empNewBookMenuBox.addActionListener(e ->

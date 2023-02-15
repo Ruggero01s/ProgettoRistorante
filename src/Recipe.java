@@ -1,6 +1,6 @@
 import java.util.HashMap;
 
-public class Recipe //todo override equals
+public class  Recipe //todo override equals
 {
     private String id;
     private HashMap<String, Double> ingredients = new HashMap<>();

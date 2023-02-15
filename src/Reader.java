@@ -220,7 +220,8 @@ public class Reader
                 if (xmlr.getEventType() == XMLStreamConstants.END_ELEMENT)
                     if(xmlr.getLocalName().equals("dish"))
                     {
-                        dishes.add(new Dish(name,Controller.stringToRecipe(id),startPeriod,endPeriod));
+                        dishes.add(new Dish(name,
+                                Controller.stringToRecipe(id),startPeriod,endPeriod));
                     }
 
                 xmlr.next();
@@ -336,6 +337,7 @@ public class Reader
         catch (Exception e)
         {
             System.out.println(ERRORE + Writer.BOOKINGS_NAME_FILE);
+            e.printStackTrace();
             System.out.println(e.getMessage());
         }
         return bookings;

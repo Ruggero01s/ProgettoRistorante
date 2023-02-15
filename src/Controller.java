@@ -1,8 +1,8 @@
 import javax.swing.*;
 import java.text.ParseException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.Map;
 
 public class Controller
@@ -28,6 +28,7 @@ public class Controller
 			model.getRecipesSet().add(d.getRecipe());
 		}
 		model.setThematicMenusSet(Reader.readThematicMenu());
+		model.setBookingMap(Reader.readBooking());
 		updateRecipeStringList();
 		updateDishStringList();
 		updateDrinkList();
@@ -77,6 +78,10 @@ public class Controller
 				Writer.writeThematicMenu(model.getThematicMenusSet());
 				updateMenuOut();
 				updateEmpNewBookMenuBox();
+				break;
+			case "bookings":
+				model.getBookingMap().clear();
+				writeBookings();
 				break;
 		}
 	}
@@ -162,26 +167,6 @@ public class Controller
 		{
 			sui.errorSetter("NumberFormatException");
 		}
-	}
-	
-	public void printDrinks()
-	{
-		System.out.println(model.getDrinksMap());
-	}
-	
-	public void printExtraFoods()
-	{
-		System.out.println(model.getExtraFoodsMap());
-	}
-	
-	public void printRecipes()
-	{
-		System.out.println(model.getRecipesSet());
-	}
-	
-	public void printDishes()
-	{
-		System.out.println(model.getDishesSet());
 	}
 	
 	public void saveRecipe() {
@@ -451,7 +436,7 @@ public class Controller
 		sui.empNewBookMenuBox.setModel(new DefaultComboBoxModel(out));
 	}
 
-	public Date inputToDate(String input) throws ParseException {
+	public DateOur inputToDate(String input){
 		String[] bookDates;
 		try {
 			bookDates = input.split("/");
@@ -463,10 +448,65 @@ public class Controller
 		}
 		return null;
 	}
-	public void seeBookings(Date data){
+
+	public HashMap<Dish,Integer> inputToOrder(String in) { //todo sistemare se non mette un numero nel numero piatti
+		String[] lines = in.split("\n");
+		HashMap<Dish,Integer> order = new HashMap<>();
+		boolean found=false;
+		for (String line: lines) {
+			found = false;
+			String[] parts = line.split(":");
+			String name = parts[0];
+			Integer num = Integer.parseInt(parts[1]);
+			if(num<=0) //errore
+			{
+				order.clear();
+				sui.errorSetter("minZero");
+				return order;
+			}
+			for (ThematicMenu menu: model.getThematicMenusSet()) {
+				if (name.equals(menu.getName()))
+				{
+					found = true;
+					for (Dish dish: model.getDishesSet()) {
+						if(order.containsKey(dish))
+						{
+							order.put(dish, order.get(dish)+num);
+						}
+						else order.put(dish, num);
+
+					}
+					break;
+				}
+			}
+			if (!found){
+				for (Dish dish: model.getDishesSet()) {
+					if (name.equals(dish.getName()))
+					{
+						found = true;
+						if(order.containsKey(dish))
+						{
+							order.put(dish, order.get(dish)+num);
+						}
+						else order.put(dish, num);
+						break;
+					}
+				}
+			}
+			if (!found) {
+				order.clear();
+				sui.errorSetter("notFound");
+				return order;
+			}
+		}
+		return order;
+	}
+
+	public void seeBookings(DateOur data)	{ //todo gestione errore no prenotzazione per data
 		ArrayList<Booking> dayBookings = new ArrayList<>(model.getBookingMap().get(data));
 		String out="";
-		for (Booking b: dayBookings) {
+		for (Booking b: dayBookings)
+		{
 			out = (out + "\n" + b.getName() +"\t" + "n. " + b.getNumber() + "\t" + b.getWorkload());
 		}
 		sui.empSeeBookAreaOut.setText(out);
@@ -517,9 +557,13 @@ public class Controller
 			{
 				day.add(new Booking(name, number, workload, order));
 				model.getBookingMap().put(date, day);
+				return true;
 			}
 			else
+			{
 				sui.errorSetter("fullRestaurant");
+				return false;
+			}
 		}
 	}
 
@@ -537,6 +581,11 @@ public class Controller
 			}
 		}
 		return out;
+	}
+
+	public void writeBookings()
+	{
+		Writer.writeBookings(model.getBookingMap());
 	}
 
 }

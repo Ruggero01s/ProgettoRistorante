@@ -291,7 +291,7 @@ public class Writer
 			{
 				xmlw.writeCharacters("\n\t");
 				xmlw.writeStartElement("booking"); // <booking>
-				xmlw.writeAttribute("date", booking.getKey().toString());
+				xmlw.writeAttribute("date", booking.getKey().getStringDate());
 				for (Booking b: booking.getValue())
 				{
 					xmlw.writeCharacters("\n\t\t");
