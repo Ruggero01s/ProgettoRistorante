@@ -276,7 +276,7 @@ public class Writer
 		}
 	}
 
-	public static void writeBookings(HashMap <Date,ArrayList<Booking>> bookings)
+	public static void writeBookings(HashMap <DateOur,ArrayList<Booking>> bookings)
 	{
 		XMLOutputFactory xmlof = null;
 		XMLStreamWriter xmlw = null;
@@ -287,7 +287,7 @@ public class Writer
 			xmlw.writeStartDocument("utf-8", "1.0");
 			xmlw.writeCharacters("\n");
 			xmlw.writeStartElement("bookings"); // scrittura del tag radice <bookings>
-			for (Map.Entry<Date,ArrayList<Booking>> booking : bookings.entrySet())
+			for (Map.Entry<DateOur,ArrayList<Booking>> booking : bookings.entrySet())
 			{
 				xmlw.writeCharacters("\n\t");
 				xmlw.writeStartElement("booking"); // <booking>

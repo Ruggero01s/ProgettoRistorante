@@ -204,7 +204,7 @@ public class GUI {
                  throw new RuntimeException(ex);
              }
          });
-        cfgMenuClearButton.addActionListener(e -> ctrl.clearInfo("thematicMenu.xml"));
+        cfgMenuClearButton.addActionListener(e -> ctrl.clearInfo("thematicMenus.xml"));
 //------------------------------------------------------------------------------------------
 //==========================================================================================
         stateChange(STATE.TITLE);

@@ -1,5 +1,4 @@
 import javax.swing.*;
-import java.awt.*;
 import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -34,6 +33,7 @@ public class Controller
 		updateDrinkList();
 		updateFoodList();
 		updateMenuOut();
+		updateEmpNewBookMenuBox();
 		sui.cfgResBaseOut.setText("Capacità: "+ model.getCapacity() + "\n" + "IndividualWorkload: " + model.getWorkPersonLoad() + "\n" + "Restaurant Worlkload: "+ model.getWorkResturantLoad());
 		sui.cfgBaseInputCap.setText(Integer.toString(model.getCapacity()));
 		sui.cfgBaseInputIndWork.setText(Integer.toString(model.getWorkPersonLoad()));
@@ -72,10 +72,11 @@ public class Controller
 				model.getDishesSet().clear();
 				Writer.writeDishes(model.getDishesSet());
 				updateDishStringList();
-			case "thematicMenu.xml":
+			case "thematicMenus.xml":
 				model.getThematicMenusSet().clear();
 				Writer.writeThematicMenu(model.getThematicMenusSet());
 				updateMenuOut();
+				updateEmpNewBookMenuBox();
 				break;
 		}
 	}
@@ -183,8 +184,7 @@ public class Controller
 		System.out.println(model.getDishesSet());
 	}
 	
-	public void saveRecipe()
-	{
+	public void saveRecipe() {
 		try
 		{
 			boolean err=false;
@@ -266,8 +266,7 @@ public class Controller
 		}
 	}
 
-	public void saveMenu() throws ParseException
-	{
+	public void saveMenu() throws ParseException {
 		String inputName = sui.cfgMenuNameInput.getText();
 		String inputs = sui.cfgMenuDishesInput.getText();
 
@@ -319,16 +318,17 @@ public class Controller
 						break;
 					}
 				}
-				if (valid)
+				if (valid) {
 					model.getThematicMenusSet().add(temp);
+					updateMenuOut();
+					updateEmpNewBookMenuBox();
+				}
 				else sui.errorSetter("sameNameAsDish");
-			}else sui.errorSetter("thiccMenu");;
-			updateMenuOut();
+			}else sui.errorSetter("thiccMenu");
 		}
 	}
 
-	public static boolean checkDate (String s)
-	{
+	public static boolean checkDate (String s) {
 		if(s.equals(""))
 			return false;
 		if(!s.contains("/"))
@@ -354,8 +354,7 @@ public class Controller
 		return false;
 	}
 
-	public static ArrayList<Dish> stringListToDishList(ArrayList<String> list )
-	{
+	public static ArrayList<Dish> stringListToDishList(ArrayList<String> list ) {
 		ArrayList<Dish> dishes = new ArrayList<>();
 		for (String s: list) {
 			for (Dish d: model.getDishesSet()) {
@@ -365,8 +364,8 @@ public class Controller
 		}
 		return dishes;
 	}
-	public void updateMenuOut ()
-	{
+
+	public void updateMenuOut () {
 		String out="";
 		for (ThematicMenu m: model.getThematicMenusSet()) {
 			out=out+m.getName()+"\n";
@@ -375,8 +374,7 @@ public class Controller
 		sui.setMenuList(out);
 	}
 
-	public static Recipe stringToRecipe(String id)
-	{
+	public static Recipe stringToRecipe(String id) {
 			for (Recipe r :model.getRecipesSet() )
 			{
 				if (r.getId().equals(id))
@@ -385,8 +383,7 @@ public class Controller
 		return null; //non dovrebbe succedere
 	}
 
-	public void updateRecipeStringList()
-	{
+	public void updateRecipeStringList() {
 		String[] recipes = new String[model.getRecipesSet().size()];
 		int i=0;
 		for (Recipe r: model.getRecipesSet())
@@ -404,8 +401,8 @@ public class Controller
 		sui.cfgResRecipesOut.setText(compactedArray);
 		sui.setRecipeList(compactedArray);
 	}
-	public void updateDishStringList()
-	{
+//TODO fare i metodi con parametri che vengono da sui
+	public void updateDishStringList()	{
 		String[] dishes = new String[model.getDishesSet().size()];
 		int i=0;
 		for (Dish d: model.getDishesSet())
@@ -424,8 +421,7 @@ public class Controller
 		sui.setDishList(compactedArray);
 	}
 
-	public void updateDrinkList()
-	{
+	public void updateDrinkList(){
 		String out="";
 		for (Map.Entry<String, Double> drink : model.getDrinksMap().entrySet())
 		{
@@ -435,8 +431,7 @@ public class Controller
 		sui.cfgResDrinksOut.setText(out);
 	}
 
-	public void updateFoodList()
-	{
+	public void updateFoodList(){
 		String out="";
 		for (Map.Entry<String, Double> food : model.getExtraFoodsMap().entrySet())
 		{
@@ -446,10 +441,27 @@ public class Controller
 		sui.cfgResFoodsOut.setText(out);
 	}
 
+	public void updateEmpNewBookMenuBox(){
+		String[] out = new String[model.getThematicMenusSet().size()];
+		int i=0;
+		for (ThematicMenu m: model.getThematicMenusSet()) {
+			out[i]=m.getName();
+			i++;
+		}
+		sui.empNewBookMenuBox.setModel(new DefaultComboBoxModel(out));
+	}
+
 	public Date inputToDate(String input) throws ParseException {
 		String[] bookDates;
-		bookDates = input.split("/");
-		return new Date(bookDates[0],bookDates[1]);
+		try {
+			bookDates = input.split("/");
+			DateOur data = new DateOur(bookDates[0],bookDates[1]);
+			return data;
+		}
+		catch (ParseException e) {
+			sui.errorSetter("invalidDate");
+		}
+		return null;
 	}
 	public void seeBookings(Date data){
 		ArrayList<Booking> dayBookings = new ArrayList<>(model.getBookingMap().get(data));
@@ -460,13 +472,37 @@ public class Controller
 		sui.empSeeBookAreaOut.setText(out);
 	}
 
-	public void manageBooking(String name, Date date, int number, int workload, HashMap<Dish,Integer> order)
+	public void saveBooking ()
+	{
+		String name=sui.empNewBookNameInput.getText();
+		DateOur date = inputToDate(sui.empNewBookDateInput.getText());
+		int number = Integer.parseInt(sui.empNewBookNumInput.getText()),workload=0;
+		HashMap<Dish, Integer> order=inputToOrder(sui.empNewBookOrderInput.getText());
+		if (!order.isEmpty())
+		{
+			if (number > 0) {
+				for (Map.Entry<Dish, Integer> dish : order.entrySet())
+					workload += dish.getKey().getRecipe().getWorkLoadPortion() * dish.getValue();
+				if (manageBooking(name, date, number, workload, order))
+				{
+					sui.empNewBookNameInput.setText("");
+					sui.empNewBookDateInput.setText("");
+					sui.empNewBookNumInput.setText("");
+					sui.empNewBookOrderInput.setText("");
+				}
+			} else
+				sui.errorSetter("minZero");
+		}
+	}
+
+	public boolean manageBooking(String name, DateOur date, int number, int workload, HashMap<Dish,Integer> order)
 	{
 		ArrayList <Booking> day= new ArrayList<>();
 		if (!model.getBookingMap().containsKey(date))
 		{
 			day.add(new Booking(name, number, workload, order));
-			model.getBookingMap().put(date,day);
+			model.getBookingMap().put(date,new ArrayList<Booking>(Arrays.asList(new Booking(name, number, workload, order))));
+			return true;
 		}
 		else
 		{
@@ -487,8 +523,7 @@ public class Controller
 		}
 	}
 
-	public static HashMap<Dish,Integer> dishToMap (HashMap<String,Integer> map)
-	{
+	public static HashMap<Dish,Integer> dishToMap (HashMap<String,Integer> map)	{
 		HashMap<Dish,Integer> out = new HashMap<>();
 		for (Map.Entry<String, Integer> s : map.entrySet())
 		{

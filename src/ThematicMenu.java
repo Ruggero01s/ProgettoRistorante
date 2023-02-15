@@ -4,7 +4,7 @@ import java.util.ArrayList;
 public class ThematicMenu
 {
 	private String name;
-	private Date startPeriod,endPeriod;
+	private DateOur startPeriod,endPeriod;
 	private ArrayList <Dish> dishes = new ArrayList<>();
 	private double workThematicMenuLoad;
 	
@@ -12,8 +12,8 @@ public class ThematicMenu
 		this.name = name;
 		String[] startPezzi = startPeriod.split("/");
 		String[] endPezzi = endPeriod.split("/");
-		this.startPeriod = new Date(startPezzi[0],startPezzi[1]);
-		this.endPeriod = new Date(endPezzi[0],endPezzi[1]);
+		this.startPeriod = new DateOur(startPezzi[0],startPezzi[1]);
+		this.endPeriod = new DateOur(endPezzi[0],endPezzi[1]);
 		this.dishes = dishes;
 		calcWorkThematicMenuLoad(); //calcola in automatico il workThematicMenuLoad
 	}
@@ -28,22 +28,22 @@ public class ThematicMenu
 		this.name = name;
 	}
 	
-	public Date getStartPeriod()
+	public DateOur getStartPeriod()
 	{
 		return startPeriod;
 	}
 	
-	public void setStartPeriod(Date startPeriod)
+	public void setStartPeriod(DateOur startPeriod)
 	{
 		this.startPeriod = startPeriod;
 	}
 	
-	public Date getEndPeriod()
+	public DateOur getEndPeriod()
 	{
 		return endPeriod;
 	}
 	
-	public void setEndPeriod(Date endPeriod)
+	public void setEndPeriod(DateOur endPeriod)
 	{
 		this.endPeriod = endPeriod;
 	}

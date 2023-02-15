@@ -11,7 +11,7 @@ public class Model {
     private Set<Dish> dishesSet = new HashSet<>();
     private Set<Recipe> recipesSet= new HashSet<>();
     private Set<ThematicMenu> thematicMenusSet= new HashSet<>();
-    private HashMap<Date,ArrayList<Booking>>  bookingMap = new HashMap<>();
+    private HashMap<DateOur,ArrayList<Booking>>  bookingMap = new HashMap<>();
 
     public int getWorkPersonLoad() {
         return workPersonLoad;
@@ -26,11 +26,11 @@ public class Model {
         this.workloadRestaurant = workloadRestaurant;
     }
 
-    public HashMap<Date, ArrayList<Booking>> getBookingMap() {
+    public HashMap<DateOur, ArrayList<Booking>> getBookingMap() {
         return bookingMap;
     }
 
-    public void setBookingMap(HashMap<Date, ArrayList<Booking>> bookingMap) {
+    public void setBookingMap(HashMap<DateOur, ArrayList<Booking>> bookingMap) {
         this.bookingMap = bookingMap;
     }
 

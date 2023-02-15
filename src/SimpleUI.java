@@ -1,4 +1,5 @@
 import javax.swing.*;
+import javax.swing.border.Border;
 import java.awt.*;
 import java.awt.event.*;
 import java.text.ParseException;
@@ -184,12 +185,31 @@ public class SimpleUI extends JFrame {
     JTextArea empSeeBookDateInput = new JTextArea();
     JTextArea empSeeBookAreaOut = new JTextArea();
     JButton empSeeBookSend = new JButton("Vedi prenotazioni");
+    JButton empSeeBookWrite = new JButton("Salva prenotazioni");
+    JButton empSeeBookClear = new JButton("Svuota prenotazioni");
 
 //-------------------------------------------------------------------------------------------
     //EMPLOY NEW BOOKING
-    JLabel empNewBookText = new JLabel("Prenotazioni:");
-    JTextArea empNewBookInput = new JTextArea();
+    JLabel empNewBookText = new JLabel("Nuova prenotazione:");
+    JLabel empNewBookDateText = new JLabel("Data:");
+    JLabel empNewBookNameText = new JLabel("Nome:");
+    JLabel empNewBookNumText = new JLabel("Numero:");
+    JLabel empNewBookOrderText = new JLabel("Lista ordine:");
+
+    JTextArea empNewBookDateInput = new JTextArea();
+    JTextArea empNewBookNameInput = new JTextArea();
+    JTextArea empNewBookNumInput = new JTextArea();
+    JTextArea empNewBookOrderInput = new JTextArea();
+
+    JComboBox empNewBookMenuBox = new JComboBox<>();
+
+    JButton empNewBookSend = new JButton("Inserisci");
+
 //-------------------------------------------------------------------------------------------
+
+    Border border = BorderFactory.createLineBorder(Color.GRAY,1);
+
+
     public SimpleUI(Controller ctrl) {
         this.ctrl = ctrl;
         // Set up the UI components
@@ -206,14 +226,15 @@ public class SimpleUI extends JFrame {
     };
 
     public void init() {
-        logInit();
-        cfgInit();
-        empInit();
         c.insets = new Insets(5, 5, 5, 5); // Top, left, bottom, right padding
         titlePadding.insets = new Insets(0, 5, 20, 5);
         endPadding.insets = new Insets(20, 5, 0, 5);
         c.fill = GridBagConstraints.HORIZONTAL;
         endPadding.fill = GridBagConstraints.HORIZONTAL;
+
+        logInit();
+        cfgInit();
+        empInit();
         // Set the initial state
         state = State.LOGIN;
         updateUI();
@@ -252,6 +273,7 @@ public class SimpleUI extends JFrame {
     }
 
     private void cfgInit() {
+
         cfgBaseInputCap.setLineWrap(true);
         cfgBaseInputIndWork.setLineWrap(true);
         cfgDrinksInput.setLineWrap(true);
@@ -277,6 +299,34 @@ public class SimpleUI extends JFrame {
         cfgRecipeAreaOut.setLineWrap(true);
         cfgDishAreaOut.setLineWrap(true);
         cfgMenuAreaOut.setLineWrap(true);
+        cfgFoodsAreaOut.setLineWrap(true);
+
+        cfgBaseInputCap.setBorder(border);
+        cfgBaseInputIndWork.setBorder(border);
+        cfgDrinksInput.setBorder(border);
+        cfgFoodsInput.setBorder(border);
+        cfgRecipeNameInput.setBorder(border);
+        cfgRecipePortionsInput.setBorder(border);
+        cfgRecipeIngredientsInput.setBorder(border);
+        cfgRecipeWorkLoadInput.setBorder(border);
+        cfgDishNameInput.setBorder(border);
+        cfgDishSDateInput.setBorder(border);
+        cfgDishEDateInput.setBorder(border);
+        cfgMenuNameInput.setBorder(border);
+        cfgMenuDishesInput.setBorder(border);
+        cfgMenuSDateInput.setBorder(border);
+        cfgMenuEDateInput.setBorder(border);
+        cfgDrinksAreaOut.setBorder(border);
+        cfgResBaseOut.setBorder(border);
+        cfgResDrinksOut.setBorder(border);
+        cfgResFoodsOut.setBorder(border);
+        cfgResRecipesOut.setBorder(border);
+        cfgResDishesOut.setBorder(border);
+        cfgResMenuOut.setBorder(border);
+        cfgRecipeAreaOut.setBorder(border);
+        cfgDishAreaOut.setBorder(border);
+        cfgMenuAreaOut.setBorder(border);
+        cfgFoodsAreaOut.setBorder(border);
 
 
         cfgResBaseOut.setEditable(false);
@@ -297,7 +347,16 @@ public class SimpleUI extends JFrame {
         cfgRecipeClearButton.addActionListener(e -> ctrl.clearInfo("recipes.xml"));
         cfgDrinksClearButton.addActionListener(e -> ctrl.clearInfo("drinks.xml"));
         cfgDishClearButton.addActionListener(e -> ctrl.clearInfo("dishes.xml"));
-        cfgMenuClearButton.addActionListener(e -> ctrl.clearInfo("thematicMenu.xml"));
+        cfgMenuClearButton.addActionListener(e -> ctrl.clearInfo("thematicMenus.xml"));
+
+        //listener back button
+        buttonBack1.addActionListener(back);
+        buttonBack2.addActionListener(back);
+        buttonBack3.addActionListener(back);
+        buttonBack4.addActionListener(back);
+        buttonBack5.addActionListener(back);
+        buttonBack6.addActionListener(back);
+        buttonBack7.addActionListener(back);
 
         cfgMenuComboBox.addActionListener(e -> {
             String selectedItem = (String) cfgMenuComboBox.getSelectedItem();
@@ -589,46 +648,91 @@ public class SimpleUI extends JFrame {
         cfgTabbedPane.addTab("Menus", cfgMenuPanel);
         cfgTabbedPane.addTab("Resoconto", cfgResPanel);
         cfgTabbedPane.addTab("Write&Save", cfgWriteClearPanel);
-
-        //listener back button
-        buttonBack1.addActionListener(back);
-        buttonBack2.addActionListener(back);
-        buttonBack3.addActionListener(back);
-        buttonBack4.addActionListener(back);
-        buttonBack5.addActionListener(back);
-        buttonBack6.addActionListener(back);
-        buttonBack7.addActionListener(back);
     }
 
     private void empInit() {
-        c.gridx = 0;
-        c.gridy = 0;
-        empSeeBookingsPanel.add(empSeeBookText);
+        //output prenotazioni
+        titlePadding.gridx = 0;
+        titlePadding.gridy = 0;
+        empSeeBookingsPanel.add(empSeeBookText, titlePadding);
         c.gridx = 1;
         c.gridy = 0;
-        empSeeBookingsPanel.add(empSeeBookDateInput);
+        empSeeBookingsPanel.add(empSeeBookDateInput,c);
         c.gridx = 0;
         c.gridy = 2;
-        empSeeBookingsPanel.add(empSeeBookAreaOut);
+        c.gridwidth=2;
+        empSeeBookingsPanel.add(empSeeBookAreaOut,c);
+        c.gridwidth=1;
         c.gridx = 0;
-        c.gridy = 3;
-        empSeeBookingsPanel.add(buttonBack8);
+        c.gridy = 5;
+        empSeeBookingsPanel.add(buttonBack8,c);
+        c.gridx = 0;
+        c.gridy = 4;
+        empSeeBookingsPanel.add(empSeeBookSend,c);
+        c.gridx = 0;
+        c.gridy = 6;
+        empSeeBookingsPanel.add(empSeeBookWrite,c);
         c.gridx = 1;
-        c.gridy = 3;
-        empSeeBookingsPanel.add(empSeeBookSend);
+        c.gridy = 6;
+        empSeeBookingsPanel.add(empSeeBookClear,c);
 
-        c.gridx = 0;
-        c.gridy = 0;
-        empNewBookingPanel.add(empNewBookText);
+        // input prenotazioni
+        titlePadding.gridx = 0;
+        titlePadding.gridy = 0;
+        empNewBookingPanel.add(empNewBookText,titlePadding);
         c.gridx = 0;
         c.gridy = 1;
-        empNewBookingPanel.add(empNewBookInput);
+        empNewBookingPanel.add(empNewBookDateText,c);
+        c.gridx = 1;
+        c.gridy = 1;
+        empNewBookingPanel.add(empNewBookDateInput,c);
+        c.gridx = 0;
+        c.gridy = 2;
+        empNewBookingPanel.add(empNewBookNameText,c);
+        c.gridx = 1;
+        c.gridy = 2;
+        empNewBookingPanel.add(empNewBookNameInput,c);
+        c.gridx = 0;
+        c.gridy = 3;
+        empNewBookingPanel.add(empNewBookNumText,c);
+        c.gridx = 1;
+        c.gridy = 3;
+        empNewBookingPanel.add(empNewBookNumInput,c);
+        c.gridx = 0;
+        c.gridy = 4;
+        empNewBookingPanel.add(empNewBookOrderText,c);
+        c.gridx = 1;
+        c.gridy = 4;
+        empNewBookingPanel.add(empNewBookMenuBox,c);
+        c.gridx = 2;
+        c.gridy = 4;
+        empNewBookingPanel.add(empNewBookOrderInput,c);
+        c.gridx = 2;
+        c.gridy = 6;
+        empNewBookingPanel.add(empNewBookSend,c);
+        c.gridx = 0;
+        c.gridy = 6;
+        empNewBookingPanel.add(buttonBack9,c);
+
+
+        empSeeBookDateInput.setLineWrap(true);
+        empSeeBookAreaOut.setLineWrap(true);
+        empNewBookOrderInput.setLineWrap(true);
+        empNewBookNameInput.setLineWrap(true);
+        empNewBookDateInput.setLineWrap(true);
+        empNewBookNumInput.setLineWrap(true);
+
+        empSeeBookDateInput.setBorder(border);
+        empSeeBookAreaOut.setBorder(border);
+        empNewBookOrderInput.setBorder(border);
+        empNewBookNameInput.setBorder(border);
+        empNewBookDateInput.setBorder(border);
+        empNewBookNumInput.setBorder(border);
 
         buttonBack8.addActionListener(back);
         buttonBack9.addActionListener(back);
         buttonBack10.addActionListener(back);
         buttonBack11.addActionListener(back);
-
 
         empSeeBookSend.addActionListener(e->{
             String s = empSeeBookDateInput.getText().trim();
@@ -641,8 +745,26 @@ public class SimpleUI extends JFrame {
             };
         });
 
+        empNewBookMenuBox.addActionListener(e ->
+        {
+            String selectedItem = (String) empNewBookMenuBox.getSelectedItem();
+            empNewBookOrderInput.setText(empNewBookOrderInput.getText() + selectedItem + ":1\n");
+        });
+
+        empNewBookSend.addActionListener(e -> {
+          ctrl.saveBooking();
+        });
+
+        empSeeBookWrite.addActionListener(e -> {
+           ctrl.writeBookings();
+        });
+
+        empSeeBookWrite.addActionListener(e -> {
+            ctrl.clearInfo("bookings");
+        });
+
         empTabbedPane.add("Bookings", empSeeBookingsPanel);
-        empTabbedPane.add("New Bookings", empSeeBookingsPanel);
+        empTabbedPane.add("New Bookings", empNewBookingPanel);
     }
 
     // Method to update the UI based on the current state
@@ -702,6 +824,10 @@ public class SimpleUI extends JFrame {
                 break;
             case "nameSameAsDish":
                 JOptionPane.showMessageDialog(getContentPane(), "Il menù è troppo impegnativo, riduci il suo carico",
+                        "Err", JOptionPane.ERROR_MESSAGE);
+                break;
+            case "notFound":
+                JOptionPane.showMessageDialog(getContentPane(), "Piatto o menù non trovato",
                         "Err", JOptionPane.ERROR_MESSAGE);
                 break;
         }

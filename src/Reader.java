@@ -280,12 +280,12 @@ public class Reader
         return menu;
     }
 
-    public static HashMap <Date,ArrayList<Booking>> readBooking()
+    public static HashMap <DateOur,ArrayList<Booking>> readBooking()
     {
         XMLInputFactory xmlif = null;
         XMLStreamReader xmlr = null;
 
-        HashMap <Date,ArrayList<Booking>> bookings = new HashMap<>();
+        HashMap <DateOur,ArrayList<Booking>> bookings = new HashMap<>();
         try
         {
             xmlif = XMLInputFactory.newInstance();
@@ -319,7 +319,10 @@ public class Reader
                     switch (xmlr.getLocalName())
                     {
                         case "bookings":
-                            bookings.put(new Date(dateString[0],dateString[1]),book);
+                            if (dateString.length==0) //per evitare rotture in lettura
+                                return new HashMap<>();
+                            ArrayList<Booking> out = new ArrayList<>(book);
+                            bookings.put(new DateOur(dateString[0],dateString[1]),out);
                             book.clear();
                             break;
                         case "book":

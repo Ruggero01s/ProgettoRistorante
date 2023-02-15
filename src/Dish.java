@@ -1,20 +1,19 @@
 import java.text.ParseException;
-import java.util.HashMap;
 
 public class Dish    //todo override equals
 {
     private String name;
-    private Date startPeriod, endPeriod;
+    private DateOur startPeriod, endPeriod;
     private Recipe recipe;
 
     public Dish(String name, Recipe recipe/*, boolean permanent*/, String startPeriod, String endPeriod) throws ParseException {
         this.name = name;
 
         String[] periodDateStart = startPeriod.split("/");
-        this.startPeriod = new Date(periodDateStart[0], periodDateStart[1]);
+        this.startPeriod = new DateOur(periodDateStart[0], periodDateStart[1]);
 
         String[] periodDateEnd = endPeriod.split("/");
-        this.endPeriod = new Date(periodDateEnd[0], periodDateEnd[1]);
+        this.endPeriod = new DateOur(periodDateEnd[0], periodDateEnd[1]);
         this.recipe = recipe;
     }
 
@@ -34,19 +33,19 @@ public class Dish    //todo override equals
         this.permanent = permanent;
     }*/
 
-    public Date getStartPeriod() {
+    public DateOur getStartPeriod() {
         return startPeriod;
     }
 
-    public void setStartPeriod(Date startPeriod) {
+    public void setStartPeriod(DateOur startPeriod) {
         this.startPeriod = startPeriod;
     }
 
-    public Date getEndPeriod() {
+    public DateOur getEndPeriod() {
         return endPeriod;
     }
 
-    public void setEndPeriod(Date endPeriod) {
+    public void setEndPeriod(DateOur endPeriod) {
         this.endPeriod = endPeriod;
     }
 
