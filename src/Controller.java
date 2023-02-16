@@ -599,7 +599,7 @@ public class Controller
 		{
 			String name = sui.empNewBookNameInput.getText();
 			DateOur date = inputToDate(sui.empNewBookDateInput.getText());
-			if (date.getDate().before(model.getToday().getDate()))
+			if (date.getDate().after(model.getToday().getDate()))
 			{
 				int number = Integer.parseInt(sui.empNewBookNumInput.getText()), workload = 0;
 				HashMap<Dish, Integer> order = inputToOrder(sui.empNewBookOrderInput.getText(), date);

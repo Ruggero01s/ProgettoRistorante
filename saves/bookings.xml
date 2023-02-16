@@ -7,4 +7,8 @@
 		<book name="Ciccio" number="12" workload="36">
 			<order dish="Polpett" quantity="12"></order>
 			<order dish="PastaCoTonno" quantity="12"></order></book></booking>
+	<booking date="03/03/0001">
+		<book name="dasd" number="1" workload="3">
+			<order dish="Polpett" quantity="1"></order>
+			<order dish="PastaCoTonno" quantity="1"></order></book></booking>
 </bookings>

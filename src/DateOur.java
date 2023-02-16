@@ -19,24 +19,14 @@ public class DateOur
 
 	public boolean bet(DateOur s, DateOur e)
 	{
-		try
-		{
-			Calendar start = Calendar.getInstance(), end = Calendar.getInstance(), today = Calendar.getInstance();
-			SimpleDateFormat format = new SimpleDateFormat("dd/MM");
-			java.util.Date dateFormat = format.parse(this.getStringDate());
-			today.setTime(dateFormat);
-			dateFormat = format.parse(s.getStringDate());
-			start.setTime(dateFormat);
-			dateFormat = format.parse(e.getStringDate());
-			end.setTime(dateFormat);
-			return today.before(end) && today.after(start);
-		}
-		catch (Exception err )
-		{
-			err.printStackTrace();
-		}
+		/*this.date.set(Calendar.YEAR,0);
+		s.getDate().set(Calendar.YEAR,0);
+		end.set(Calendar.YEAR,0);
+		return between(s,e);
+		this.date.get()*/
 		return false;
 	}
+	
 
 	public DateOur(String day, String month) throws ParseException
 	{
