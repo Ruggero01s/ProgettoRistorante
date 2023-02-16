@@ -67,6 +67,7 @@ public class Reader
         {
             xmlif = XMLInputFactory.newInstance();
             xmlr = xmlif.createXMLStreamReader(new FileInputStream(Writer.ROOT + Writer.CONFIG_NAME_FILE));
+            String[] today= {};
             while (xmlr.hasNext())
             { // continua a leggere finche ha eventi a disposizione
                 if(xmlr.getEventType() == XMLStreamConstants.START_ELEMENT) // inizio di un elemento
@@ -75,6 +76,8 @@ public class Reader
                     {
                         model.setCapacity(Integer.parseInt(xmlr.getAttributeValue(0)));
                         model.setWorkPersonLoad((int) Double.parseDouble(xmlr.getAttributeValue(1)));
+                        today=xmlr.getAttributeValue(2).split("/");
+                        model.setToday(new DateOur(today[0],today[1]));
                     }
                 }
                 xmlr.next();

@@ -6,6 +6,7 @@ public class ThematicMenu
 	private String name;
 	private DateOur startPeriod,endPeriod;
 	private ArrayList <Dish> dishes = new ArrayList<>();
+	private boolean seasonal;
 	private double workThematicMenuLoad;
 	
 	public ThematicMenu(String name, String startPeriod, String endPeriod, ArrayList<Dish> dishes) throws ParseException {

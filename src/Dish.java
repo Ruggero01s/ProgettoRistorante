@@ -5,6 +5,7 @@ public class Dish    //todo override equals
     private String name;
     private DateOur startPeriod, endPeriod;
     private Recipe recipe;
+    private boolean seasonal;
 
     public Dish(String name, Recipe recipe/*, boolean permanent*/, String startPeriod, String endPeriod) throws ParseException {
         this.name = name;

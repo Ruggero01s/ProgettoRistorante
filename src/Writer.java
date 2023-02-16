@@ -54,7 +54,7 @@ public class Writer
 		}
 	}
 	
-	public static void writeConfigBase(int capacity, int workPersonLoad)
+	public static void writeConfigBase(int capacity, int workPersonLoad, DateOur today)
 	{
 		
 		XMLOutputFactory xmlof = null;
@@ -70,6 +70,7 @@ public class Writer
 			xmlw.writeStartElement("baseConfig"); // <baseconfig>
 			xmlw.writeAttribute("capacity", Integer.toString(capacity));
 			xmlw.writeAttribute("workPersonLoad", Integer.toString(workPersonLoad));
+			xmlw.writeAttribute("today", today.getStringDate());
 			xmlw.writeEndElement(); // </baseconfig>
 			xmlw.writeCharacters("\n");
 			xmlw.writeEndElement();//</config>

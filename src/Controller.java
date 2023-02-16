@@ -48,7 +48,7 @@ public class Controller
 			case "config.xml":
 				model.setCapacity(0);
 				model.setWorkPersonLoad(0);
-				Writer.writeConfigBase(model.getCapacity(), model.getWorkPersonLoad());
+				Writer.writeConfigBase(model.getCapacity(), model.getWorkPersonLoad(),model.getToday());
 				sui.cfgResBaseOut.setText("""
 						Capacità: 0
 						IndividualWorkload: 0
@@ -92,7 +92,7 @@ public class Controller
 			Writer.writeDrinks(model.getDrinksMap());
 		//if(!model.getExtraFoodsMap().isEmpty())
 			Writer.writeExtraFoods(model.getExtraFoodsMap());
-		Writer.writeConfigBase(model.getCapacity(), model.getWorkPersonLoad());
+		Writer.writeConfigBase(model.getCapacity(), model.getWorkPersonLoad(),model.getToday());
 		Writer.writeRecipes(model.getRecipesSet());
 		//if(!model.getDishesSet().isEmpty())
 			Writer.writeDishes(model.getDishesSet());
@@ -199,10 +199,10 @@ public class Controller
 			else
 			{
 				model.getRecipesSet().add(new Recipe(inputName, ingredientQuantityMap, portions, workLoad));
-				sui.cfgRecipeNameInput.setText("");
-				sui.cfgRecipeIngredientsInput.setText("");
-				sui.cfgRecipePortionsInput.setText("");
-				sui.cfgRecipeWorkLoadInput.setText("");
+				sui.cfgRecipeNameInput.setText(Model.CLEAR);
+				sui.cfgRecipeIngredientsInput.setText(Model.CLEAR);
+				sui.cfgRecipePortionsInput.setText(Model.CLEAR);
+				sui.cfgRecipeWorkLoadInput.setText(Model.CLEAR);
 				updateRecipeStringList();
 			}
 		}
@@ -236,9 +236,9 @@ public class Controller
 					if (r.getId().equals(inputIngredients)) {
 						model.getDishesSet().add(new Dish(inputName, r, inputStartDate, inputEndDate));
 						updateDishStringList();
-						sui.cfgDishNameInput.setText("");
-						sui.cfgDishSDateInput.setText("");
-						sui.cfgDishEDateInput.setText("");
+						sui.cfgDishNameInput.setText(Model.CLEAR);
+						sui.cfgDishSDateInput.setText(Model.CLEAR);
+						sui.cfgDishEDateInput.setText(Model.CLEAR);
 						found = true;
 						break;
 					}
@@ -281,10 +281,10 @@ public class Controller
 					if (d.getName().equals(s)) {
 						dishesForMenu.add(d);
 						found = true;
-						sui.cfgMenuNameInput.setText("");
-						sui.cfgMenuDishesInput.setText("");
-						sui.cfgMenuSDateInput.setText("");
-						sui.cfgMenuEDateInput.setText("");
+						sui.cfgMenuNameInput.setText(Model.CLEAR);
+						sui.cfgMenuDishesInput.setText(Model.CLEAR);
+						sui.cfgMenuSDateInput.setText(Model.CLEAR);
+						sui.cfgMenuEDateInput.setText(Model.CLEAR);
 						break;
 					}
 				}
@@ -589,33 +589,39 @@ public class Controller
 
 	public void saveBooking ()
 	{
-		try{
+		try
+		{
 			String name = sui.empNewBookNameInput.getText();
 			DateOur date = inputToDate(sui.empNewBookDateInput.getText());
-			int number = Integer.parseInt(sui.empNewBookNumInput.getText()), workload = 0;
-			HashMap<Dish, Integer> order = inputToOrder(sui.empNewBookOrderInput.getText(),date);
-			if (!order.isEmpty()) {
-				if (number > 0) {
-					for (Map.Entry<Dish, Integer> dish : order.entrySet())
-						workload += dish.getKey().getRecipe().getWorkLoadPortion() * dish.getValue();
-					if (manageBooking(name, date, number, workload, order)) {
-						sui.empNewBookNameInput.setText("");
-						sui.empNewBookDateInput.setText("");
-						sui.empNewBookNumInput.setText("");
-						sui.empNewBookOrderInput.setText("");
-					}
-				} else
-					sui.errorSetter("minZero");
+			if (date.getDate().before(model.getToday().getDate()))
+			{
+				int number = Integer.parseInt(sui.empNewBookNumInput.getText()), workload = 0;
+				HashMap<Dish, Integer> order = inputToOrder(sui.empNewBookOrderInput.getText(), date);
+				if (!order.isEmpty()) {
+					if (number > 0) {
+						for (Map.Entry<Dish, Integer> dish : order.entrySet())
+							workload += dish.getKey().getRecipe().getWorkLoadPortion() * dish.getValue();
+						if (manageBooking(name, date, number, workload, order)) {
+							sui.empNewBookNameInput.setText(Model.CLEAR);
+							sui.empNewBookDateInput.setText(Model.CLEAR);
+							sui.empNewBookNumInput.setText(Model.CLEAR);
+							sui.empNewBookOrderInput.setText(Model.CLEAR);
+						}
+					} else
+						sui.errorSetter("minZero");
+				}
 			}
+			else
+				sui.errorSetter("invalidDate");
 		}catch(NumberFormatException e){
 			sui.errorSetter("NumberFormatException");
 		}
 	}
 
-	ArrayList <Booking> day= new ArrayList<>();
+
 	public boolean manageBooking(String name, DateOur date, int number, int workload, HashMap<Dish,Integer> order)
 	{
-
+		ArrayList <Booking> day= new ArrayList<>();
 		if (!model.getBookingMap().containsKey(date))
 		{
 			day.add(new Booking(name, number, workload, order));

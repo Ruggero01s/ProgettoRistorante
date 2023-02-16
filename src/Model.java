@@ -2,10 +2,13 @@ import java.util.*;
 
 public class Model {
 
+    public static final String CLEAR= "";
+
     static final double INCREASE20 = 1.20;
 
     private int capacity=0, workPersonLoad=0;
     private double workloadRestaurant;
+    private DateOur today;
     private HashMap<String, Double> drinksMap = new HashMap<>();
     private HashMap<String, Double> extraFoodsMap = new HashMap<>();
     private Set<Dish> dishesSet = new HashSet<>();
