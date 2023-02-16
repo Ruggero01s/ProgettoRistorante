@@ -175,9 +175,9 @@ public class Reader
                     }
                 }
                 if (xmlr.getEventType() == XMLStreamConstants.END_ELEMENT)
-                    if(xmlr.getLocalName().equals("recipe"))
+                    if(xmlr.getLocalName().equals("recipe")) 
                     {
-                        recipes.add(new Recipe(id,ingredients,portions,workLoadPortion));
+                        recipes.add(new Recipe(id,(HashMap<String, Double>) ingredients.clone(),portions,workLoadPortion));
                         ingredients.clear();
                     }
 

@@ -4,17 +4,26 @@ import java.util.Calendar;
 public class DateOur
 {
 	private Calendar date = Calendar.getInstance();
-	
+
+
+	public Calendar getDate() {
+		return date;
+	}
+
 	public DateOur(String day, String month) throws ParseException
 	{
 		SimpleDateFormat format = new SimpleDateFormat("dd/MM/yyyy");
 		java.util.Date dateFormat = format.parse(day.concat("/".concat(month).concat("/").concat("1444")));
 		this.date.setTime(dateFormat);
 	}
-	
+
+	/**
+	 * Trasformo una data in una stringa
+	 * @return stringa della data
+	 */
 	public String getStringDate()
 	{
-		SimpleDateFormat format = new SimpleDateFormat("dd/MM/yyyy");
+		SimpleDateFormat format = new SimpleDateFormat("dd/MM");
 		java.util.Date dateFormat = new java.util.Date();
 		dateFormat.setTime(this.date.getTimeInMillis());
 		return format.format(dateFormat);
@@ -23,10 +32,10 @@ public class DateOur
 	@Override
 	public boolean equals(Object d)
 	{
-		if (d == this) return true;
+		if (d == this)
+			return true;
 		if (!(d instanceof DateOur))
 			return false;
-
 		DateOur date = (DateOur) d;
 		String me = this.getStringDate();
 		return (me.equals((date.getStringDate())));
@@ -38,6 +47,17 @@ public class DateOur
 		int result = 17;
 		result = 31 * result + getStringDate().hashCode();
 		return result;
+	}
+
+	/**
+	 * controllo se una data è tra due estremi
+	 * @param s inizio periodo di validità
+	 * @param e fine periodo di validità
+	 * @return true se la data è tra gli estremi, false altrimenti
+	 */
+	public boolean between (DateOur s, DateOur e)
+	{
+		return this.date.before(e.getDate()) && this.date.after(s.getDate());
 	}
 
 	/*

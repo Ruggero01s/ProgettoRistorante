@@ -79,7 +79,6 @@ public class Controller
 				Writer.writeThematicMenu(model.getThematicMenusSet());
 				updateMenuOut();
 				updateEmpNewBookMenuBox();
-				break;
 			case "bookings":
 				model.getBookingMap().clear();
 				writeBookings();
@@ -439,7 +438,8 @@ public class Controller
 
 	public DateOur inputToDate(String input){
 		String[] bookDates;
-		try {
+		try
+		{
 			bookDates = input.split("/");
 			return new DateOur(bookDates[0],bookDates[1]);
 		}
@@ -449,7 +449,7 @@ public class Controller
 		return null;
 	}
 
-	public HashMap<Dish,Integer> inputToOrder(String in) { //todo sistemare se non mette un numero nel numero piatti
+	public HashMap<Dish,Integer> inputToOrder(String in, DateOur date) { //todo sistemare se non mette un numero nel numero piatti
 		String[] lines = in.split("\n");
 		HashMap<Dish,Integer> order = new HashMap<>();
 		boolean found;

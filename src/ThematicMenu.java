@@ -94,4 +94,9 @@ public class ThematicMenu
 		result = 31 * result + name.hashCode();
 		return result;
 	}
+
+	public boolean isValid(DateOur date)
+	{
+		return date.between(this.startPeriod,this.endPeriod);
+	}
 }
