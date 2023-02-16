@@ -161,7 +161,8 @@ public class SimpleUI extends JFrame {
     JTextArea cfgResRecipesOut = new JTextArea();
     JTextArea cfgResDishesOut = new JTextArea();
     JTextArea cfgResMenuOut = new JTextArea();
-
+    JComboBox cfgResDatiMenuBox = new JComboBox();
+    JTextArea cfgResDatiMenuOut = new JTextArea();
     //------------------------------------------------------------------------------------------
     //CONFIG_WRITING AND CLEAR
     JButton cfgBaseClearButton = new JButton("Clear Cap&IndWork");
@@ -171,7 +172,7 @@ public class SimpleUI extends JFrame {
     JButton cfgDishClearButton = new JButton("Clear Dishes");
     JButton cfgMenuClearButton = new JButton("Clear Menus");
     JButton cfgWriteButton = new JButton("Salva ed esci");
-//------------------------------------------------------------------------------------------
+//============================================================================================
 //============================================================================================
 //============================================================================================
     //EMPLOYEE
@@ -342,11 +343,11 @@ public class SimpleUI extends JFrame {
 
 
         cfgResBaseOut.setPreferredSize(new Dimension(300, 50));
-        cfgResDrinksOut.setEditable(false);
-        cfgResFoodsOut.setEditable(false);
-        cfgResRecipesOut.setEditable(false);
-        cfgResDishesOut.setEditable(false);
-        cfgResMenuOut.setEditable(false);
+        cfgResDrinksOut.setPreferredSize(new Dimension(300, 50));
+        cfgResFoodsOut.setPreferredSize(new Dimension(300, 50));
+        cfgResRecipesOut.setPreferredSize(new Dimension(300, 50));
+        cfgResDishesOut.setPreferredSize(new Dimension(300, 50));
+        cfgResMenuOut.setPreferredSize(new Dimension(300, 50));
 
         cfgResBaseOut.setEditable(false);
         cfgResDrinksOut.setEditable(false);
@@ -379,8 +380,13 @@ public class SimpleUI extends JFrame {
 
         cfgMenuComboBox.addActionListener(e ->
         {
-            String selectedItem = (String) cfgMenuComboBox.getSelectedItem();
+            String selectedItem = ((String) cfgMenuComboBox.getSelectedItem()).split("-")[0].trim();
             cfgMenuDishesInput.setText(cfgMenuDishesInput.getText() + selectedItem + "\n");
+        });
+
+        cfgResDatiMenuBox.addActionListener(e ->
+        {
+            ctrl.writeMenuComp((String) cfgResDatiMenuBox.getSelectedItem());
         });
 
         // general config manager
@@ -603,7 +609,6 @@ public class SimpleUI extends JFrame {
         c.gridwidth=4;
         cfgResPanel.add(cfgResDrinksOut, c);
         c.gridwidth=1;
-
         c.gridx = 0;
         c.gridy = 3;
         cfgResPanel.add(cfgResFoodsText, c);
@@ -636,8 +641,16 @@ public class SimpleUI extends JFrame {
         c.gridwidth=GridBagConstraints.REMAINDER;
         cfgResPanel.add(cfgResMenuOut, c);
         c.gridwidth=1;
-        c.gridx = 4;
+        c.gridx = 0;
         c.gridy = 7;
+        cfgResPanel.add(cfgResDatiMenuBox, c);
+        c.gridx = 1;
+        c.gridy = 7;
+        c.gridwidth=GridBagConstraints.REMAINDER;
+        cfgResPanel.add(cfgResDatiMenuOut, c);
+        c.gridwidth=1;
+        c.gridx = 4;
+        c.gridy = 8;
         cfgResPanel.add(buttonBack6, c);
 
 

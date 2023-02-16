@@ -22,6 +22,14 @@ public class Model {
         updateWorkResturantLoad();
     }
 
+    public DateOur getToday() {
+        return today;
+    }
+
+    public void setToday(DateOur today) {
+        this.today = today;
+    }
+
     public void setWorkloadRestaurant(double workloadRestaurant) {
         this.workloadRestaurant = workloadRestaurant;
     }

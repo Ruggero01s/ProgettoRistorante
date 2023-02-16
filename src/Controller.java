@@ -35,7 +35,7 @@ public class Controller
 		updateDrinkList();
 		updateFoodList();
 		updateMenuOut();
-		updateEmpNewBookMenuBox();
+		updateMenuBoxes();
 		sui.cfgResBaseOut.setText("Capacità: "+ model.getCapacity() + "\n" + "IndividualWorkload: " + model.getWorkPersonLoad() + "\n" + "Restaurant Worlkload: "+ model.getWorkResturantLoad());
 		sui.cfgBaseInputCap.setText(Integer.toString(model.getCapacity()));
 		sui.cfgBaseInputIndWork.setText(Integer.toString(model.getWorkPersonLoad()));
@@ -78,7 +78,7 @@ public class Controller
 				model.getThematicMenusSet().clear();
 				Writer.writeThematicMenu(model.getThematicMenusSet());
 				updateMenuOut();
-				updateEmpNewBookMenuBox();
+				updateMenuBoxes();
 			case "bookings":
 				model.getBookingMap().clear();
 				writeBookings();
@@ -216,7 +216,7 @@ public class Controller
 		try
 		{
 			String inputName = sui.cfgDishNameInput.getText();
-			String inputIngredients = (String) sui.cfgDishComboBox.getSelectedItem();
+			String inputIngredients = ((String) sui.cfgDishComboBox.getSelectedItem()).split("-")[0].trim();
 			
 			String inputStartDate = sui.cfgDishSDateInput.getText();
 			String inputEndDate = sui.cfgDishEDateInput.getText();
@@ -306,7 +306,7 @@ public class Controller
 				if (valid) {
 					model.getThematicMenusSet().add(temp);
 					updateMenuOut();
-					updateEmpNewBookMenuBox();
+					updateMenuBoxes();
 				}
 				else sui.errorSetter("sameNameAsDish");
 			}else sui.errorSetter("thiccMenu");
@@ -350,7 +350,7 @@ public class Controller
 		return dishes;
 	}
 
-	public void updateMenuOut () {
+	public void updateMenuOut() {
 		StringBuilder out= new StringBuilder();
 		for (ThematicMenu m: model.getThematicMenusSet()) {
 			out.append(m.getName()).append(" - [").append(m.getStartPeriod().getStringDate()).append(" || ").append(m.getStartPeriod().getStringDate()).append("] - ").append("\n");
@@ -426,15 +426,39 @@ public class Controller
 		sui.cfgResFoodsOut.setText(out.toString().trim());
 	}
 
-	public void updateEmpNewBookMenuBox(){
+	public void updateMenuBoxes(){
+		String[] out = makeMenuList();
+		DefaultComboBoxModel<String> model = new DefaultComboBoxModel<>( out );
+		sui.empNewBookMenuBox.setModel(model);
+		sui.cfgResDatiMenuBox.setModel(model);
+	}
+
+	public void writeMenuComp(String menuName){
+		String out = "";
+		for (ThematicMenu menu: model.getThematicMenusSet()){
+			if (menu.getName().equals(menuName))
+			{
+				out = out + menuName + "\n";
+				for (Dish d: menu.getDishes()) {
+					out = out + "    " + d.getName() + "\n";
+				}
+				break;
+			}
+		}
+		sui.cfgResDatiMenuOut.setText(out);
+	}
+
+	public String[] makeMenuList()
+	{
 		String[] out = new String[model.getThematicMenusSet().size()];
-		int i=0;
-		for (ThematicMenu m: model.getThematicMenusSet()) {
-			out[i]=m.getName();
+		int i = 0;
+		for (ThematicMenu m : model.getThematicMenusSet()) {
+			out[i] = m.getName();
 			i++;
 		}
-		sui.empNewBookMenuBox.setModel(new DefaultComboBoxModel(out));
+		return out;
 	}
+
 
 	public DateOur inputToDate(String input){
 		String[] bookDates;
