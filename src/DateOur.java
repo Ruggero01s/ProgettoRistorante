@@ -10,6 +10,34 @@ public class DateOur
 		return date;
 	}
 
+	public DateOur(String day, String month, String year) throws ParseException
+	{
+		SimpleDateFormat format = new SimpleDateFormat("dd/MM/yyyy");
+		java.util.Date dateFormat = format.parse(day.concat("/".concat(month).concat("/").concat(year)));
+		this.date.setTime(dateFormat);
+	}
+
+	public boolean bet(DateOur s, DateOur e)
+	{
+		try
+		{
+			Calendar start = Calendar.getInstance(), end = Calendar.getInstance(), today = Calendar.getInstance();
+			SimpleDateFormat format = new SimpleDateFormat("dd/MM");
+			java.util.Date dateFormat = format.parse(this.getStringDate());
+			today.setTime(dateFormat);
+			dateFormat = format.parse(s.getStringDate());
+			start.setTime(dateFormat);
+			dateFormat = format.parse(e.getStringDate());
+			end.setTime(dateFormat);
+			return today.before(end) && today.after(start);
+		}
+		catch (Exception err )
+		{
+			err.printStackTrace();
+		}
+		return false;
+	}
+
 	public DateOur(String day, String month) throws ParseException
 	{
 		SimpleDateFormat format = new SimpleDateFormat("dd/MM/yyyy");
@@ -23,7 +51,7 @@ public class DateOur
 	 */
 	public String getStringDate()
 	{
-		SimpleDateFormat format = new SimpleDateFormat("dd/MM");
+		SimpleDateFormat format = new SimpleDateFormat("dd/MM/yyyy");
 		java.util.Date dateFormat = new java.util.Date();
 		dateFormat.setTime(this.date.getTimeInMillis());
 		return format.format(dateFormat);

@@ -214,6 +214,8 @@ public class Writer
 				xmlw.writeAttribute("name", dish.getName());
 				xmlw.writeAttribute("startDate", dish.getStartPeriod().getStringDate());
 				xmlw.writeAttribute("endDate", dish.getEndPeriod().getStringDate());
+				xmlw.writeAttribute("seasonal", Boolean.toString(dish.isSeasonal()));
+				xmlw.writeAttribute("permanent", Boolean.toString(dish.isPermanent()));
 				xmlw.writeCharacters("\n\t\t");
 				xmlw.writeStartElement("recipe"); // <recipe>
 				xmlw.writeAttribute("id", dish.getRecipe().getId());
@@ -253,6 +255,8 @@ public class Writer
 				xmlw.writeAttribute("name", menu.getName());
 				xmlw.writeAttribute("startDate", menu.getStartPeriod().getStringDate());
 				xmlw.writeAttribute("endDate", menu.getEndPeriod().getStringDate());
+				xmlw.writeAttribute("seasonal", Boolean.toString(menu.isSeasonal()));
+				xmlw.writeAttribute("permanent", Boolean.toString(menu.isPermanent()));
 				for (Dish dish: menu.getDishes())
 				{
 					xmlw.writeCharacters("\n\t\t");

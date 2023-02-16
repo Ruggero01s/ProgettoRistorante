@@ -5,17 +5,19 @@ public class Dish    //todo override equals
     private String name;
     private DateOur startPeriod, endPeriod;
     private Recipe recipe;
-    private boolean seasonal;
+    private boolean seasonal,permanent;
 
     public Dish(String name, Recipe recipe, String startPeriod, String endPeriod, boolean seasonal, boolean permanent) throws ParseException {
         this.name = name;
 
         String[] periodDateStart = startPeriod.split("/");
-        this.startPeriod = new DateOur(periodDateStart[0], periodDateStart[1]);
+        this.startPeriod = new DateOur(periodDateStart[0], periodDateStart[1], periodDateStart[2]);
 
         String[] periodDateEnd = endPeriod.split("/");
-        this.endPeriod = new DateOur(periodDateEnd[0], periodDateEnd[1]);
+        this.endPeriod = new DateOur(periodDateEnd[0], periodDateEnd[1],periodDateStart[2]);
         this.recipe = recipe;
+        this.seasonal = seasonal;
+        this.permanent = permanent;
     }
 
     public String getName() {

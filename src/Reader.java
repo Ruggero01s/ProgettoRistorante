@@ -77,7 +77,7 @@ public class Reader
                         model.setCapacity(Integer.parseInt(xmlr.getAttributeValue(0)));
                         model.setWorkPersonLoad((int) Double.parseDouble(xmlr.getAttributeValue(1)));
                         today=xmlr.getAttributeValue(2).split("/");
-                        model.setToday(new DateOur(today[0],today[1]));
+                        model.setToday(new DateOur(today[0],today[1],today[2]));
                     }
                 }
                 xmlr.next();
@@ -207,6 +207,7 @@ public class Reader
             xmlif = XMLInputFactory.newInstance();
             xmlr = xmlif.createXMLStreamReader(new FileInputStream(Writer.ROOT + Writer.DISHES_NAME_FILE));
             String name="",id="",startPeriod="",endPeriod="";
+            boolean seasonal=false,permanent=false;
             while (xmlr.hasNext())
             {
                 // continua a leggere finche ha eventi a disposizione
@@ -220,6 +221,8 @@ public class Reader
                             name=xmlr.getAttributeValue(0);
                             startPeriod = xmlr.getAttributeValue(1);
                             endPeriod = xmlr.getAttributeValue(2);
+                            seasonal= Boolean.parseBoolean(xmlr.getAttributeValue(3));
+                            permanent= Boolean.parseBoolean(xmlr.getAttributeValue(4));
                             break;
                         case "recipe":
                             id=xmlr.getAttributeValue(0);
@@ -229,8 +232,7 @@ public class Reader
                 if (xmlr.getEventType() == XMLStreamConstants.END_ELEMENT)
                     if(xmlr.getLocalName().equals("dish"))
                     {
-                        dishes.add(new Dish(name,
-                                ctrl.stringToRecipe(id),startPeriod,endPeriod));
+                        dishes.add(new Dish(name, ctrl.stringToRecipe(id),startPeriod,endPeriod,seasonal,permanent));
                     }
 
                 xmlr.next();
@@ -256,6 +258,7 @@ public class Reader
             xmlr = xmlif.createXMLStreamReader(new FileInputStream(Writer.ROOT + Writer.MENUS_NAME_FILE));
             String name="",startPeriod="",endPeriod="";
             ArrayList <String> dishes = new ArrayList<>();
+            boolean seasonal=false, permanent=false;
             while (xmlr.hasNext())
             {
                 // continua a leggere finche ha eventi a disposizione
@@ -267,6 +270,8 @@ public class Reader
                             name=xmlr.getAttributeValue(0);
                             startPeriod = xmlr.getAttributeValue(1);
                             endPeriod = xmlr.getAttributeValue(2);
+                            seasonal = Boolean.parseBoolean(xmlr.getAttributeValue(3));
+                            permanent = Boolean.parseBoolean(xmlr.getAttributeValue(4));
                             break;
                         case "dish":
                             dishes.add(xmlr.getAttributeValue(0));
@@ -276,7 +281,7 @@ public class Reader
                 if (xmlr.getEventType() == XMLStreamConstants.END_ELEMENT)
                     if(xmlr.getLocalName().equals("menu"))
                     {
-                        menu.add(new ThematicMenu(name,startPeriod,endPeriod, ctrl.stringListToDishList(dishes)));
+                        menu.add(new ThematicMenu(name,startPeriod,endPeriod, ctrl.stringListToDishList(dishes),seasonal, permanent));
                         dishes.clear();
                     }
                 xmlr.next();
@@ -332,7 +337,7 @@ public class Reader
                             if (dateString.length==0) //per evitare rotture in lettura
                                 return new HashMap<>();
                             ArrayList<Booking> out = new ArrayList<>(book);
-                            bookings.put(new DateOur(dateString[0],dateString[1]),out);
+                            bookings.put(new DateOur(dateString[0],dateString[1],dateString[2]),out);
                             book.clear();
                             break;
                         case "book":

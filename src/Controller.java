@@ -285,7 +285,8 @@ public class Controller
 		for (String s: inputList)
 		{
 			found = false;
-			if(!s.equals("")) {
+			if(!s.equals(""))
+			{
 				for (Dish d : model.getDishesSet()) {
 					if (d.getName().equals(s)) {
 						dishesForMenu.add(d);
@@ -303,7 +304,7 @@ public class Controller
 			sui.errorSetter("noDish");
 		else
 		{
-			ThematicMenu temp = new ThematicMenu(inputName, inputStartDate, inputEndDate, dishesForMenu);
+			ThematicMenu temp = new ThematicMenu(inputName, inputStartDate, inputEndDate, dishesForMenu, seasonal, permanent);
 			if(temp.getWorkThematicMenuLoad()<=((double)model.getWorkPersonLoad()*4/3)) {
 				boolean valid = true;
 				for (String s : sui.dishString) {
@@ -328,6 +329,8 @@ public class Controller
 		if(!s.contains("/"))
 			return false;
 		String [] pezzi = s.split("/");
+		if(Integer.parseInt(pezzi[2])<=0)
+			return false;
 		switch (Integer.parseInt(pezzi[1]))
 		{
 			case 1,3,5,7,8,10,12:
@@ -474,7 +477,7 @@ public class Controller
 		try
 		{
 			bookDates = input.split("/");
-			return new DateOur(bookDates[0],bookDates[1]);
+			return new DateOur(bookDates[0],bookDates[1],bookDates[2]);
 		}
 		catch (Exception e) {
 			sui.errorSetter("invalidDate");
