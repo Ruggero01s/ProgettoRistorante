@@ -184,8 +184,18 @@ public class SimpleUI extends JFrame {
 //-------------------------------------------------------------------------------------------
     //EMPLOY SEE BOOKINGS
     JLabel empSeeBookText = new JLabel("Prenotazioni:");
+    JLabel empSeeBookDateText = new JLabel("Data da cercare:");
     JTextArea empSeeBookDateInput = new JTextArea();
-    JTextArea empSeeBookAreaOut = new JTextArea();
+    JLabel empSeeBookNameText = new JLabel("Nome:");
+    JLabel empSeeBookNumText = new JLabel("Numero:");
+    JLabel empSeeBookWorkloadText = new JLabel("Workload:");
+    JTextArea empSeeBookNameAreaOut = new JTextArea();
+    JTextArea empSeeBookNumAreaOut = new JTextArea();
+    JTextArea empSeeBookWorkloadAreaOut = new JTextArea();
+    JLabel empSeeBookCapacityTotalText = new JLabel("Posti disponibile:");
+    JTextArea empSeeBookCapacityTotalOut = new JTextArea();
+    JLabel empSeeBookWorkloadTotalText = new JLabel("Workload disponibile:");
+    JTextArea empSeeBookWorkloadTotalOut = new JTextArea();
     JButton empSeeBookSend = new JButton("Vedi prenotazioni");
     JButton empSeeBookWrite = new JButton("Salva prenotazioni");
     JButton empSeeBookClear = new JButton("Svuota prenotazioni");
@@ -330,6 +340,13 @@ public class SimpleUI extends JFrame {
         cfgMenuAreaOut.setBorder(border);
         cfgFoodsAreaOut.setBorder(border);
 
+
+        cfgResBaseOut.setPreferredSize(new Dimension(300, 50));
+        cfgResDrinksOut.setEditable(false);
+        cfgResFoodsOut.setEditable(false);
+        cfgResRecipesOut.setEditable(false);
+        cfgResDishesOut.setEditable(false);
+        cfgResMenuOut.setEditable(false);
 
         cfgResBaseOut.setEditable(false);
         cfgResDrinksOut.setEditable(false);
@@ -567,52 +584,59 @@ public class SimpleUI extends JFrame {
         });
 
         //Resconto tab
-        c.gridx = 0;
-        c.gridy = 0;
+        titlePadding.gridx = 0;
+        titlePadding.gridy = 0;
         cfgResPanel.add(cfgResText, titlePadding);
         c.gridx = 0;
         c.gridy = 1;
         cfgResPanel.add(cfgResBaseText, c);
         c.gridx = 1;
         c.gridy = 1;
+        c.gridwidth=4;
         cfgResPanel.add(cfgResBaseOut, c);
-
+        c.gridwidth=1;
         c.gridx = 0;
         c.gridy = 2;
         cfgResPanel.add(cfgResDrinksText, c);
         c.gridx = 1;
         c.gridy = 2;
+        c.gridwidth=4;
         cfgResPanel.add(cfgResDrinksOut, c);
+        c.gridwidth=1;
 
         c.gridx = 0;
         c.gridy = 3;
         cfgResPanel.add(cfgResFoodsText, c);
         c.gridx = 1;
         c.gridy = 3;
+        c.gridwidth=GridBagConstraints.REMAINDER;
         cfgResPanel.add(cfgResFoodsOut, c);
-
+        c.gridwidth=1;
         c.gridx = 0;
         c.gridy = 4;
         cfgResPanel.add(cfgResRecipesText, c);
         c.gridx = 1;
         c.gridy = 4;
+        c.gridwidth=GridBagConstraints.REMAINDER;
         cfgResPanel.add(cfgResRecipesOut, c);
-
+        c.gridwidth=1;
         c.gridx = 0;
         c.gridy = 5;
         cfgResPanel.add(cfgResDishesText, c);
         c.gridx = 1;
         c.gridy = 5;
+        c.gridwidth=GridBagConstraints.REMAINDER;
         cfgResPanel.add(cfgResDishesOut, c);
-
+        c.gridwidth=1;
         c.gridx = 0;
         c.gridy = 6;
         cfgResPanel.add(cfgResMenuText, c);
         c.gridx = 1;
         c.gridy = 6;
+        c.gridwidth=GridBagConstraints.REMAINDER;
         cfgResPanel.add(cfgResMenuOut, c);
-
-        c.gridx = 6;
+        c.gridwidth=1;
+        c.gridx = 4;
         c.gridy = 7;
         cfgResPanel.add(buttonBack6, c);
 
@@ -658,25 +682,53 @@ public class SimpleUI extends JFrame {
         titlePadding.gridx = 0;
         titlePadding.gridy = 0;
         empSeeBookingsPanel.add(empSeeBookText, titlePadding);
+        c.gridx = 0;
+        c.gridy = 1;
+        empSeeBookingsPanel.add(empSeeBookDateText,c);
         c.gridx = 1;
-        c.gridy = 0;
+        c.gridy = 1;
         empSeeBookingsPanel.add(empSeeBookDateInput,c);
         c.gridx = 0;
         c.gridy = 2;
-        c.gridwidth=2;
-        empSeeBookingsPanel.add(empSeeBookAreaOut,c);
-        c.gridwidth=1;
+        empSeeBookingsPanel.add(empSeeBookNameText,c);
+        c.gridx = 1;
+        c.gridy = 2;
+        empSeeBookingsPanel.add(empSeeBookNumText,c);
+        c.gridx = 2;
+        c.gridy = 2;
+        empSeeBookingsPanel.add(empSeeBookWorkloadText,c);
         c.gridx = 0;
-        c.gridy = 5;
-        empSeeBookingsPanel.add(buttonBack8,c);
+        c.gridy = 3;
+        empSeeBookingsPanel.add(empSeeBookNameAreaOut,c);
+        c.gridx = 1;
+        c.gridy = 3;
+        empSeeBookingsPanel.add(empSeeBookNumAreaOut,c);
+        c.gridx = 2;
+        c.gridy = 3;
+        empSeeBookingsPanel.add(empSeeBookWorkloadAreaOut,c);
         c.gridx = 0;
         c.gridy = 4;
-        empSeeBookingsPanel.add(empSeeBookSend,c);
+        empSeeBookingsPanel.add(empSeeBookCapacityTotalText,c);
+        c.gridx = 1;
+        c.gridy = 4;
+        empSeeBookingsPanel.add(empSeeBookCapacityTotalOut,c);
+        c.gridx = 0;
+        c.gridy = 5;
+        empSeeBookingsPanel.add(empSeeBookWorkloadTotalText,c);
+        c.gridx = 1;
+        c.gridy = 5;
+        empSeeBookingsPanel.add(empSeeBookWorkloadTotalOut,c);
         c.gridx = 0;
         c.gridy = 6;
-        empSeeBookingsPanel.add(empSeeBookWrite,c);
+        empSeeBookingsPanel.add(buttonBack8,c);
         c.gridx = 1;
         c.gridy = 6;
+        empSeeBookingsPanel.add(empSeeBookSend,c);
+        c.gridx = 0;
+        c.gridy = 7;
+        empSeeBookingsPanel.add(empSeeBookWrite,c);
+        c.gridx = 1;
+        c.gridy = 7;
         empSeeBookingsPanel.add(empSeeBookClear,c);
 
         // input prenotazioni
@@ -719,14 +771,23 @@ public class SimpleUI extends JFrame {
 
 
         empSeeBookDateInput.setLineWrap(true);
-        empSeeBookAreaOut.setLineWrap(true);
+        empSeeBookNameAreaOut.setLineWrap(true);
+        empSeeBookNumAreaOut.setLineWrap(true);
+        empSeeBookWorkloadAreaOut.setLineWrap(true);
+        empSeeBookWorkloadTotalOut.setLineWrap(true);
+        empSeeBookCapacityTotalOut.setLineWrap(true);
         empNewBookOrderInput.setLineWrap(true);
         empNewBookNameInput.setLineWrap(true);
         empNewBookDateInput.setLineWrap(true);
         empNewBookNumInput.setLineWrap(true);
 
+
+        empSeeBookWorkloadTotalOut.setBorder(border);
+        empSeeBookCapacityTotalOut.setBorder(border);
         empSeeBookDateInput.setBorder(border);
-        empSeeBookAreaOut.setBorder(border);
+        empSeeBookNameAreaOut.setBorder(border);
+        empSeeBookNumAreaOut.setBorder(border);
+        empSeeBookWorkloadAreaOut.setBorder(border);
         empNewBookOrderInput.setBorder(border);
         empNewBookNameInput.setBorder(border);
         empNewBookDateInput.setBorder(border);
@@ -737,6 +798,8 @@ public class SimpleUI extends JFrame {
         buttonBack10.addActionListener(back);
         buttonBack11.addActionListener(back);
 
+
+        //todo sistemare visione prenotzioni
         empSeeBookSend.addActionListener(e->{
             String s = empSeeBookDateInput.getText().trim();
             if(Controller.checkDate(s))
@@ -745,7 +808,7 @@ public class SimpleUI extends JFrame {
             }
         });
 
-        //todo sistemare visione prenotzioni
+
 
         empNewBookMenuBox.addActionListener(e ->
         {
@@ -830,6 +893,14 @@ public class SimpleUI extends JFrame {
                 break;
             case "notFound":
                 JOptionPane.showMessageDialog(getContentPane(), "Piatto o menù non trovato",
+                        "Err", JOptionPane.ERROR_MESSAGE);
+                break;
+            case "noBookings":
+                JOptionPane.showMessageDialog(getContentPane(), "Nessuna prenotazione trovata",
+                        "Err", JOptionPane.ERROR_MESSAGE);
+                break;
+            case "noQuantity":
+                JOptionPane.showMessageDialog(getContentPane(), "Quantità di un elemento non valida",
                         "Err", JOptionPane.ERROR_MESSAGE);
                 break;
         }

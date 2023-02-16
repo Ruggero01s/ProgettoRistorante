@@ -1,6 +1,7 @@
 import java.util.HashMap;
+import java.util.Map;
 
-public class  Recipe //todo override equals
+public class  Recipe
 {
     private String id;
     private HashMap<String, Double> ingredients = new HashMap<>();
@@ -63,5 +64,14 @@ public class  Recipe //todo override equals
         result = 31 * result + id.hashCode();
         result = 31 * result + ((Integer)portions).hashCode();
         return result;
+    }
+
+    public String getIngredientsList(){
+        StringBuilder out= new StringBuilder();
+        for (Map.Entry<String, Double> entry : ingredients.entrySet())
+        {
+            out.append(entry.getKey()).append(":").append(entry.getValue()).append(", ");
+        }
+        return out.toString();
     }
 }

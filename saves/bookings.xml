@@ -3,5 +3,8 @@
 	<booking date="01/01/1444">
 		<book name="qewq" number="3" workload="9">
 			<order dish="Polpett" quantity="3"></order>
-			<order dish="PastaCoTonno" quantity="3"></order></book></booking>
+			<order dish="PastaCoTonno" quantity="3"></order></book>
+		<book name="Ciccio" number="12" workload="36">
+			<order dish="Polpett" quantity="12"></order>
+			<order dish="PastaCoTonno" quantity="12"></order></book></booking>
 </bookings>
