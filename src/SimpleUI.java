@@ -17,6 +17,11 @@ public class SimpleUI extends JFrame {
     private State state;
     private Controller ctrl;
 
+    boolean MenuPermaRadio = false;
+    boolean MenuSeasRadio = false;
+    boolean DishPermaRadio = false;
+    boolean DishSeasRadio = false;
+
 
     //GENERAL
     JButton managerButton = new JButton("Manager");
@@ -112,7 +117,11 @@ public class SimpleUI extends JFrame {
     JLabel cfgDishTextDate = new JLabel("Inserisci data di inizio e fine: ");
     JTextArea cfgDishAreaOut = new JTextArea();
     JButton cfgDishSendButton = new JButton("Conferma piatto");
+
     JRadioButton cfgDishPermanentRadio = new JRadioButton("Permanente");
+    JRadioButton cfgDishSeasonalRadio = new JRadioButton("Stagionale");
+    ButtonGroup cfgDishGroup = new ButtonGroup();
+
     JTextArea cfgDishNameInput = new JTextArea();
     String dishList;
     public void setDishList(String list) {
@@ -139,6 +148,9 @@ public class SimpleUI extends JFrame {
         cfgMenuAreaOut.setText(this.menuList);
     }
     JRadioButton cfgMenuPermanentRadio = new JRadioButton("Permanente");
+    JRadioButton cfgMenuSeasonalRadio = new JRadioButton("Stagionale");
+    ButtonGroup cfgMenuGroup = new ButtonGroup();
+
     JTextArea cfgMenuNameInput = new JTextArea();
     JTextArea cfgMenuDishesInput = new JTextArea();
     JTextArea cfgMenuSDateInput = new JTextArea();
@@ -227,7 +239,7 @@ public class SimpleUI extends JFrame {
         this.ctrl = ctrl;
         // Set up the UI components
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        setSize(600, 600);
+        setSize(1000, 600);
         setVisible(true);
         getContentPane().setBackground(Color.GRAY); //TODO
         setLayout(new BorderLayout());
@@ -378,16 +390,10 @@ public class SimpleUI extends JFrame {
         buttonBack6.addActionListener(back);
         buttonBack7.addActionListener(back);
 
-        cfgMenuComboBox.addActionListener(e ->
-        {
-            String selectedItem = ((String) cfgMenuComboBox.getSelectedItem()).split("-")[0].trim();
-            cfgMenuDishesInput.setText(cfgMenuDishesInput.getText() + selectedItem + "\n");
-        });
-
-        cfgResDatiMenuBox.addActionListener(e ->
-        {
-            ctrl.writeMenuComp((String) cfgResDatiMenuBox.getSelectedItem());
-        });
+        cfgDishGroup.add(cfgDishPermanentRadio);
+        cfgDishGroup.add(cfgDishSeasonalRadio);
+        cfgMenuGroup.add(cfgMenuSeasonalRadio);
+        cfgMenuGroup.add(cfgMenuPermanentRadio);
 
         // general config manager
 
@@ -515,26 +521,50 @@ public class SimpleUI extends JFrame {
         c.gridx = 0;
         c.gridy = 3;
         cfgDishesPanel.add(cfgDishTextDate, c);
+        c.gridx = 1;
+        c.gridy = 4;
+        cfgDishesPanel.add(cfgDishPermanentRadio, c);
+        cfgDishPermanentRadio.addActionListener(e -> {
+            if (DishPermaRadio) {
+                DishPermaRadio = false;
+                cfgDishGroup.clearSelection();
+            }else {
+                DishPermaRadio = true;
+                DishSeasRadio = false;
+            }
+        });
+
         c.gridx = 2;
+        c.gridy = 4;
+        cfgDishesPanel.add(cfgDishSeasonalRadio,c);
+        cfgDishSeasonalRadio.addActionListener(e -> {
+            if (DishSeasRadio){
+                DishSeasRadio = false;
+                cfgDishGroup.clearSelection();
+            }else {
+                DishSeasRadio = true;
+                DishPermaRadio = false;
+            }
+        });
+
+
+        c.gridx = 1;
         c.gridy = 3;
         cfgDishesPanel.add(cfgDishSDateInput, c);
-        c.gridx = 3;
+        c.gridx = 2;
         c.gridy = 3;
         cfgDishesPanel.add(cfgDishEDateInput, c);
-        c.gridx = 1;
-        c.gridy = 3;
-        cfgDishesPanel.add(cfgDishPermanentRadio, c);
         c.gridx = 0;
-        c.gridy = 4;
+        c.gridy = 5;
         cfgDishesPanel.add(cfgDishTextOut, c);
         c.gridx = 1;
-        c.gridy = 4;
+        c.gridy = 5;
         cfgDishesPanel.add(cfgDishAreaOut, c);
         c.gridx = 0;
-        c.gridy = 5;
+        c.gridy = 6;
         cfgDishesPanel.add(buttonBack4, c);
-        c.gridx = 3;
-        c.gridy = 5;
+        c.gridx = 2;
+        c.gridy = 6;
         cfgDishesPanel.add(cfgDishSendButton, c);
         cfgDishSendButton.addActionListener(e -> ctrl.saveDish());
 
@@ -554,6 +584,12 @@ public class SimpleUI extends JFrame {
         c.gridx = 1;
         c.gridy = 2;
         cfgMenuPanel.add(cfgMenuComboBox, c);
+        cfgMenuComboBox.addActionListener(e ->
+        {
+            String selectedItem = ((String) cfgMenuComboBox.getSelectedItem()).split("-")[0].trim();
+            cfgMenuDishesInput.setText(cfgMenuDishesInput.getText() + selectedItem + "\n");
+        });
+
         c.gridx = 2;
         c.gridy = 2;
         cfgMenuPanel.add(cfgMenuDishesInput, c);
@@ -561,25 +597,50 @@ public class SimpleUI extends JFrame {
         c.gridy = 3;
         cfgMenuPanel.add(cfgMenuTextDate, c);
         c.gridx = 1;
-        c.gridy = 3;
+        c.gridy = 4;
         cfgMenuPanel.add(cfgMenuPermanentRadio, c);
+        cfgMenuPermanentRadio.addActionListener(e -> {
+            if (MenuPermaRadio)
+            {
+                MenuPermaRadio = false;
+                cfgMenuGroup.clearSelection();
+            }else {
+                MenuPermaRadio = true;
+                MenuSeasRadio = false;
+            }
+        });
+
         c.gridx = 2;
+        c.gridy = 4;
+        cfgMenuPanel.add(cfgMenuSeasonalRadio, c);
+        cfgMenuSeasonalRadio.addActionListener(e -> {
+            if (MenuSeasRadio)
+            {
+                MenuSeasRadio = false;
+                cfgMenuGroup.clearSelection();
+            }else{
+                MenuSeasRadio = true;
+                MenuPermaRadio = false;
+            }
+        });
+
+        c.gridx = 1;
         c.gridy = 3;
         cfgMenuPanel.add(cfgMenuSDateInput, c);
-        c.gridx = 3;
+        c.gridx = 2;
         c.gridy = 3;
         cfgMenuPanel.add(cfgMenuEDateInput, c);
         c.gridx = 0;
-        c.gridy = 4;
+        c.gridy = 5;
         cfgMenuPanel.add(cfgMenuTextOut, c);
         c.gridx = 1;
-        c.gridy = 4;
+        c.gridy = 5;
         cfgMenuPanel.add(cfgMenuAreaOut, c);
         c.gridx = 0;
-        c.gridy = 5;
+        c.gridy = 6;
         cfgMenuPanel.add(buttonBack5, c);
-        c.gridx = 3;
-        c.gridy = 5;
+        c.gridx = 2;
+        c.gridy = 6;
         cfgMenuPanel.add(cfgMenuSendButton, c);
         cfgMenuSendButton.addActionListener(e -> {
             try {
@@ -644,6 +705,10 @@ public class SimpleUI extends JFrame {
         c.gridx = 0;
         c.gridy = 7;
         cfgResPanel.add(cfgResDatiMenuBox, c);
+        cfgResDatiMenuBox.addActionListener(e ->
+        {
+            ctrl.writeMenuComp((String) cfgResDatiMenuBox.getSelectedItem());
+        });
         c.gridx = 1;
         c.gridy = 7;
         c.gridwidth=GridBagConstraints.REMAINDER;
@@ -691,7 +756,7 @@ public class SimpleUI extends JFrame {
     }
 
     private void empInit() {
-        //output prenotazioni
+        //SeeBooking
         titlePadding.gridx = 0;
         titlePadding.gridy = 0;
         empSeeBookingsPanel.add(empSeeBookText, titlePadding);
@@ -737,14 +802,28 @@ public class SimpleUI extends JFrame {
         c.gridx = 1;
         c.gridy = 6;
         empSeeBookingsPanel.add(empSeeBookSend,c);
+        empSeeBookSend.addActionListener(e->{
+            String s = empSeeBookDateInput.getText().trim();
+            if(Controller.checkDate(s))
+            {
+                ctrl.seeBookings(ctrl.inputToDate(s));
+            }
+        });
         c.gridx = 0;
         c.gridy = 7;
         empSeeBookingsPanel.add(empSeeBookWrite,c);
+        empSeeBookWrite.addActionListener(e -> {
+            ctrl.writeBookings();
+        });
+
         c.gridx = 1;
         c.gridy = 7;
         empSeeBookingsPanel.add(empSeeBookClear,c);
+        empSeeBookClear.addActionListener(e -> {
+            ctrl.clearInfo("bookings");
+        });
 
-        // input prenotazioni
+        // NewBooking prenotazioni
         titlePadding.gridx = 0;
         titlePadding.gridy = 0;
         empNewBookingPanel.add(empNewBookText,titlePadding);
@@ -772,12 +851,21 @@ public class SimpleUI extends JFrame {
         c.gridx = 1;
         c.gridy = 4;
         empNewBookingPanel.add(empNewBookMenuBox,c);
+        empNewBookMenuBox.addActionListener(e ->
+        {
+            String selectedItem = (String) empNewBookMenuBox.getSelectedItem();
+            empNewBookOrderInput.setText(empNewBookOrderInput.getText() + selectedItem + ":1\n");
+        });
         c.gridx = 2;
         c.gridy = 4;
         empNewBookingPanel.add(empNewBookOrderInput,c);
         c.gridx = 2;
         c.gridy = 6;
         empNewBookingPanel.add(empNewBookSend,c);
+        empNewBookSend.addActionListener(e -> {
+            ctrl.saveBooking();
+        });
+
         c.gridx = 0;
         c.gridy = 6;
         empNewBookingPanel.add(buttonBack9,c);
@@ -810,36 +898,6 @@ public class SimpleUI extends JFrame {
         buttonBack9.addActionListener(back);
         buttonBack10.addActionListener(back);
         buttonBack11.addActionListener(back);
-
-
-        //todo sistemare visione prenotzioni
-        empSeeBookSend.addActionListener(e->{
-            String s = empSeeBookDateInput.getText().trim();
-            if(Controller.checkDate(s))
-            {
-                    ctrl.seeBookings(ctrl.inputToDate(s));
-            }
-        });
-
-
-
-        empNewBookMenuBox.addActionListener(e ->
-        {
-            String selectedItem = (String) empNewBookMenuBox.getSelectedItem();
-            empNewBookOrderInput.setText(empNewBookOrderInput.getText() + selectedItem + ":1\n");
-        });
-
-        empNewBookSend.addActionListener(e -> {
-          ctrl.saveBooking();
-        });
-
-        empSeeBookWrite.addActionListener(e -> {
-           ctrl.writeBookings();
-        });
-
-        empSeeBookClear.addActionListener(e -> {
-            ctrl.clearInfo("bookings");
-        });
 
         empTabbedPane.add("Bookings", empSeeBookingsPanel);
         empTabbedPane.add("New Bookings", empNewBookingPanel);

@@ -220,31 +220,35 @@ public class Controller
 			
 			String inputStartDate = sui.cfgDishSDateInput.getText();
 			String inputEndDate = sui.cfgDishEDateInput.getText();
-
-			if (sui.cfgDishPermanentRadio.isSelected())
-			{
+			boolean perm = sui.cfgDishPermanentRadio.isSelected();
+			boolean seasonal = sui.cfgDishSeasonalRadio.isSelected();
+			if(!perm) {
+				if (!checkDate(inputStartDate) || !checkDate(inputEndDate)) {
+					sui.errorSetter("invalidDate");
+					return;
+				}
+			}
+			else {
 				inputStartDate = "01/01";
 				inputEndDate = "31/12";
 			}
-			if(!checkDate(inputStartDate) || !checkDate(inputEndDate)) {
-				sui.errorSetter("invalidDate");
-				return;
-			}
-				boolean found = false;
-				for (Recipe r : model.getRecipesSet()) {
-					found = false;
-					if (r.getId().equals(inputIngredients)) {
-						model.getDishesSet().add(new Dish(inputName, r, inputStartDate, inputEndDate));
-						updateDishStringList();
-						sui.cfgDishNameInput.setText(Model.CLEAR);
-						sui.cfgDishSDateInput.setText(Model.CLEAR);
-						sui.cfgDishEDateInput.setText(Model.CLEAR);
-						found = true;
-						break;
-					}
+			boolean found = false;
+			for (Recipe r : model.getRecipesSet())
+			{
+				found = false;
+				if (r.getId().equals(inputIngredients))
+				{
+					model.getDishesSet().add(new Dish(inputName, r, inputStartDate, inputEndDate, seasonal, perm));
+					updateDishStringList();
+					sui.cfgDishNameInput.setText(Model.CLEAR);
+					sui.cfgDishSDateInput.setText(Model.CLEAR);
+					sui.cfgDishEDateInput.setText(Model.CLEAR);
+					found = true;
+					break;
 				}
-				if (!found)
-					sui.errorSetter("noRecipe");
+			}
+			if (!found)
+				sui.errorSetter("noRecipe");
 		}catch (ParseException e)
 		{
 			sui.errorSetter("invalidDate");
@@ -260,18 +264,23 @@ public class Controller
 		String inputStartDate = sui.cfgMenuSDateInput.getText();
 		String inputEndDate = sui.cfgMenuEDateInput.getText();
 
+		boolean permanent = sui.cfgMenuPermanentRadio.isSelected();
+		boolean seasonal = sui.cfgMenuSeasonalRadio.isSelected();
+
 		ArrayList<Dish> dishesForMenu = new ArrayList<>();
 
-		if (sui.cfgMenuPermanentRadio.isSelected())
+		if(!permanent)
+		{
+			if (!checkDate(inputStartDate) || !checkDate(inputEndDate)) {
+				sui.errorSetter("invalidDate");
+				return;
+			}
+		}
+		else
 		{
 			inputStartDate = "01/01";
 			inputEndDate = "31/12";
 		}
-		if(!checkDate(inputStartDate) || !checkDate(inputEndDate)) {
-			sui.errorSetter("invalidDate");
-			return;
-		}
-
 		boolean found=false;
 		for (String s: inputList)
 		{
@@ -499,16 +508,10 @@ public class Controller
 						{
 							found = true;
 							for (Dish dish : model.getDishesSet()) {
-								if (dish.isValid(date)) {
 									if (order.containsKey(dish))
 										order.put(dish, order.get(dish) + num);
 									else
 										order.put(dish, num);
-								} else {
-									order.clear();
-									sui.errorSetter("invalidDate");
-									return order;
-								}
 							}
 							break;
 						}

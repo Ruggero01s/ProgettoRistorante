@@ -68,8 +68,23 @@ public class ThematicMenu
 	{
 		this.workThematicMenuLoad = workThematicMenuLoad;
 	}
-	
-	
+
+	public boolean isSeasonal() {
+		return seasonal;
+	}
+
+	public void setSeasonal(boolean seasonal) {
+		this.seasonal = seasonal;
+	}
+
+	public boolean isPermanent() {
+		return permanent;
+	}
+
+	public void setPermanent(boolean permanent) {
+		this.permanent = permanent;
+	}
+
 	public void calcWorkThematicMenuLoad ()
 	{
 		this.workThematicMenuLoad=0;

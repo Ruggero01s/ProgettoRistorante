@@ -7,7 +7,7 @@ public class Dish    //todo override equals
     private Recipe recipe;
     private boolean seasonal;
 
-    public Dish(String name, Recipe recipe/*, boolean permanent*/, String startPeriod, String endPeriod) throws ParseException {
+    public Dish(String name, Recipe recipe, String startPeriod, String endPeriod, boolean seasonal, boolean permanent) throws ParseException {
         this.name = name;
 
         String[] periodDateStart = startPeriod.split("/");
@@ -26,13 +26,21 @@ public class Dish    //todo override equals
         this.name = name;
     }
 
-   /* public boolean isPermanent() {
+    public boolean isSeasonal() {
+        return seasonal;
+    }
+
+    public void setSeasonal(boolean seasonal) {
+        this.seasonal = seasonal;
+    }
+
+    public boolean isPermanent() {
         return permanent;
     }
 
     public void setPermanent(boolean permanent) {
         this.permanent = permanent;
-    }*/
+    }
 
     public DateOur getStartPeriod() {
         return startPeriod;

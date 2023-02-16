@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <dishes>
-	<dish name="Polpett" startDate="01/01" endDate="31/12">
+	<dish name="Polpett" startDate="01/01/2023" endDate="31/12/2023" seasonal="false" permanent="true">
 		<recipe id="polpette"></recipe></dish>
-	<dish name="PastaCoTonno" startDate="01/04" endDate="06/07">
+	<dish name="PastaCoTonno" startDate="01/04/2023" endDate="06/07/2023" seasonal="false" permanent="false">
 		<recipe id="pastaTonno"></recipe></dish>
 </dishes>

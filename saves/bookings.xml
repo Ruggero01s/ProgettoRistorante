@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <bookings>
-	<booking date="01/01/1444">
+	<booking date="01/01/2023">
 		<book name="qewq" number="3" workload="9">
 			<order dish="Polpett" quantity="3"></order>
 			<order dish="PastaCoTonno" quantity="3"></order></book>
