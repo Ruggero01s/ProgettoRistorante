@@ -15,6 +15,15 @@ public class Model {
     private Set<Recipe> recipesSet= new HashSet<>();
     private Set<ThematicMenu> thematicMenusSet= new HashSet<>();
     private HashMap<DateOur,ArrayList<Booking>>  bookingMap = new HashMap<>();
+    private HashMap<String,Double> groceryMap = new HashMap<>();
+
+    public HashMap<String,Double> getGroceryMap() {
+        return groceryMap;
+    }
+
+    public void setGroceryMap(HashMap<String, Double> groceryMap) {
+        this.groceryMap = groceryMap;
+    }
 
     public int getWorkPersonLoad() {
         return workPersonLoad;

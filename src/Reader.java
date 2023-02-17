@@ -332,7 +332,7 @@ public class Reader
                 if (xmlr.getEventType() == XMLStreamConstants.END_ELEMENT)
                     switch (xmlr.getLocalName())
                     {
-                        case "bookings":
+                        case "booking":
                             if (dateString.length==0) //per evitare rotture in lettura
                                 return new HashMap<>();
                             ArrayList<Booking> out = new ArrayList<>(book);

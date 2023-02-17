@@ -2,7 +2,6 @@ import javax.swing.*;
 import javax.swing.border.Border;
 import java.awt.*;
 import java.awt.event.*;
-import java.text.ParseException;
 
 public class SimpleUI extends JFrame {
     // Enum for the different states of the frame
@@ -78,6 +77,7 @@ public class SimpleUI extends JFrame {
     JLabel cfgDrinksText = new JLabel("Inserisci dati bevanda: (nome : quantità (L))");
     JLabel cfgDrinksTextOut = new JLabel("Elenco dati bevande: (nome : quantità (L))");
     JTextArea cfgDrinksAreaOut = new JTextArea(drinkList);
+    JScrollPane cfgDrinksAreaScroll = new JScrollPane(cfgDrinksAreaOut);
     JButton cfgDrinksSendButton = new JButton("Inserisci");
     JTextArea cfgDrinksInput = new JTextArea();
     //------------------------------------------------------------------------------------------
@@ -88,6 +88,7 @@ public class SimpleUI extends JFrame {
     JTextArea cfgFoodsInput = new JTextArea();
     JLabel cfgFoodsTextOut = new JLabel("Elenco dati cibi extra: (nome : quantità (Hg))");
     JTextArea cfgFoodsAreaOut = new JTextArea(foodsList);
+    JScrollPane cfgFoodsAreaScroll = new JScrollPane(cfgFoodsAreaOut);
     //------------------------------------------------------------------------------------------
     //CONFIG_RECIPES
     JLabel cfgRecipeTextTitle = new JLabel("Inserisci dati ricetta");
@@ -118,6 +119,7 @@ public class SimpleUI extends JFrame {
     JLabel cfgDishTextRecipe = new JLabel("Seleziona ricetta: ");
     JLabel cfgDishTextDate = new JLabel("Inserisci data di inizio e fine: ");
     JTextArea cfgDishAreaOut = new JTextArea();
+    JScrollPane cfgDishAreaScroll = new JScrollPane(cfgDishAreaOut);
     JButton cfgDishSendButton = new JButton("Conferma piatto");
 
     JRadioButton cfgDishPermanentRadio = new JRadioButton("Permanente");
@@ -144,6 +146,7 @@ public class SimpleUI extends JFrame {
     JLabel cfgMenuTextName = new JLabel("Inserisci nome: ");
     JLabel cfgMenuTextOut = new JLabel("Elenco menu inseriti: ");
     JTextArea cfgMenuAreaOut = new JTextArea();
+    JScrollPane cfgMenuAreaScroll = new JScrollPane(cfgMenuAreaOut);
     JLabel cfgMenuTextDish = new JLabel("Seleziona od inserisci piatti: ");
     JLabel cfgMenuTextDate = new JLabel("Inserisci data di inizio e fine: ");
     JButton cfgMenuSendButton = new JButton("Conferma menu");

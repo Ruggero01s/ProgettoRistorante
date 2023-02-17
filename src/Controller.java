@@ -1,8 +1,5 @@
 import javax.swing.*;
-import java.text.ParseException;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
 
 public class Controller
 {
@@ -41,6 +38,7 @@ public class Controller
 		sui.cfgBaseInputCap.setText(Integer.toString(model.getCapacity()));
 		sui.cfgBaseInputIndWork.setText(Integer.toString(model.getWorkPersonLoad()));
 		sui.cfgBaseInputDate.setText(model.getToday().getStringDate());
+		generateGroceryList();
 	}
 
 	public String getTodayString(){
@@ -143,14 +141,23 @@ public class Controller
 	{
 		try
 		{
-			String[] input = sui.cfgDrinksInput.getText().split(":");
-			double quantity = Double.parseDouble(input[1]);
+			String input = sui.cfgDrinksInput.getText();
+			if (!input.contains(":"))
+				throw new NumberFormatException ("");
 
-			if(quantity<= 0)
+			String[] inputSplit = input.split(":");
+
+			if (inputSplit[0].equals(""))
+				throw new NumberFormatException ("");
+			if(inputSplit.length<2)
+				throw new NumberFormatException ("");
+
+			double quantity = Double.parseDouble(inputSplit[1]);
+
+			if (quantity <= 0)
 				sui.errorSetter("minZero");
-			else
-			{
-				model.getDrinksMap().put(input[0], quantity);
+			else {
+				model.getDrinksMap().put(inputSplit[0], quantity);
 				sui.cfgDrinksInput.setText("");
 				updateDrinkList();
 			}
@@ -164,8 +171,19 @@ public class Controller
 	public void saveFoods(){
 		try
 		{
-			String[] input = sui.cfgFoodsInput.getText().split(":");
-			double quantity = Double.parseDouble(input[1]);
+			String input = sui.cfgDrinksInput.getText();
+
+			if (!input.contains(":"))
+				throw new NumberFormatException ("");
+
+			String[] inputSplit = input.split(":");
+
+			if(inputSplit.length<2)
+				throw new NumberFormatException ("");
+			if (inputSplit[0].equals(""))
+				throw new NumberFormatException ("");
+			double quantity = Double.parseDouble(inputSplit[1]);
+
 			if(quantity<= 0)
 				sui.errorSetter("minZero");
 			else
@@ -193,13 +211,24 @@ public class Controller
 			HashMap<String, Double> ingredientQuantityMap = new HashMap<>();
 			String[] lines = inputIngredients.split("\n");
 
+			if (inputName.equals(""))
+				throw new NumberFormatException ("");
+
 			for (String line : lines)
 			{
 				if(!line.contains(":"))
 					throw new NumberFormatException ("");
 
 				String[] words = line.split(":");
+
+				if(words[0].equals(""))
+					throw new NumberFormatException ("");
+
+				if (words.length<2)
+					throw new NumberFormatException ("");
+
 				double quantity=Double.parseDouble(words[1]);
+
 				if(quantity<=0)
 				{
 					err = true;
@@ -213,12 +242,17 @@ public class Controller
 				sui.errorSetter("minZero");
 			else
 			{
-				model.getRecipesSet().add(new Recipe(inputName, ingredientQuantityMap, portions, workLoad));
-				sui.cfgRecipeNameInput.setText(Model.CLEAR);
-				sui.cfgRecipeIngredientsInput.setText(Model.CLEAR);
-				sui.cfgRecipePortionsInput.setText(Model.CLEAR);
-				sui.cfgRecipeWorkLoadInput.setText(Model.CLEAR);
-				updateRecipeStringList();
+				if(model.getRecipesSet().add(new Recipe(inputName, ingredientQuantityMap, portions, workLoad)))
+				{
+					sui.cfgRecipeNameInput.setText(Model.CLEAR);
+					sui.cfgRecipeIngredientsInput.setText(Model.CLEAR);
+					sui.cfgRecipePortionsInput.setText(Model.CLEAR);
+					sui.cfgRecipeWorkLoadInput.setText(Model.CLEAR);
+					updateRecipeStringList();
+				}
+				else
+					sui.errorSetter("existingName");
+
 			}
 		}
 		catch (NumberFormatException e)
@@ -227,25 +261,33 @@ public class Controller
 		}
 	}
     
-    public void saveDish() {
+    public void saveDish()
+	{
 		try
 		{
 			String inputName = sui.cfgDishNameInput.getText();
-			String inputIngredients = ((String) sui.cfgDishComboBox.getSelectedItem()).split("-")[0].trim();
+
+			if(inputName.equals(Model.CLEAR))
+				throw new NumberFormatException ("");
+
+			String inputRecipe = ((String) sui.cfgDishComboBox.getSelectedItem()).split("-")[0].trim();
 			
 			String inputStartDate = sui.cfgDishSDateInput.getText();
 			String inputEndDate = sui.cfgDishEDateInput.getText();
 			boolean perm = sui.cfgDishPermanentRadio.isSelected();
 			boolean seasonal = sui.cfgDishSeasonalRadio.isSelected();
-			if(!perm) {
-				if (!checkDate(inputStartDate) || !checkDate(inputEndDate)) {
+			if(!perm)
+			{
+				if (!checkDate(inputStartDate) || !checkDate(inputEndDate))
+				{
 					sui.errorSetter("invalidDate");
 					return;
 				}
 			}
-			else {
-				inputStartDate = "01/01";
-				inputEndDate = "31/12";
+			else
+			{
+				inputStartDate = "01/01/1444";
+				inputEndDate = "31/12/1444";
 			}
 			boolean found = false;
 			for (Recipe r : model.getRecipesSet())
@@ -253,26 +295,36 @@ public class Controller
 				found = false;
 				if (r.getId().equals(inputRecipe))
 				{
-					model.getDishesSet().add(new Dish(inputName, r, inputStartDate, inputEndDate, seasonal, perm));
-					updateDishStringList();
-					sui.cfgDishNameInput.setText(Model.CLEAR);
-					sui.cfgDishSDateInput.setText(Model.CLEAR);
-					sui.cfgDishEDateInput.setText(Model.CLEAR);
-					found = true;
-					break;
+					if(model.getDishesSet().add(new Dish(inputName, r, inputStartDate, inputEndDate, seasonal, perm)))
+					{
+						updateDishStringList();
+						sui.cfgDishNameInput.setText(Model.CLEAR);
+						sui.cfgDishSDateInput.setText(Model.CLEAR);
+						sui.cfgDishEDateInput.setText(Model.CLEAR);
+						found = true;
+						break;
+					}
+					else
+						sui.errorSetter("existingName");
 				}
 			}
 			if (!found)
 				sui.errorSetter("noRecipe");
-		}catch (ParseException e)
+		}catch (Exception e)
 		{
-			sui.errorSetter("invalidDate");
+			sui.errorSetter("NumberFormatException");
 		}
 	}
 
-	public void saveMenu() throws ParseException {
+	public void saveMenu()
+	{
+		try
+		{
 		String inputName = sui.cfgMenuNameInput.getText();
 		String inputs = sui.cfgMenuDishesInput.getText();
+
+		if (inputName.equals(Model.CLEAR))
+			throw new NumberFormatException("");
 
 		String[] inputList = inputs.split("\n");
 
@@ -293,8 +345,8 @@ public class Controller
 		}
 		else
 		{
-			inputStartDate = "01/01";
-			inputEndDate = "31/12";
+			inputStartDate = "01/01/1444";
+			inputEndDate = "31/12/1444";
 		}
 		boolean found=false;
 		for (String s: inputList)
@@ -328,10 +380,14 @@ public class Controller
 						break;
 					}
 				}
-				if (valid) {
-					model.getThematicMenusSet().add(temp);
-					updateMenuOut();
-					updateMenuBoxes();
+				if (valid)
+				{
+					if(model.getThematicMenusSet().add(temp)) {
+						updateMenuOut();
+						updateMenuBoxes();
+					}
+					else
+						sui.errorSetter("existingName");
 				}
 				else sui.errorSetter("sameNameAsDish");
 			}else sui.errorSetter("thiccMenu");
@@ -702,4 +758,89 @@ public class Controller
 		Writer.writeBookings(model.getBookingMap());
 	}
 
+	private void generateGroceryList()
+	{
+		HashMap<String,Double> groceryMap = new HashMap<>();
+		HashMap<String,Double> surplusMap = new HashMap<>();
+		Double quantity=0.0,surplus=0.0;
+		int multi=0;
+		Recipe recipe;
+		HashMap<Dish, Integer> allDish = new HashMap<>();
+		if(model.getBookingMap().containsKey(model.getToday()))
+		{
+			ArrayList <Booking> book = new ArrayList<>(model.getBookingMap().get(model.getToday()));
+			for (Booking b: book)
+			{
+ 				for (Map.Entry<Dish, Integer> entry : b.getOrder().entrySet())
+				{
+					Dish dish = entry.getKey();
+					if(allDish.containsKey(dish))
+						allDish.put(dish, entry.getValue() + allDish.get(dish));
+					else
+						allDish.put(dish, entry.getValue());
+				}
+			}
+
+			for (Map.Entry<Dish, Integer> entry : allDish.entrySet())
+			{
+				recipe = entry.getKey().getRecipe();
+
+				for (Map.Entry<String, Double> ingredient : recipe.getIngredients().entrySet())
+				{
+					multi = entry.getValue()/recipe.getPortions();
+					int resto = entry.getValue()%recipe.getPortions();
+
+					if(multi == 0)
+					{
+						multi++;
+						surplus=ingredient.getValue()*(recipe.getPortions()-entry.getValue());
+					}
+					if(resto!=0)
+					{
+						multi++;
+						surplus=ingredient.getValue()/recipe.getPortions()*resto;
+					}
+
+					quantity = ingredient.getValue()*multi;
+
+					if (groceryMap.containsKey(ingredient.getKey()))
+					{
+						double delta = quantity;
+						quantity+= groceryMap.get(ingredient.getKey());
+						delta = quantity - delta;
+						if (delta<surplusMap.get(ingredient.getKey()))
+						{
+							surplusMap.put(ingredient.getKey(),(surplusMap.get(ingredient.getKey())-delta));
+						}
+						else
+						{
+							groceryMap.put(ingredient.getKey(), quantity);
+							surplusMap.put(ingredient.getKey(),surplusMap.get(ingredient.getKey())+surplus);
+						}
+					}
+					else
+					{
+						groceryMap.put(ingredient.getKey(),quantity);
+						surplusMap.put(ingredient.getKey(),surplus);
+					}
+				}
+			}
+			model.setGroceryMap(groceryMap);
+			groceryMapToString();
+		}
+		else {
+			//todo messaggio di non esistenza di prenotazioni
+		}
+	}
+
+	private void groceryMapToString()
+	{
+		String out ="";
+		for (Map.Entry<String, Double> entry : model.getGroceryMap().entrySet())
+		{
+			out= out+entry.getKey()+" : "+entry.getValue()+"\n";
+		}
+		out.trim();
+		sui.wareListOut.setText(out);
+	}
 }
