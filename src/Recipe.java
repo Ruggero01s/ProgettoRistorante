@@ -62,7 +62,6 @@ public class  Recipe
     public int hashCode() {
         int result = 17;
         result = 31 * result + id.hashCode();
-        result = 31 * result + ((Integer)portions).hashCode();
         return result;
     }
 

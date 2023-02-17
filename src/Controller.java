@@ -7,14 +7,14 @@ import java.util.Map;
 public class Controller
 {
 	Model model = new Model();
-	SimpleUI sui = new SimpleUI(this);
+	SimpleUI sui;
 	Reader reader = new Reader(this);
 	
 	public void init()
 	{
-		sui.init();
-
+		sui = new SimpleUI(this);
 		loadModel();
+		sui.init();
 	}
 
 	private void loadModel()
@@ -43,6 +43,10 @@ public class Controller
 		sui.cfgBaseInputDate.setText(model.getToday().getStringDate());
 	}
 
+	public String getTodayString(){
+		return model.getToday().getStringDate();
+	}
+
 	public void clearInfo(String name)
 	{
 		switch (name)
@@ -55,7 +59,7 @@ public class Controller
 						Capacità: 0
 						IndividualWorkload: 0
 						Restaurant Worlkload: 0
-						Data odierna: 01/01/1900""");
+						Data odierna: 01/01/1444""");
 				sui.cfgBaseInputCap.setText(Integer.toString(0));
 				sui.cfgBaseInputIndWork.setText(Integer.toString(0));
 				clearInfo("bookings");
@@ -166,7 +170,7 @@ public class Controller
 				sui.errorSetter("minZero");
 			else
 			{
-				model.getExtraFoodsMap().put(input[0], quantity);
+				model.getExtraFoodsMap().put(inputSplit[0], quantity);
 				sui.cfgFoodsInput.setText("");
 				updateFoodList();
 			}
@@ -191,6 +195,9 @@ public class Controller
 
 			for (String line : lines)
 			{
+				if(!line.contains(":"))
+					throw new NumberFormatException ("");
+
 				String[] words = line.split(":");
 				double quantity=Double.parseDouble(words[1]);
 				if(quantity<=0)
@@ -244,7 +251,7 @@ public class Controller
 			for (Recipe r : model.getRecipesSet())
 			{
 				found = false;
-				if (r.getId().equals(inputIngredients))
+				if (r.getId().equals(inputRecipe))
 				{
 					model.getDishesSet().add(new Dish(inputName, r, inputStartDate, inputEndDate, seasonal, perm));
 					updateDishStringList();
@@ -329,6 +336,9 @@ public class Controller
 				else sui.errorSetter("sameNameAsDish");
 			}else sui.errorSetter("thiccMenu");
 		}
+		} catch (Exception e) {
+			sui.errorSetter("NumberFormatException");
+		}
 	}
 
 	public static boolean checkDate (String s) {
@@ -374,7 +384,7 @@ public class Controller
 	public void updateMenuOut() {
 		StringBuilder out= new StringBuilder();
 		for (ThematicMenu m: model.getThematicMenusSet()) {
-			out.append(m.getName()).append(" - [").append(m.getStartPeriod().getStringDate()).append(" || ").append(m.getStartPeriod().getStringDate()).append("] - w.").append(m.getWorkThematicMenuLoad() + " \n");
+			out.append(m.getName()).append(" - [").append(m.getStartPeriod().getStringDate()).append(" || ").append(m.getStartPeriod().getStringDate()).append("] - w.").append(m.getWorkThematicMenuLoad()).append(" \n");
 		}
 		sui.cfgResMenuOut.setText(out.toString().trim());
 		sui.setMenuList(out.toString().trim());
@@ -459,7 +469,7 @@ public class Controller
 		for (ThematicMenu menu: model.getThematicMenusSet()){
 			if (menu.getName().equals(menuName))
 			{
-				out.append(menuName).append(" w." + menu.getWorkThematicMenuLoad()+ "\n");
+				out.append(menuName).append(" w.").append(menu.getWorkThematicMenuLoad()).append("\n");
 				for (Dish d: menu.getDishes()) {
 					out.append("    ").append(d.getName()).append("\n");
 				}
