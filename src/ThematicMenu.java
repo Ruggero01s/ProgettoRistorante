@@ -119,12 +119,11 @@ public class ThematicMenu
 			return true;
 		else
 		{
-			if (this.seasonal = false)
-				return date.between(this.startPeriod, this.endPeriod);
-			else
-			{
+			if (this.seasonal)
 				return date.bet(this.startPeriod,this.endPeriod);
-			}
+			else
+				return date.between(this.startPeriod, this.endPeriod);
+
 		}
 	}
 }

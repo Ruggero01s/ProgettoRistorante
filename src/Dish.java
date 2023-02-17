@@ -85,9 +85,18 @@ public class Dish
         result = 31 * result + name.hashCode();
         return result;
     }
+
     public boolean isValid(DateOur date)
     {
-        return date.between(this.startPeriod,this.endPeriod);
-    }
+        if(this.permanent)
+            return true;
+        else
+        {
+            if (this.seasonal)
+                return date.bet(this.startPeriod,this.endPeriod);
+            else
+                return date.between(this.startPeriod, this.endPeriod);
 
+        }
+    }
 }

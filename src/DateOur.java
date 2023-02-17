@@ -81,6 +81,7 @@ public class DateOur
 	}
 
 
+
 	@Override
 	public int hashCode() {
 		int result = 17;
@@ -96,8 +97,14 @@ public class DateOur
 	 */
 	public boolean between (DateOur s, DateOur e)
 	{
-		return this.date.before(e.getDate()) && this.date.after(s.getDate());
+		return (this.date.before(e.getDate()) && this.date.after(s.getDate())) || this.equals(s) || this.equals(e);
 	}
+	private boolean between (Calendar s, Calendar e)
+	{
+		if (s.get(Calendar.DAY_OF_YEAR)==e.get(Calendar.DAY_OF_YEAR)) return true;
+		return this.date.before(e) && this.date.after(s);
+	}
+
 
 	/*
 	public void test()

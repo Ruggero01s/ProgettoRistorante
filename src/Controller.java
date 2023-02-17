@@ -58,6 +58,7 @@ public class Controller
 						Data odierna: 01/01/1900""");
 				sui.cfgBaseInputCap.setText(Integer.toString(0));
 				sui.cfgBaseInputIndWork.setText(Integer.toString(0));
+				clearInfo("bookings");
 				break;
 			case "drinks.xml":
 				model.getDrinksMap().clear();
@@ -625,8 +626,6 @@ public class Controller
 						sui.errorSetter("minZero");
 				}
 			}
-			else
-				sui.errorSetter("invalidDate");
 		}catch(NumberFormatException e){
 			sui.errorSetter("NumberFormatException");
 		}
@@ -636,16 +635,23 @@ public class Controller
 	public boolean manageBooking(String name, DateOur date, int number, int workload, HashMap<Dish,Integer> order)
 	{
 		ArrayList <Booking> day= new ArrayList<>();
+		int capacity=number,work=workload;
+		day = model.getBookingMap().get(date);
 		if (!model.getBookingMap().containsKey(date))
 		{
-			day.add(new Booking(name, number, workload, order));
-			model.getBookingMap().put(date,day);
-			return true;
+			if(capacity<=model.getCapacity() && work<= model.getWorkResturantLoad())
+			{
+				day.add(new Booking(name, number, workload, order));
+				model.getBookingMap().put(date, day);
+				return true;
+			}
+			else {
+				sui.errorSetter("fullRestaurant");
+				return false;
+			}
 		}
 		else
 		{
-			int capacity=number,work=workload;
-			day = model.getBookingMap().get(date);
 			for (Booking b : day)
 			{
 				capacity+=b.getNumber();

@@ -38,8 +38,7 @@ public class Reader
                         String mana = xmlr.getAttributeValue(1);
                         String empl = xmlr.getAttributeValue(2);
                         String stor = xmlr.getAttributeValue(3);
-                        if (mana.equals("true")) manager = true;
-                        else manager = false;
+                        manager = mana.equals("true");
                         if (empl.equals("true")) employee = true;
                         else employee = false;
                         if (stor.equals("true")) storageWorker = true;
@@ -119,8 +118,8 @@ public class Reader
 
     public HashMap<String,Double> readExtraFoods()
     {
-        XMLInputFactory xmlif = null;
-        XMLStreamReader xmlr = null;
+        XMLInputFactory xmlif ;
+        XMLStreamReader xmlr;
 
         HashMap<String,Double> foods = new HashMap<>();
 
@@ -197,8 +196,8 @@ public class Reader
 
     public HashSet <Dish> readDishes()
     {
-        XMLInputFactory xmlif = null;
-        XMLStreamReader xmlr = null;
+        XMLInputFactory xmlif;
+        XMLStreamReader xmlr;
 
         HashSet<Dish> dishes = new HashSet<>();
 
