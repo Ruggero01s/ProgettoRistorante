@@ -55,7 +55,7 @@ public class  Recipe
 
         Recipe recipe = (Recipe) r;
 
-        return this.id.equals((recipe.id)) && this.portions == recipe.portions;
+        return this.id.equals((recipe.id));
     }
 
     @Override

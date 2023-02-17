@@ -19,12 +19,34 @@ public class DateOur
 
 	public boolean bet(DateOur s, DateOur e)
 	{
-		/*this.date.set(Calendar.YEAR,0);
-		s.getDate().set(Calendar.YEAR,0);
-		end.set(Calendar.YEAR,0);
-		return between(s,e);
-		this.date.get()*/
-		return false;
+		boolean result = false,result2=false;
+		if(s.getDate().get(Calendar.YEAR)<e.getDate().get(Calendar.YEAR))
+		{
+			Calendar temp = Calendar.getInstance();
+			SimpleDateFormat format = new SimpleDateFormat("dd/MM/yyyy");
+			java.util.Date dateFormat = null;
+			try {
+				dateFormat = format.parse("31/12/".concat(Integer.toString(s.getDate().get(Calendar.YEAR))));
+			} catch (ParseException ex) {
+				throw new RuntimeException(ex);
+			}
+			temp.setTime(dateFormat);
+			int t = this.date.get(Calendar.YEAR);
+			this.date.set(Calendar.YEAR,s.getDate().get(Calendar.YEAR));
+			result = between(s.getDate(),temp);
+			this.date.set(Calendar.YEAR,e.getDate().get(Calendar.YEAR));
+			result2= between(temp,e.getDate());
+			this.date.set(Calendar.YEAR,t);
+			return result || result2;
+		}
+		else if (s.getDate().get(Calendar.YEAR)==e.getDate().get(Calendar.YEAR))
+		{
+			int t = this.date.get(Calendar.YEAR);
+			this.date.set(Calendar.YEAR,s.getDate().get(Calendar.YEAR));
+			result = between(s,e);
+			this.date.set(Calendar.YEAR,t);
+		}
+		return result;
 	}
 	
 
@@ -34,7 +56,6 @@ public class DateOur
 		java.util.Date dateFormat = format.parse(day.concat("/".concat(month).concat("/").concat("1444")));
 		this.date.setTime(dateFormat);
 	}
-
 	/**
 	 * Trasformo una data in una stringa
 	 * @return stringa della data

@@ -57,9 +57,12 @@ public class SimpleUI extends JFrame {
     JLabel cfgBaseText = new JLabel("Inserisci dati ristorante:");
     JLabel cfgBaseCapacityText = new JLabel("Posti a sedere:");
     JLabel cfgBaseIndiviualWorkloadAreaText = new JLabel("Carico lavoro max:");
+    JLabel cfgBaseDateText = new JLabel("Inserisci data odierna:");
     JButton cfgBaseSendButton = new JButton("Conferma");
     JTextArea cfgBaseInputCap = new JTextArea();
     JTextArea cfgBaseInputIndWork = new JTextArea();
+    JTextArea cfgBaseInputDate = new JTextArea();
+
 
     public void setDrinkList(String drinkList)
     {
@@ -301,6 +304,7 @@ public class SimpleUI extends JFrame {
 
         cfgBaseInputCap.setLineWrap(true);
         cfgBaseInputIndWork.setLineWrap(true);
+        cfgBaseInputDate.setLineWrap(true);
         cfgDrinksInput.setLineWrap(true);
         cfgFoodsInput.setLineWrap(true);
         cfgRecipeNameInput.setLineWrap(true);
@@ -328,6 +332,7 @@ public class SimpleUI extends JFrame {
 
         cfgBaseInputCap.setBorder(border);
         cfgBaseInputIndWork.setBorder(border);
+        cfgBaseInputDate.setBorder(border);
         cfgDrinksInput.setBorder(border);
         cfgFoodsInput.setBorder(border);
         cfgRecipeNameInput.setBorder(border);
@@ -352,14 +357,21 @@ public class SimpleUI extends JFrame {
         cfgDishAreaOut.setBorder(border);
         cfgMenuAreaOut.setBorder(border);
         cfgFoodsAreaOut.setBorder(border);
+        cfgResDatiMenuOut.setBorder(border);
 
 
-        cfgResBaseOut.setPreferredSize(new Dimension(300, 50));
+        cfgResBaseOut.setPreferredSize(new Dimension(300, 70));
         cfgResDrinksOut.setPreferredSize(new Dimension(300, 50));
         cfgResFoodsOut.setPreferredSize(new Dimension(300, 50));
         cfgResRecipesOut.setPreferredSize(new Dimension(300, 50));
         cfgResDishesOut.setPreferredSize(new Dimension(300, 50));
         cfgResMenuOut.setPreferredSize(new Dimension(300, 50));
+        cfgFoodsAreaOut.setPreferredSize(new Dimension(300, 50));
+        cfgDrinksAreaOut.setPreferredSize(new Dimension(300, 50));
+        cfgRecipeAreaOut.setPreferredSize(new Dimension(300, 50));
+        cfgDishAreaOut.setPreferredSize(new Dimension(300, 50));
+        cfgMenuAreaOut.setPreferredSize(new Dimension(300, 50));
+
 
         cfgResBaseOut.setEditable(false);
         cfgResDrinksOut.setEditable(false);
@@ -414,9 +426,15 @@ public class SimpleUI extends JFrame {
         cfgBasePanel.add(cfgBaseInputIndWork, c);
         c.gridx = 0;
         c.gridy = 3;
-        cfgBasePanel.add(buttonBack1, c);
+        cfgBasePanel.add(cfgBaseDateText, c);
         c.gridx = 1;
         c.gridy = 3;
+        cfgBasePanel.add(cfgBaseInputDate, c);
+        c.gridx = 0;
+        c.gridy = 4;
+        cfgBasePanel.add(buttonBack1, c);
+        c.gridx = 1;
+        c.gridy = 4;
         cfgBaseSendButton.addActionListener(e -> ctrl.saveConfig());
         cfgBasePanel.add(cfgBaseSendButton, c);
 
@@ -807,6 +825,8 @@ public class SimpleUI extends JFrame {
             if(Controller.checkDate(s))
             {
                 ctrl.seeBookings(ctrl.inputToDate(s));
+            }else {
+                errorSetter("invalidDate");
             }
         });
         c.gridx = 0;
@@ -894,6 +914,13 @@ public class SimpleUI extends JFrame {
         empNewBookDateInput.setBorder(border);
         empNewBookNumInput.setBorder(border);
 
+        empSeeBookWorkloadTotalOut.setEditable(false);
+        empSeeBookCapacityTotalOut.setEditable(false);
+        empSeeBookNameAreaOut.setEditable(false);
+        empSeeBookNumAreaOut.setEditable(false);
+        empSeeBookWorkloadAreaOut.setEditable(false);
+
+
         buttonBack8.addActionListener(back);
         buttonBack9.addActionListener(back);
         buttonBack10.addActionListener(back);
@@ -972,6 +999,10 @@ public class SimpleUI extends JFrame {
                 break;
             case "noQuantity":
                 JOptionPane.showMessageDialog(getContentPane(), "Quantità di un elemento non valida",
+                        "Err", JOptionPane.ERROR_MESSAGE);
+                break;
+            case "outOfDate":
+                JOptionPane.showMessageDialog(getContentPane(), "Menù o piatto non disponibile in questa data",
                         "Err", JOptionPane.ERROR_MESSAGE);
                 break;
         }

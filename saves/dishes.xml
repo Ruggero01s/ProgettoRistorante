@@ -1,5 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <dishes>
+	<dish name="Pizza Hawai" startDate="01/01/2023" endDate="04/07/2023" seasonal="true" permanent="false">
+		<recipe id="Pizza"></recipe></dish>
+	<dish name="Peperonata" startDate="01/12/2022" endDate="10/02/2023" seasonal="true" permanent="false">
+		<recipe id="peperonata"></recipe></dish>
 	<dish name="Polpett" startDate="01/01/2023" endDate="31/12/2023" seasonal="false" permanent="true">
 		<recipe id="polpette"></recipe></dish>
 	<dish name="PastaCoTonno" startDate="01/04/2023" endDate="06/07/2023" seasonal="false" permanent="false">

@@ -36,9 +36,11 @@ public class Controller
 		updateFoodList();
 		updateMenuOut();
 		updateMenuBoxes();
-		sui.cfgResBaseOut.setText("Capacità: "+ model.getCapacity() + "\n" + "IndividualWorkload: " + model.getWorkPersonLoad() + "\n" + "Restaurant Worlkload: "+ model.getWorkResturantLoad());
+		sui.cfgResBaseOut.setText("Capacità: " + model.getCapacity() + "\n" + "IndividualWorkload: " +
+				model.getWorkPersonLoad() + "\n" + "Restaurant Worlkload: " + model.getWorkResturantLoad()+ "\n" +"Data odierna: " + model.getToday().getStringDate())  ;
 		sui.cfgBaseInputCap.setText(Integer.toString(model.getCapacity()));
 		sui.cfgBaseInputIndWork.setText(Integer.toString(model.getWorkPersonLoad()));
+		sui.cfgBaseInputDate.setText(model.getToday().getStringDate());
 	}
 
 	public void clearInfo(String name)
@@ -52,7 +54,8 @@ public class Controller
 				sui.cfgResBaseOut.setText("""
 						Capacità: 0
 						IndividualWorkload: 0
-						Restaurant Worlkload: 0""");
+						Restaurant Worlkload: 0
+						Data odierna: 01/01/1900""");
 				sui.cfgBaseInputCap.setText(Integer.toString(0));
 				sui.cfgBaseInputIndWork.setText(Integer.toString(0));
 				break;
@@ -89,15 +92,15 @@ public class Controller
 	public void writeAll()
 	{
 		//if(!model.getDrinksMap().isEmpty())
-			Writer.writeDrinks(model.getDrinksMap());
+		Writer.writeDrinks(model.getDrinksMap());
 		//if(!model.getExtraFoodsMap().isEmpty())
-			Writer.writeExtraFoods(model.getExtraFoodsMap());
+		Writer.writeExtraFoods(model.getExtraFoodsMap());
 		Writer.writeConfigBase(model.getCapacity(), model.getWorkPersonLoad(),model.getToday());
 		Writer.writeRecipes(model.getRecipesSet());
 		//if(!model.getDishesSet().isEmpty())
-			Writer.writeDishes(model.getDishesSet());
+		Writer.writeDishes(model.getDishesSet());
 		//if(!model.getThematicMenusSet().isEmpty())
-			Writer.writeThematicMenu(model.getThematicMenusSet());
+		Writer.writeThematicMenu(model.getThematicMenusSet());
 	}
 	
 	public void saveConfig()
@@ -106,18 +109,22 @@ public class Controller
 		{
 			String inputCapacity = sui.cfgBaseInputCap.getText();
 			String inputWorkload = sui.cfgBaseInputIndWork.getText();
-
+			String todayString = sui.cfgBaseInputDate.getText().trim();
 			int capacity = Integer.parseInt(inputCapacity);
 			int workload= Integer.parseInt(inputWorkload);
-
-			if(capacity<= 0 || workload<= 0)
-				sui.errorSetter("minZero");
-			else
-			{
-				model.setCapacity(capacity);
-				model.setWorkPersonLoad(workload);
-				sui.cfgResBaseOut.setText("Capacità: "+ model.getCapacity() + "\n" + "IndividualWorkload: " +
-						model.getWorkPersonLoad() + "\n" + "Restaurant Worlkload: "+ model.getWorkResturantLoad());
+			if (!checkDate(todayString))
+				sui.errorSetter("invalidDate");
+			else {
+				DateOur today = inputToDate(todayString);
+				if (capacity <= 0 || workload <= 0)
+					sui.errorSetter("minZero");
+				else {
+					model.setCapacity(capacity);
+					model.setWorkPersonLoad(workload);
+					model.setToday(today);
+					sui.cfgResBaseOut.setText("Capacità: " + model.getCapacity() + "\n" + "IndividualWorkload: " +
+							model.getWorkPersonLoad() + "\n" + "Restaurant Worlkload: " + model.getWorkResturantLoad()+ "\n" +"Data odierna: " + model.getToday().getStringDate())  ;
+				}
 			}
 		}
 		catch (NumberFormatException e)
@@ -329,6 +336,7 @@ public class Controller
 		if(!s.contains("/"))
 			return false;
 		String [] pezzi = s.split("/");
+		if (pezzi.length<3) return false;
 		if(Integer.parseInt(pezzi[2])<=0)
 			return false;
 		switch (Integer.parseInt(pezzi[1]))
@@ -365,7 +373,7 @@ public class Controller
 	public void updateMenuOut() {
 		StringBuilder out= new StringBuilder();
 		for (ThematicMenu m: model.getThematicMenusSet()) {
-			out.append(m.getName()).append(" - [").append(m.getStartPeriod().getStringDate()).append(" || ").append(m.getStartPeriod().getStringDate()).append("] - ").append("\n");
+			out.append(m.getName()).append(" - [").append(m.getStartPeriod().getStringDate()).append(" || ").append(m.getStartPeriod().getStringDate()).append("] - w.").append(m.getWorkThematicMenuLoad() + " \n");
 		}
 		sui.cfgResMenuOut.setText(out.toString().trim());
 		sui.setMenuList(out.toString().trim());
@@ -385,7 +393,7 @@ public class Controller
 		int i=0;
 		for (Recipe r: model.getRecipesSet())
 		{
-			recipes[i]=(r.getId() +" - "+ "["+r.getIngredientsList()+"]");
+			recipes[i]=(r.getId() +" - "+ "["+r.getIngredientsList()+"] - p." + r.getPortions() + " - w." + r.getWorkLoadPortion());
 			i++;
 		}
 		DefaultComboBoxModel<String> model = new DefaultComboBoxModel<>( recipes );
@@ -446,18 +454,18 @@ public class Controller
 	}
 
 	public void writeMenuComp(String menuName){
-		String out = "";
+		StringBuilder out = new StringBuilder();
 		for (ThematicMenu menu: model.getThematicMenusSet()){
 			if (menu.getName().equals(menuName))
 			{
-				out = out + menuName + "\n";
+				out.append(menuName).append(" w." + menu.getWorkThematicMenuLoad()+ "\n");
 				for (Dish d: menu.getDishes()) {
-					out = out + "    " + d.getName() + "\n";
+					out.append("    ").append(d.getName()).append("\n");
 				}
 				break;
 			}
 		}
-		sui.cfgResDatiMenuOut.setText(out);
+		sui.cfgResDatiMenuOut.setText(out.toString());
 	}
 
 	public String[] makeMenuList()
@@ -485,7 +493,7 @@ public class Controller
 		return null;
 	}
 
-	public HashMap<Dish,Integer> inputToOrder(String in, DateOur date) { //todo sistemare se non mette un numero nel numero piatti
+	public HashMap<Dish,Integer> inputToOrder(String in, DateOur date) {
 		String[] lines = in.split("\n");
 		HashMap<Dish,Integer> order = new HashMap<>();
 		boolean found;
@@ -521,7 +529,7 @@ public class Controller
 						else
 						{
 							order.clear();
-							sui.errorSetter("invalidDate");
+							sui.errorSetter("outOfDate");
 							return order;
 						}
 					}
@@ -599,7 +607,7 @@ public class Controller
 		{
 			String name = sui.empNewBookNameInput.getText();
 			DateOur date = inputToDate(sui.empNewBookDateInput.getText());
-			if (date.getDate().after(model.getToday().getDate()))
+			if (date !=null && date.getDate().after(model.getToday().getDate()))
 			{
 				int number = Integer.parseInt(sui.empNewBookNumInput.getText()), workload = 0;
 				HashMap<Dish, Integer> order = inputToOrder(sui.empNewBookOrderInput.getText(), date);

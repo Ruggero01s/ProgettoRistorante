@@ -1,6 +1,6 @@
 import java.text.ParseException;
 
-public class Dish    //todo override equals
+public class Dish
 {
     private String name;
     private DateOur startPeriod, endPeriod;
@@ -14,7 +14,7 @@ public class Dish    //todo override equals
         this.startPeriod = new DateOur(periodDateStart[0], periodDateStart[1], periodDateStart[2]);
 
         String[] periodDateEnd = endPeriod.split("/");
-        this.endPeriod = new DateOur(periodDateEnd[0], periodDateEnd[1],periodDateStart[2]);
+        this.endPeriod = new DateOur(periodDateEnd[0], periodDateEnd[1],periodDateEnd[2]);
         this.recipe = recipe;
         this.seasonal = seasonal;
         this.permanent = permanent;

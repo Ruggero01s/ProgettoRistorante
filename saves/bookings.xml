@@ -1,14 +1,21 @@
 <?xml version="1.0" encoding="utf-8"?>
 <bookings>
-	<booking date="01/01/2023">
+	<booking date="03/03/0001">
+		<book name="PIZZZAA" number="4" workload="4">
+			<order dish="Pizza Hawai" quantity="4"></order></book>
 		<book name="qewq" number="3" workload="9">
 			<order dish="Polpett" quantity="3"></order>
 			<order dish="PastaCoTonno" quantity="3"></order></book>
 		<book name="Ciccio" number="12" workload="36">
 			<order dish="Polpett" quantity="12"></order>
-			<order dish="PastaCoTonno" quantity="12"></order></book></booking>
-	<booking date="03/03/0001">
+			<order dish="PastaCoTonno" quantity="12"></order></book>
 		<book name="dasd" number="1" workload="3">
+			<order dish="Polpett" quantity="1"></order>
+			<order dish="PastaCoTonno" quantity="1"></order></book></booking>
+	<booking date="01/06/2023">
+		<book name="qwertt" number="200" workload="5">
+			<order dish="Pizza Hawai" quantity="1"></order>
+			<order dish="Peperonata" quantity="1"></order>
 			<order dish="Polpett" quantity="1"></order>
 			<order dish="PastaCoTonno" quantity="1"></order></book></booking>
 </bookings>
