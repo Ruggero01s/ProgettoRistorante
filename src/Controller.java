@@ -696,41 +696,55 @@ public class Controller
 			sui.errorSetter("NumberFormatException");
 		}
 	}
-
-
-	public boolean manageBooking(String name, DateOur date, int number, int workload, HashMap<Dish,Integer> order)
-	{
-		ArrayList <Booking> day= new ArrayList<>();
-		int capacity=number,work=workload;
-		day = model.getBookingMap().get(date);
-		if (!model.getBookingMap().containsKey(date))
-		{
-			if(capacity<=model.getCapacity() && work<= model.getWorkResturantLoad())
-			{
+	
+	
+	/**
+	 * Adds a new booking to the restaurant's booking system for the specified date, with the provided information.
+	 *
+	 * @param name The name of the person making the booking.
+	 * @param date The date of the booking (must be of type DateOur).
+	 * @param number The number of guests in the booking.
+	 * @param workload The expected workload for the restaurant staff for the booking.
+	 * @param order A HashMap of the dishes and the quantities of each that the guests will order.
+	 *
+	 * @return true if the booking was successfully added, false otherwise (for example, if the restaurant is already at capacity or the workload is too high).
+	 */
+	public boolean manageBooking(String name, DateOur date, int number, int workload, HashMap<Dish, Integer> order) {
+		// Create a new ArrayList to hold the bookings for the specified date
+		ArrayList<Booking> day = new ArrayList<>();
+		// Set the initial capacity and workload based on the inputs
+		int capacity = number;
+		int work = workload;
+		
+		// Retrieve the bookings for the specified date, if they exist
+		if (!model.getBookingMap().containsKey(date)) {
+			// If there are no existing bookings for the date, check if the restaurant has capacity and workload available to add the new booking
+			if (capacity <= model.getCapacity() && work <= model.getWorkResturantLoad()) {
+				// If there is capacity and workload available, create a new Booking object and add it to the ArrayList for the date
 				day.add(new Booking(name, number, workload, order));
+				// Add the ArrayList to the booking map with the specified date
 				model.getBookingMap().put(date, day);
 				return true;
-			}
-			else {
+			} else {
+				// If there is no capacity or workload available, set an error message and return false
 				sui.errorSetter("fullRestaurant");
 				return false;
 			}
-		}
-		else
-		{
-			for (Booking b : day)
-			{
-				capacity+=b.getNumber();
-				work+=b.getWorkload();
+		} else {
+			// If there are existing bookings for the date, calculate the total capacity and workload based on all bookings for the date
+			for (Booking b : day) {
+				capacity += b.getNumber();
+				work += b.getWorkload();
 			}
-			if(capacity<=model.getCapacity() && work<= model.getWorkResturantLoad())
-			{
+			// Check if the restaurant has capacity and workload available to add the new booking
+			if (capacity <= model.getCapacity() && work <= model.getWorkResturantLoad()) {
+				// If there is capacity and workload available, create a new Booking object and add it to the ArrayList for the date
 				day.add(new Booking(name, number, workload, order));
+				// Update the booking map with the ArrayList for the specified date
 				model.getBookingMap().put(date, day);
 				return true;
-			}
-			else
-			{
+			} else {
+				// If there is no capacity or workload available, set an error message and return false
 				sui.errorSetter("fullRestaurant");
 				return false;
 			}
