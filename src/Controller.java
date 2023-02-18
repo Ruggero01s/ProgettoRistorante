@@ -289,7 +289,7 @@ public class Controller
 				inputStartDate = "01/01/1444";
 				inputEndDate = "31/12/1444";
 			}
-			boolean found = false;
+			boolean found=false;
 			for (Recipe r : model.getRecipesSet())
 			{
 				found = false;
@@ -408,20 +408,25 @@ public class Controller
 			return false;
 		switch (Integer.parseInt(pezzi[1]))
 		{
-			case 1,3,5,7,8,10,12:
-				if(Integer.parseInt(pezzi[0]) <=31 || Integer.parseInt(pezzi[0]) >0)
+			case 1, 3, 5, 7, 8, 10, 12 ->
+			{
+				if (Integer.parseInt(pezzi[0]) <= 31 || Integer.parseInt(pezzi[0]) > 0)
 					return true;
-				break;
-			case 2:
-				if(Integer.parseInt(pezzi[0]) <=29 || Integer.parseInt(pezzi[0]) >0)
+			}
+			case 2 ->
+			{
+				if (Integer.parseInt(pezzi[0]) <= 29 || Integer.parseInt(pezzi[0]) > 0)
 					return true;
-				break;
-			case 4,6,9,11:
-				if(Integer.parseInt(pezzi[0]) <=30 || Integer.parseInt(pezzi[0]) >0)
+			}
+			case 4, 6, 9, 11 ->
+			{
+				if (Integer.parseInt(pezzi[0]) <= 30 || Integer.parseInt(pezzi[0]) > 0)
 					return true;
-				break;
-			default:
+			}
+			default ->
+			{
 				return false;
+			}
 		}
 		return false;
 	}
@@ -779,13 +784,16 @@ public class Controller
 		Double quantity=0.0,surplus=0.0;
 		int multi=0;
 		Recipe recipe;
+		int numberOfPeople=0;
 		HashMap<Dish, Integer> allDish = new HashMap<>();
+		
 		if(model.getBookingMap().containsKey(model.getToday()))
 		{
 			ArrayList <Booking> book = new ArrayList<>(model.getBookingMap().get(model.getToday()));
 			for (Booking b: book)
 			{
- 				for (Map.Entry<Dish, Integer> entry : b.getOrder().entrySet())
+ 				numberOfPeople+=b.getNumber();
+				for (Map.Entry<Dish, Integer> entry : b.getOrder().entrySet())
 				{
 					Dish dish = entry.getKey();
 					if(allDish.containsKey(dish))
@@ -839,12 +847,18 @@ public class Controller
 					}
 				}
 			}
+			
+			//todo decidere di quanto deve essere l'incremento, probabilmente lo deciderà il manager
+			groceryMap.replaceAll((k, v) -> v * 1.05); //incremento del 5% ogni ingrediente
+			
+			groceryMap.putAll(model.getDrinksMap()); //add drinks and foods
+			groceryMap.putAll(model.getExtraFoodsMap());
+			
 			model.setGroceryMap(groceryMap);
 			groceryMapToString();
 		}
-		else {
-			//todo messaggio di non esistenza di prenotazioni
-		}
+		else
+			sui.wareListOut.setText("Non essendoci prenotazioni per oggi la lista della spesa è vuota");
 	}
 
 	private void groceryMapToString()

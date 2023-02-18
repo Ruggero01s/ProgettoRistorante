@@ -268,7 +268,7 @@ public class SimpleUI extends JFrame {
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setSize(1000, 1000);
         setVisible(true);
-        getContentPane().setBackground(Color.GRAY); //TODO
+        getContentPane().setBackground(Color.GRAY); //TODO cambiare lo sfondo che fa schifo
         setLayout(new BorderLayout());
     }
 
