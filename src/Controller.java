@@ -103,7 +103,7 @@ public class Controller
 		}
 	}
 
-	public void writeAll()
+	public void writeManager()
 	{
 		//if(!model.getDrinksMap().isEmpty())
 		Writer.writeDrinks(model.getDrinksMap());
@@ -793,7 +793,12 @@ public class Controller
 	{
 		Writer.writeBookings(model.getBookingMap());
 	}
-
+	
+	public void writeRegister()
+	{
+		Writer.writeRegister(model.getRegistro());
+	}
+	
 	private void generateGroceryList()
 	{
 		HashMap<String,Double> groceryMap = new HashMap<>();
@@ -884,7 +889,10 @@ public class Controller
 			updateRegister(drink);
 			updateRegister(food);
 
+			model.setGroceryMap(groceryMap);
+			
 			sui.wareListOut.setText(groceriesToString(groceryMap, drink, food));
+			sui.wareListMagOut.setText(registerToString());
 		}
 		else
 			sui.wareListOut.setText("Non essendoci prenotazioni per oggi la lista della spesa è vuota");
@@ -919,6 +927,23 @@ public class Controller
 		}
 	}
 
+	private String registerToString(){
+		String out ="";
+		for (Map.Entry<String, Double> entry : model.getRegistro().entrySet())
+		{
+			String k = entry.getKey();
+			if (model.getExtraFoodsMap().containsKey(k)){
+				out += k + ":" + entry.getValue() + " hg\n";
+			}
+			else if (model.getDrinksMap().containsKey(k)){
+				out += k + ":" + entry.getValue() + " L\n";
+			}else out += k + ":" + entry.getValue() + " g\n";
+			
+		}
+		return out.trim();
+	}
+	
+	
 	private String groceriesToString(HashMap<String, Double> ingredients, HashMap<String, Double> drinks, HashMap<String, Double> foods){
 		String out = "";
 		out += groceryIngredientsMapToString(ingredients) + "\n";

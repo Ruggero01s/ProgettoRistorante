@@ -259,6 +259,10 @@ public class SimpleUI extends JFrame {
     JLabel wareListText = new JLabel("Lista aggiornata al: ");
     JTextArea wareListOut = new JTextArea();
     JScrollPane wareListScroll = new JScrollPane(wareListOut);
+    JLabel wareListMagText = new JLabel("Magazzino al: ");
+    JTextArea wareListMagOut = new JTextArea();
+    JScrollPane wareListMagScroll = new JScrollPane(wareListMagOut);
+    JButton wareListSend = new JButton("Scrivi magazzino");
     //-------------------------------------------------------------------------------------------
     //WAREHOUSE RETURNLIST
     JPanel wareReturnListPanel = new JPanel(new GridBagLayout());
@@ -438,7 +442,7 @@ public class SimpleUI extends JFrame {
 
 
 
-        cfgWriteButton.addActionListener(e -> ctrl.writeAll());
+        cfgWriteButton.addActionListener(e -> ctrl.writeManager());
         cfgBaseClearButton.addActionListener(e -> ctrl.clearInfo("config.xml"));
         cfgFoodClearButton.addActionListener(e -> ctrl.clearInfo("extraFoods.xml"));
         cfgRecipeClearButton.addActionListener(e -> ctrl.clearInfo("recipes.xml"));
@@ -982,10 +986,14 @@ public class SimpleUI extends JFrame {
 
     private void wareInit() {
         wareListText.setText(wareListText.getText() + ctrl.getTodayString());
+        wareListMagText.setText(wareListMagText.getText() + ctrl.getTodayString());
 
         wareListScroll.setPreferredSize(new Dimension(300, 100));
         wareListScroll.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS);
-
+    
+        wareListMagScroll.setPreferredSize(new Dimension(300, 100));
+        wareListMagScroll.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS);
+        
         wareReturnListScroll.setPreferredSize(new Dimension(300, 100));
         wareReturnListScroll.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS);
 
@@ -1001,7 +1009,17 @@ public class SimpleUI extends JFrame {
         wareListPanel.add(wareListScroll, c);
         c.gridx = 0;
         c.gridy = 2;
+        wareListPanel.add(wareListMagText, c);
+        c.gridx = 0;
+        c.gridy = 3;
+        wareListPanel.add(wareListMagScroll, c);
+        c.gridx = 0;
+        c.gridy = 4;
         wareListPanel.add(buttonBack12, c);
+        c.gridx = 1;
+        c.gridy = 4;
+        wareListSend.addActionListener(e->{ctrl.writeRegister();});
+        wareListPanel.add(wareListSend, c);
 
         //RETURNLIST PANEL
         c.gridx = 0;
