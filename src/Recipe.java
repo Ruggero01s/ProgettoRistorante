@@ -6,11 +6,11 @@ import java.util.Set;
 public class  Recipe
 {
     private String id;
-    private HashMap<String, Double> ingredients = new HashMap<>();
+    private Set<Ingredient> ingredients;
     private int portions;
     private double workLoadPortion;
 
-    public Recipe(String id, HashMap<String, Double> ingredients, int portions, double workLoadPortion) {
+    public Recipe(String id, Set<Ingredient> ingredients, int portions, double workLoadPortion) {
         this.id = id;
         this.ingredients =new HashSet<>(ingredients);
         this.portions = portions;
@@ -73,9 +73,9 @@ public class  Recipe
     public String getIngredientsList()
     {
         StringBuilder out= new StringBuilder();
-        for (Map.Entry<String, Double> entry : ingredients.entrySet())
+        for (Ingredient i: ingredients)
         {
-            out.append(entry.getKey()).append(":").append(entry.getValue()).append(", ");
+            out.append(i.getName()).append(":").append(i.getQuantity()).append(", ");
         }
         return out.toString();
     }

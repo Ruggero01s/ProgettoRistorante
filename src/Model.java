@@ -26,12 +26,12 @@ public class Model {
         this.registro = registro;
     }
 
-    public HashMap<String,Double> getGroceryMap() {
-        return groceryMap;
+    public Set<Ingredient> getGrocerySet() {
+        return grocerySet;
     }
 
-    public void setGroceryMap(HashMap<String, Double> groceryMap) {
-        this.groceryMap = groceryMap;
+    public void setGroceryMap(Set<Ingredient> grocerySet) {
+        this.grocerySet = grocerySet;
     }
 
     public int getWorkPersonLoad() {

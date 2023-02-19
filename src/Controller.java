@@ -225,7 +225,7 @@ public class Controller
 			String inputPortions = sui.cfgRecipePortionsInput.getText();
 			String inputWorkload = sui.cfgRecipeWorkLoadInput.getText();
 			
-			HashMap<String, Double> ingredientQuantityMap = new HashMap<>();
+			Set<Ingredient> ingredientQuantitySet = new HashSet<>();
 			String[] lines = inputIngredients.split("\n");
 
 			if (inputName.equals(""))
@@ -241,17 +241,26 @@ public class Controller
 				if(words[0].equals(""))
 					throw new NumberFormatException ("");
 
-				if (words.length<2)
+				if (words.length<3)
 					throw new NumberFormatException ("");
 
 				double quantity=Double.parseDouble(words[1]);
-
+				switch (words[2]){
+					case "kg", "g", "hg", "L", "ml", "cl" ->
+					{
+					}
+					default -> {
+						throw new NumberFormatException ("");
+					}
+				}
+				
+				String unit = words[2];
 				if(quantity<=0)
 				{
 					err = true;
 					break;
 				}
-				ingredientQuantityMap.put(words[0],quantity );
+				ingredientQuantitySet.add(new Ingredient(words[0],unit,quantity));
 			}
 			int portions=Integer.parseInt(inputPortions);
 			double workLoad = Double.parseDouble(inputWorkload);
@@ -259,7 +268,7 @@ public class Controller
 				sui.errorSetter("minZero");
 			else
 			{
-				if(model.getRecipesSet().add(new Recipe(inputName, ingredientQuantityMap, portions, workLoad)))
+				if(model.getRecipesSet().add(new Recipe(inputName, ingredientQuantitySet, portions, workLoad)))
 				{
 					sui.cfgRecipeNameInput.setText(Model.CLEAR);
 					sui.cfgRecipeIngredientsInput.setText(Model.CLEAR);
@@ -801,8 +810,8 @@ public class Controller
 	
 	private void generateGroceryList()
 	{
-		HashMap<String,Double> groceryMap = new HashMap<>();
-		HashMap<String,Double> surplusMap = new HashMap<>();
+		Set<Ingredient> grocerySet = new HashSet<>();
+		HashMap<Ingredient,Ingredient> surplusSet = new HashMap<>();
 		double quantity=0.0,surplus=0.0;
 		int multi=0;
 		Recipe recipe;
@@ -829,28 +838,42 @@ public class Controller
 			{
 				recipe = entry.getKey().getRecipe();
 
-				for (Map.Entry<String, Double> ingredient : recipe.getIngredients().entrySet())
+				for (Ingredient ingredient : recipe.getIngredients())
 				{
+					switch (ingredient.getUnit()){
+						case "kg":
+							ingredient.setQuantity(ingredient.getQuantity()*1000);
+							break;
+						case "hg":
+							ingredient.setQuantity(ingredient.getQuantity()*100);
+							break;
+						case "ml":
+							ingredient.setQuantity(ingredient.getQuantity()/1000);
+							break;
+						case "cl":
+							ingredient.setQuantity(ingredient.getQuantity()/100);
+							break;
+					}
 					multi = entry.getValue()/recipe.getPortions();
 					int resto = entry.getValue()%recipe.getPortions();
 
 					if(multi == 0)
 					{
 						multi++;
-						surplus=ingredient.getValue()*(recipe.getPortions()-entry.getValue());
+						surplus=ingredient.getQuantity()*(recipe.getPortions()-entry.getValue());
 					}
 					if(resto!=0)
 					{
 						multi++;
-						surplus=ingredient.getValue()/recipe.getPortions()*resto;
+						surplus=ingredient.getQuantity()/recipe.getPortions()*resto;
 					}
 
-					quantity = ingredient.getValue()*multi;
+					quantity = ingredient.getQuantity()*multi;
 
-					if (groceryMap.containsKey(ingredient.getKey()))
+					if (grocerySet.contains(ingredient))
 					{
 						double delta = quantity;
-						quantity+= groceryMap.get(ingredient.getKey());
+						quantity+= ingredient.getQuantity();
 						delta = quantity - delta;
 						if (delta<surplusSet.get(ingredient))
 						{
