@@ -5,6 +5,7 @@ import java.io.FileInputStream;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Set;
 
 public class Reader
 {
@@ -160,7 +161,7 @@ public class Reader
 			String id = "";
 			int portions = 0;
 			double workLoadPortion = 0;
-			HashMap<String, Double> ingredients = new HashMap<>();
+			Set<Ingredient> ingredients = new HashSet<>();
 			while (xmlr.hasNext())
 			{
 				// continua a leggere finche ha eventi a disposizione
@@ -175,17 +176,16 @@ public class Reader
 							workLoadPortion = Double.parseDouble(xmlr.getAttributeValue(2));
 							break;
 						case "ingredient":
-							ingredients.put(xmlr.getAttributeValue(0), Double.parseDouble(xmlr.getAttributeValue(1)));
+							ingredients.add(new Ingredient(xmlr.getAttributeValue(0), xmlr.getAttributeValue(2),Double.parseDouble(xmlr.getAttributeValue(1))));
 							break;
 					}
 				}
 				if (xmlr.getEventType() == XMLStreamConstants.END_ELEMENT)
 					if (xmlr.getLocalName().equals("recipe"))
 					{
-						recipes.add(new Recipe(id, (HashMap<String, Double>) ingredients.clone(), portions, workLoadPortion));
+						recipes.add(new Recipe(id, (new HashSet<>(ingredients)), portions, workLoadPortion));
 						ingredients.clear();
 					}
-				
 				xmlr.next();
 			}
 		}

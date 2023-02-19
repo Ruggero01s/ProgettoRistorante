@@ -807,6 +807,7 @@ public class Controller
 		int multi=0;
 		Recipe recipe;
 		int numberOfPeople=0;
+		
 		HashMap<Dish, Integer> allDish = new HashMap<>();
 		
 		if(model.getBookingMap().containsKey(model.getToday()))
@@ -851,27 +852,27 @@ public class Controller
 						double delta = quantity;
 						quantity+= groceryMap.get(ingredient.getKey());
 						delta = quantity - delta;
-						if (delta<surplusMap.get(ingredient.getKey()))
+						if (delta<surplusSet.get(ingredient))
 						{
-							surplusMap.put(ingredient.getKey(),(surplusMap.get(ingredient.getKey())-delta));
+							surplusSet.put(ingredient.getKey(),(surplusSet.get(ingredient.getKey())-delta));
 						}
 						else
 						{
-							groceryMap.put(ingredient.getKey(), quantity);
-							surplusMap.put(ingredient.getKey(),surplusMap.get(ingredient.getKey())+surplus);
+							grocerySet.put(ingredient.getKey(), quantity);
+							surplusSet.put(ingredient.getKey(),surplusSet.get(ingredient.getKey())+surplus);
 						}
 					}
 					else
 					{
-						groceryMap.put(ingredient.getKey(),quantity);
-						surplusMap.put(ingredient.getKey(),surplus);
+						grocerySet.put(ingredient.getKey(),quantity);
+						surplusSet.put(ingredient.getKey(),surplus);
 					}
 				}
 			}
 
-			groceryMap.replaceAll((k, v) -> v+(v * (double)model.getIncrement()/100.0)); //incremento del 5% ogni ingrediente
+			grocerySet.replaceAll((k, v) -> v+(v * (double)model.getIncrement()/100.0)); //incremento del 5% ogni ingrediente
 
-			groceryMap = new HashMap<>(compareWithRegister(groceryMap));
+			grocerySet = new HashMap<>(compareWithRegister(grocerySet));
 
 			HashMap <String,Double> drink = new HashMap<>(model.getDrinksMap());
 			HashMap <String,Double> food = new HashMap<>(model.getExtraFoodsMap());
@@ -883,15 +884,15 @@ public class Controller
 			drink = new HashMap<>(compareWithRegister(drink));
 			food = new HashMap<>(compareWithRegister(food));
 
-		//	model.setGroceryMap(groceryMap); //todo vedere se serve
+		//	model.setGroceryMap(grocerySet); //todo vedere se serve
 
-			updateRegister(groceryMap);
+			updateRegister(grocerySet);
 			updateRegister(drink);
 			updateRegister(food);
 
-			model.setGroceryMap(groceryMap);
+			model.setGroceryMap(grocerySet);
 			
-			sui.wareListOut.setText(groceriesToString(groceryMap, drink, food));
+			sui.wareListOut.setText(groceriesToString(grocerySet, drink, food));
 			sui.wareListMagOut.setText(registerToString());
 		}
 		else

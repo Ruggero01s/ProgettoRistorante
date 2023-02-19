@@ -1,5 +1,7 @@
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Map;
+import java.util.Set;
 
 public class  Recipe
 {
@@ -10,7 +12,7 @@ public class  Recipe
 
     public Recipe(String id, HashMap<String, Double> ingredients, int portions, double workLoadPortion) {
         this.id = id;
-        this.ingredients = ingredients;
+        this.ingredients =new HashSet<>(ingredients);
         this.portions = portions;
         this.workLoadPortion = workLoadPortion;
     }
@@ -22,15 +24,18 @@ public class  Recipe
     public void setId(String id) {
         this.id = id;
     }
-
-    public HashMap<String, Double> getIngredients() {
+    
+    
+    public Set<Ingredient> getIngredients()
+    {
         return ingredients;
     }
-
-    public void setIngredients(HashMap<String, Double> ingredients) {
+    
+    public void setIngredients(Set<Ingredient> ingredients)
+    {
         this.ingredients = ingredients;
     }
-
+    
     public int getPortions() {
         return portions;
     }
@@ -65,7 +70,8 @@ public class  Recipe
         return result;
     }
 
-    public String getIngredientsList(){
+    public String getIngredientsList()
+    {
         StringBuilder out= new StringBuilder();
         for (Map.Entry<String, Double> entry : ingredients.entrySet())
         {

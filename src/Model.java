@@ -15,7 +15,7 @@ public class Model {
     private Set<Recipe> recipesSet= new HashSet<>();
     private Set<ThematicMenu> thematicMenusSet= new HashSet<>();
     private HashMap<DateOur,ArrayList<Booking>>  bookingMap = new HashMap<>();
-    private HashMap<String,Double> groceryMap = new HashMap<>();
+    private Set<Ingredient> grocerySet = new HashSet<>();
     private HashMap<String,Double> registro = new HashMap<>();
 
     public HashMap<String, Double> getRegistro() {

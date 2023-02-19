@@ -174,12 +174,13 @@ public class Writer
 				xmlw.writeAttribute("id", recipe.getId());
 				xmlw.writeAttribute("portions", Integer.toString(recipe.getPortions()));
 				xmlw.writeAttribute("workLoadPortion", Double.toString(recipe.getWorkLoadPortion()));
-				for (Map.Entry<String, Double> ingredient : recipe.getIngredients().entrySet())
+				for (Ingredient ingredient : recipe.getIngredients())
 				{
 					xmlw.writeCharacters("\n\t\t");
 					xmlw.writeStartElement("ingredient"); // <ingredient>
-					xmlw.writeAttribute("name", ingredient.getKey());
-					xmlw.writeAttribute("quantity", Double.toString(ingredient.getValue()));
+					xmlw.writeAttribute("name", ingredient.getName());
+					xmlw.writeAttribute("quantity", Double.toString(ingredient.getQuantity()));
+					xmlw.writeAttribute("unity", ingredient.getUnit());
 					xmlw.writeEndElement(); // </ingredient>
 				}
 				xmlw.writeEndElement(); // </recipe>
