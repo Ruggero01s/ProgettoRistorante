@@ -49,6 +49,8 @@ public class SimpleUI extends JFrame {
     JButton buttonBack9 = new JButton("Back");
     JButton buttonBack10 = new JButton("Back");
     JButton buttonBack11 = new JButton("Back");
+    JButton buttonBack12 = new JButton("Back");
+    JButton buttonBack13 = new JButton("Back");
 
     //------------------------------------------------------------------------------------------
     //CONFIG_BASE
@@ -56,11 +58,12 @@ public class SimpleUI extends JFrame {
     JLabel cfgBaseCapacityText = new JLabel("Posti a sedere:");
     JLabel cfgBaseIndiviualWorkloadAreaText = new JLabel("Carico lavoro max:");
     JLabel cfgBaseDateText = new JLabel("Inserisci data odierna:");
+    JLabel cfgBaseSurplusText = new JLabel("Surplus da comprare (%):");
     JButton cfgBaseSendButton = new JButton("Conferma");
     JTextArea cfgBaseInputCap = new JTextArea();
     JTextArea cfgBaseInputIndWork = new JTextArea();
     JTextArea cfgBaseInputDate = new JTextArea();
-
+    JTextArea cfgBaseInputSurplus = new JTextArea();
     public void setDrinkList(String drinkList) {
         this.drinkList = drinkList;
         cfgDrinksAreaOut.setText(this.drinkList);
@@ -250,12 +253,19 @@ public class SimpleUI extends JFrame {
 //===============================================================================================
 //===============================================================================================
     //WAREHOUSE
-    //WAREHOUSE
+    //WAREHOUSE LIST
     JTabbedPane wareTabbedPane = new JTabbedPane();
-    JPanel wareListPanel = new JPanel();
+    JPanel wareListPanel = new JPanel(new GridBagLayout());
     JLabel wareListText = new JLabel("Lista aggiornata al: ");
     JTextArea wareListOut = new JTextArea();
     JScrollPane wareListScroll = new JScrollPane(wareListOut);
+    //-------------------------------------------------------------------------------------------
+    //WAREHOUSE RETURNLIST
+    JPanel wareReturnListPanel = new JPanel(new GridBagLayout());
+    JLabel wareReturnListText = new JLabel("Lista ritorni: ");
+    JTextArea wareReturnListOut = new JTextArea();
+    JScrollPane wareReturnListScroll = new JScrollPane(wareReturnListOut);
+    JButton wareReturnListSend = new JButton("Conferma");
 
     //===============================================================================================
 //===============================================================================================
@@ -354,6 +364,8 @@ public class SimpleUI extends JFrame {
         cfgDishAreaOut.setLineWrap(true);
         cfgMenuAreaOut.setLineWrap(true);
         cfgFoodsAreaOut.setLineWrap(true);
+        cfgBaseInputSurplus.setLineWrap(true);
+        cfgRecipeAreaOut.setLineWrap(true);
 
         cfgBaseInputCap.setBorder(border);
         cfgBaseInputIndWork.setBorder(border);
@@ -383,6 +395,7 @@ public class SimpleUI extends JFrame {
         cfgMenuAreaOut.setBorder(border);
         cfgFoodsAreaOut.setBorder(border);
         cfgResDatiMenuOut.setBorder(border);
+        cfgBaseInputSurplus.setBorder(border);
 
 
         cfgResBaseScroll.setPreferredSize(new Dimension(300, 70));
@@ -423,7 +436,7 @@ public class SimpleUI extends JFrame {
         cfgDishAreaOut.setEditable(false);
         cfgMenuAreaOut.setEditable(false);
 
-        cfgRecipeAreaOut.setLineWrap(true);
+
 
         cfgWriteButton.addActionListener(e -> ctrl.writeAll());
         cfgBaseClearButton.addActionListener(e -> ctrl.clearInfo("config.xml"));
@@ -472,9 +485,15 @@ public class SimpleUI extends JFrame {
         cfgBasePanel.add(cfgBaseInputDate, c);
         c.gridx = 0;
         c.gridy = 4;
-        cfgBasePanel.add(buttonBack1, c);
+        cfgBasePanel.add(cfgBaseSurplusText, c);
         c.gridx = 1;
         c.gridy = 4;
+        cfgBasePanel.add(cfgBaseInputSurplus, c);
+        c.gridx = 0;
+        c.gridy = 5;
+        cfgBasePanel.add(buttonBack1, c);
+        c.gridx = 1;
+        c.gridy = 5;
         cfgBaseSendButton.addActionListener(e -> ctrl.saveConfig());
         cfgBasePanel.add(cfgBaseSendButton, c);
 
@@ -962,20 +981,46 @@ public class SimpleUI extends JFrame {
     }
 
     private void wareInit() {
-       wareListText.setText(wareListText.getText() + ctrl.getTodayString());
+        wareListText.setText(wareListText.getText() + ctrl.getTodayString());
 
         wareListScroll.setPreferredSize(new Dimension(300, 100));
-
         wareListScroll.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS);
 
-        titlePadding.gridx = 0;
-        titlePadding.gridy = 0;
-        wareListPanel.add(wareListText, titlePadding);
+        wareReturnListScroll.setPreferredSize(new Dimension(300, 100));
+        wareReturnListScroll.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS);
+
+        buttonBack12.addActionListener(back);
+        buttonBack13.addActionListener(back);
+
+        //LIST PANEL
+        c.gridx = 0;
+        c.gridy = 0;
+        wareListPanel.add(wareListText, c);
         c.gridx = 0;
         c.gridy = 1;
         wareListPanel.add(wareListScroll, c);
+        c.gridx = 0;
+        c.gridy = 2;
+        wareListPanel.add(buttonBack12, c);
+
+        //RETURNLIST PANEL
+        c.gridx = 0;
+        c.gridy = 0;
+        wareReturnListPanel.add(wareReturnListText, c);
+        c.gridx = 0;
+        c.gridy = 1;
+        wareReturnListPanel.add(wareReturnListScroll, c);
+        c.gridx = 0;
+        c.gridy = 2;
+        wareReturnListPanel.add(buttonBack13, c);
+        c.gridx = 1;
+        c.gridy = 2;
+      //  wareReturnListSend.addActionListener(e->ctrl.ritorna()); //todo
+        wareReturnListPanel.add(wareReturnListSend, c);
+
 
         wareTabbedPane.add("Lista della spesa", wareListPanel);
+        wareTabbedPane.add("Lista ritorni:", wareReturnListPanel);  //todo cambiare nome
     }
 
     // Method to update the UI based on the current state
@@ -1055,6 +1100,10 @@ public class SimpleUI extends JFrame {
                 break;
             case "existingName":
                 JOptionPane.showMessageDialog(getContentPane(), "Nome già in uso",
+                        "Err", JOptionPane.ERROR_MESSAGE);
+                break;
+            case "surplusTooGreat":
+                JOptionPane.showMessageDialog(getContentPane(), "Surplus troppo grande, max 10%",
                         "Err", JOptionPane.ERROR_MESSAGE);
                 break;
         }

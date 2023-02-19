@@ -16,6 +16,15 @@ public class Model {
     private Set<ThematicMenu> thematicMenusSet= new HashSet<>();
     private HashMap<DateOur,ArrayList<Booking>>  bookingMap = new HashMap<>();
     private HashMap<String,Double> groceryMap = new HashMap<>();
+    private HashMap<String,Double> registro = new HashMap<>();
+
+    public HashMap<String, Double> getRegistro() {
+        return registro;
+    }
+
+    public void setRegistro(HashMap<String, Double> registro) {
+        this.registro = registro;
+    }
 
     public HashMap<String,Double> getGroceryMap() {
         return groceryMap;
@@ -109,5 +118,13 @@ public class Model {
 
     public void setExtraFoodsMap(HashMap<String, Double> extraFoodsMap) {
         this.extraFoodsMap = extraFoodsMap;
+    }
+
+    public int getIncrement() {
+        return increment;
+    }
+
+    public void setIncrement(int increment) {
+        this.increment = increment;
     }
 }

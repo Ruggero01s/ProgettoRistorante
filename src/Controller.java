@@ -1,4 +1,5 @@
 import javax.swing.*;
+import java.text.ParseException;
 import java.util.*;
 
 public class Controller
@@ -34,10 +35,12 @@ public class Controller
 		updateMenuOut();
 		updateMenuBoxes();
 		sui.cfgResBaseOut.setText("Capacità: " + model.getCapacity() + "\n" + "IndividualWorkload: " +
-				model.getWorkPersonLoad() + "\n" + "Restaurant Worlkload: " + model.getWorkResturantLoad()+ "\n" +"Data odierna: " + model.getToday().getStringDate())  ;
+				model.getWorkPersonLoad() + "\n" + "Restaurant Worlkload: " + model.getWorkResturantLoad()+ "\n"
+				+"Data odierna: " + model.getToday().getStringDate()+"Surplus %: " + model.getIncrement());
 		sui.cfgBaseInputCap.setText(Integer.toString(model.getCapacity()));
 		sui.cfgBaseInputIndWork.setText(Integer.toString(model.getWorkPersonLoad()));
 		sui.cfgBaseInputDate.setText(model.getToday().getStringDate());
+		sui.cfgBaseInputSurplus.setText(Integer.toString(model.getIncrement()));
 		generateGroceryList();
 	}
 
@@ -56,8 +59,9 @@ public class Controller
 				sui.cfgResBaseOut.setText("""
 						Capacità: 0
 						IndividualWorkload: 0
-						Restaurant Worlkload: 0
-						Data odierna: 01/01/1444""");
+						Restaurant Workload: 0
+						Data odierna: 01/01/1444
+						Surplus %: 5""");
 				sui.cfgBaseInputCap.setText(Integer.toString(0));
 				sui.cfgBaseInputIndWork.setText(Integer.toString(0));
 				clearInfo("bookings");
@@ -112,21 +116,27 @@ public class Controller
 		{
 			String inputCapacity = sui.cfgBaseInputCap.getText();
 			String inputWorkload = sui.cfgBaseInputIndWork.getText();
+			String inputPercent = sui.cfgBaseInputSurplus.getText();
 			String todayString = sui.cfgBaseInputDate.getText().trim();
 			int capacity = Integer.parseInt(inputCapacity);
 			int workload= Integer.parseInt(inputWorkload);
+			int percent= Integer.parseInt(inputPercent);
 			if (!checkDate(todayString))
 				sui.errorSetter("invalidDate");
 			else {
 				DateOur today = inputToDate(todayString);
 				if (capacity <= 0 || workload <= 0)
 					sui.errorSetter("minZero");
-				else {
+				else if (percent>10){
+					sui.errorSetter("surplusTooGreat");
+				}else {
 					model.setCapacity(capacity);
 					model.setWorkPersonLoad(workload);
 					model.setToday(today);
+					model.setIncrement(percent);
 					sui.cfgResBaseOut.setText("Capacità: " + model.getCapacity() + "\n" + "IndividualWorkload: " +
-							model.getWorkPersonLoad() + "\n" + "Restaurant Worlkload: " + model.getWorkResturantLoad()+ "\n" +"Data odierna: " + model.getToday().getStringDate())  ;
+							model.getWorkPersonLoad() + "\n" + "Restaurant Worlkload: " + model.getWorkResturantLoad()+
+							"\n" +"Data odierna: " + model.getToday().getStringDate()+"Surplus %: " + model.getIncrement());
 				}
 			}
 		}
@@ -847,21 +857,91 @@ public class Controller
 					}
 				}
 			}
-			
-			//todo decidere di quanto deve essere l'incremento, probabilmente lo deciderà il manager
-			groceryMap.replaceAll((k, v) -> v * 1.05); //incremento del 5% ogni ingrediente
-			
-			groceryMap.putAll(model.getDrinksMap()); //add drinks and foods
-			groceryMap.putAll(model.getExtraFoodsMap());
-			
-			model.setGroceryMap(groceryMap);
-			groceryMapToString();
+
+			groceryMap.replaceAll((k, v) -> v+(v * (double)model.getIncrement()/100.0)); //incremento del 5% ogni ingrediente
+
+			groceryMap = new HashMap<>(compareWithRegister(groceryMap));
+
+			HashMap <String,Double> drink = new HashMap<>(model.getDrinksMap());
+			HashMap <String,Double> food = new HashMap<>(model.getExtraFoodsMap());
+
+			final int n=numberOfPeople;
+			drink.replaceAll((k,v)-> Math.ceil(v*n));
+			food.replaceAll((k,v)-> Math.ceil(v*n));
+
+			drink = new HashMap<>(compareWithRegister(drink));
+			food = new HashMap<>(compareWithRegister(food));
+
+		//	model.setGroceryMap(groceryMap); //todo vedere se serve
+
+			updateRegister(groceryMap);
+			updateRegister(drink);
+			updateRegister(food);
+
+			sui.wareListOut.setText(groceriesToString(groceryMap, drink, food));
 		}
 		else
 			sui.wareListOut.setText("Non essendoci prenotazioni per oggi la lista della spesa è vuota");
 	}
 
-	private void groceryMapToString()
+
+	private HashMap<String,Double> compareWithRegister(HashMap<String,Double> map)
+	{
+		for (Map.Entry<String, Double> mag: model.getRegistro().entrySet())
+		{
+			if(map.containsKey(mag.getKey()))
+			{
+				double q=map.get(mag.getKey())-mag.getValue();
+				if(q<=0)
+					map.remove(mag.getKey());
+				else
+					map.put(mag.getKey(), q);
+			}
+		}
+		return map;
+	}
+
+
+	private void updateRegister(HashMap<String,Double> map){
+		for (Map.Entry<String, Double> ingredient : map.entrySet())
+		{
+			if(model.getRegistro().containsKey(ingredient.getKey()))
+				model.getRegistro().put(ingredient.getKey(),ingredient.getValue()+model.getRegistro().get(ingredient.getKey()));
+			else
+				model.getRegistro().put(ingredient.getKey(),ingredient.getValue());
+		}
+	}
+
+	private String groceriesToString(HashMap<String, Double> ingredients, HashMap<String, Double> drinks, HashMap<String, Double> foods){
+		String out = "";
+		out += groceryIngredientsMapToString(ingredients) + "\n";
+		out += groceryFoodsMapToString(foods) + "\n";
+		out += groceryDrinksMapToString(drinks);
+		return out;
+	}
+
+
+	private String groceryDrinksMapToString(HashMap<String, Double> drinks)
+	{
+		String out ="";
+		for (Map.Entry<String, Double> entry : drinks.entrySet())
+		{
+			out= out+entry.getKey()+" : "+entry.getValue()+" L" +"\n";
+		}
+		return out.trim();
+	}
+	private String groceryFoodsMapToString(HashMap<String, Double> foods)
+	{
+		String out ="";
+		for (Map.Entry<String, Double> entry : foods.entrySet())
+		{
+			out= out+entry.getKey()+" : "+entry.getValue()+" hg" +"\n";
+		}
+		return out.trim();
+	}
+
+
+	private String groceryIngredientsMapToString(HashMap<String, Double> ingredients)
 	{
 		String out ="";
 		for (Map.Entry<String, Double> entry : model.getGroceryMap().entrySet())
