@@ -1015,7 +1015,7 @@ public class SimpleUI extends JFrame {
         wareReturnListPanel.add(buttonBack13, c);
         c.gridx = 1;
         c.gridy = 2;
-      //  wareReturnListSend.addActionListener(e->ctrl.ritorna()); //todo
+       // wareReturnListSend.addActionListener(e->ctrl.ritorna()); //todo
         wareReturnListPanel.add(wareReturnListSend, c);
 
 

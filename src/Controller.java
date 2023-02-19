@@ -28,6 +28,7 @@ public class Controller
 		}
 		model.setThematicMenusSet(reader.readThematicMenu());
 		model.setBookingMap(reader.readBooking());
+		model.setRegistro(reader.readRegister());
 		updateRecipeStringList();
 		updateDishStringList();
 		updateDrinkList();
@@ -907,7 +908,8 @@ public class Controller
 	}
 
 
-	private void updateRegister(HashMap<String,Double> map){
+	private void updateRegister(HashMap<String,Double> map)
+	{
 		for (Map.Entry<String, Double> ingredient : map.entrySet())
 		{
 			if(model.getRegistro().containsKey(ingredient.getKey()))

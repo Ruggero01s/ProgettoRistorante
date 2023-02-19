@@ -14,6 +14,7 @@ public class Writer
 	public static final String DISHES_NAME_FILE = "dishes.xml";
     public static final String MENUS_NAME_FILE = "thematicMenus.xml";
 	public static final String BOOKINGS_NAME_FILE = "bookings.xml";
+	public static final String REGISTER_NAME_FILE = "register.xml";
 	
 	
 	private static final String SALUTO = "\nOutput generato correttamente, arrivederci";
@@ -320,6 +321,39 @@ public class Writer
 			xmlw.writeCharacters("\n");
 			xmlw.writeEndElement();//</bookings>
 
+			xmlw.writeEndDocument(); // scrittura della fine del documento
+			xmlw.flush(); // svuota il buffer e procede alla scrittura
+			xmlw.close(); // chiusura del documento e delle risorse impiegate
+			System.out.println(SALUTO);
+		}
+		catch (Exception e)
+		{
+			System.out.println(ERRORE);
+			System.out.println(e.getMessage());
+		}
+	}
+	
+	public static void writeRegister(HashMap <String,Double> register)
+	{
+		XMLOutputFactory xmlof = null;
+		XMLStreamWriter xmlw = null;
+		try
+		{
+			xmlof = XMLOutputFactory.newInstance();
+			xmlw = xmlof.createXMLStreamWriter(new FileOutputStream(ROOT + REGISTER_NAME_FILE), "utf-8");
+			xmlw.writeStartDocument("utf-8", "1.0");
+			xmlw.writeCharacters("\n");
+			xmlw.writeStartElement("register"); // scrittura del tag radice <register>
+			for (Map.Entry<String,Double> reg : register.entrySet())
+			{
+				xmlw.writeCharacters("\n\t");
+				xmlw.writeStartElement("ingredient"); // <ingredient>
+				xmlw.writeAttribute("name", reg.getKey());
+				xmlw.writeAttribute("quantity", reg.getValue().toString());
+				xmlw.writeEndElement(); // </ingredient>
+			}
+			xmlw.writeCharacters("\n");
+			xmlw.writeEndElement();//</register>
 			xmlw.writeEndDocument(); // scrittura della fine del documento
 			xmlw.flush(); // svuota il buffer e procede alla scrittura
 			xmlw.close(); // chiusura del documento e delle risorse impiegate
