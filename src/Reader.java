@@ -76,6 +76,7 @@ public class Reader
                         model.setCapacity(Integer.parseInt(xmlr.getAttributeValue(0)));
                         model.setWorkPersonLoad((int) Double.parseDouble(xmlr.getAttributeValue(1)));
                         today=xmlr.getAttributeValue(2).split("/");
+                        model.setIncrement(Integer.parseInt(xmlr.getAttributeValue(3)));
                         model.setToday(new DateOur(today[0],today[1],today[2]));
                     }
                 }

@@ -55,7 +55,13 @@ public class Controller
 			case "config.xml":
 				model.setCapacity(0);
 				model.setWorkPersonLoad(0);
-				Writer.writeConfigBase(model.getCapacity(), model.getWorkPersonLoad(),model.getToday());
+				model.setIncrement(5);
+				try {
+					model.setToday(new DateOur("01","01","1444"));
+				} catch (ParseException e) {
+					throw new RuntimeException(e); //mai
+				}
+				Writer.writeConfigBase(model.getCapacity(), model.getWorkPersonLoad(),model.getToday(), model.getIncrement());
 				sui.cfgResBaseOut.setText("""
 						Capacità: 0
 						IndividualWorkload: 0
@@ -102,7 +108,7 @@ public class Controller
 		Writer.writeDrinks(model.getDrinksMap());
 		//if(!model.getExtraFoodsMap().isEmpty())
 		Writer.writeExtraFoods(model.getExtraFoodsMap());
-		Writer.writeConfigBase(model.getCapacity(), model.getWorkPersonLoad(),model.getToday());
+		Writer.writeConfigBase(model.getCapacity(), model.getWorkPersonLoad(),model.getToday(), model.getIncrement());
 		Writer.writeRecipes(model.getRecipesSet());
 		//if(!model.getDishesSet().isEmpty())
 		Writer.writeDishes(model.getDishesSet());
@@ -791,7 +797,7 @@ public class Controller
 	{
 		HashMap<String,Double> groceryMap = new HashMap<>();
 		HashMap<String,Double> surplusMap = new HashMap<>();
-		Double quantity=0.0,surplus=0.0;
+		double quantity=0.0,surplus=0.0;
 		int multi=0;
 		Recipe recipe;
 		int numberOfPeople=0;
@@ -812,7 +818,6 @@ public class Controller
 						allDish.put(dish, entry.getValue());
 				}
 			}
-
 			for (Map.Entry<Dish, Integer> entry : allDish.entrySet())
 			{
 				recipe = entry.getKey().getRecipe();
@@ -946,9 +951,9 @@ public class Controller
 		String out ="";
 		for (Map.Entry<String, Double> entry : model.getGroceryMap().entrySet())
 		{
-			out= out+entry.getKey()+" : "+entry.getValue()+"\n";
+			out= out+entry.getKey()+" : "+entry.getValue()+" g" +"\n";
 		}
-		out.trim();
-		sui.wareListOut.setText(out);
+		return out.trim();
+
 	}
 }

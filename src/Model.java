@@ -6,7 +6,7 @@ public class Model {
 
     static final double INCREASE20 = 1.20;
 
-    private int capacity=0, workPersonLoad=0;
+    private int capacity, workPersonLoad,increment;
     private double workloadRestaurant;
     private DateOur today;
     private HashMap<String, Double> drinksMap = new HashMap<>();
