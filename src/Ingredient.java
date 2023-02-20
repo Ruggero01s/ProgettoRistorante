@@ -55,7 +55,7 @@ public class Ingredient
 		if (!(i instanceof Ingredient)) {
 			return false;
 		}
-		Ingredient ingredient = (Ingredient) d;
+		Ingredient ingredient = (Ingredient) i;
 		
 		return this.name.equals(ingredient.getName());
 	}

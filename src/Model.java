@@ -16,16 +16,18 @@ public class Model {
     private Set<ThematicMenu> thematicMenusSet= new HashSet<>();
     private HashMap<DateOur,ArrayList<Booking>>  bookingMap = new HashMap<>();
     private Set<Ingredient> grocerySet = new HashSet<>();
-    private HashMap<String,Double> registro = new HashMap<>();
-
-    public HashMap<String, Double> getRegistro() {
+    private Set<Ingredient> registro = new HashSet<>();
+    
+    public Set<Ingredient> getRegistro()
+    {
         return registro;
     }
-
-    public void setRegistro(HashMap<String, Double> registro) {
+    
+    public void setRegistro(Set<Ingredient> registro)
+    {
         this.registro = registro;
     }
-
+    
     public Set<Ingredient> getGrocerySet() {
         return grocerySet;
     }

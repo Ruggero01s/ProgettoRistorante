@@ -1,11 +1,3 @@
 <?xml version="1.0" encoding="utf-8"?>
 <register>
-	<ingredient name="tonno" quantity="660.0"></ingredient>
-	<ingredient name="vino" quantity="7.0"></ingredient>
-	<ingredient name="Grissini" quantity="7.0"></ingredient>
-	<ingredient name="carne" quantity="660.0"></ingredient>
-	<ingredient name="pepperoni" quantity="1100.0"></ingredient>
-	<ingredient name="Pane" quantity="14.0"></ingredient>
-	<ingredient name="acqua" quantity="14.0"></ingredient>
-	<ingredient name="farina" quantity="1320.0"></ingredient>
 </register>

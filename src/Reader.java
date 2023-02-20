@@ -359,12 +359,12 @@ public class Reader
 		return bookings;
 	}
 	
-	public HashMap<String, Double> readRegister()
+	public Set<Ingredient> readRegister()
 	{
 		XMLInputFactory xmlif;
 		XMLStreamReader xmlr;
 		
-		HashMap<String, Double> reg = new HashMap<>();
+		Set<Ingredient> reg = new HashSet<>();
 		try
 		{
 			xmlif = XMLInputFactory.newInstance();
@@ -375,7 +375,7 @@ public class Reader
 				if (xmlr.getEventType() == XMLStreamConstants.START_ELEMENT) // inizio di un elemento
 				{
                     if(xmlr.getLocalName().equals("ingredient"))
-                        reg.put(xmlr.getAttributeValue(0),Double.parseDouble(xmlr.getAttributeValue(1)));
+                        reg.add(new Ingredient(xmlr.getAttributeValue(0),xmlr.getAttributeValue(1),Double.parseDouble(xmlr.getAttributeValue(2))));
 				}
 				xmlr.next();
 			}

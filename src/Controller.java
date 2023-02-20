@@ -14,7 +14,7 @@ public class Controller
 		loadModel();
 		sui.init();
 	}
-
+	
 	private void loadModel()
 	{
 		reader.readConfig(model);
@@ -22,7 +22,7 @@ public class Controller
 		model.setExtraFoodsMap(reader.readExtraFoods());
 		model.setRecipesSet(reader.readRecipes());
 		model.setDishesSet(reader.readDishes());
-		for (Dish d: model.getDishesSet())
+		for (Dish d : model.getDishesSet())
 		{
 			model.getRecipesSet().add(d.getRecipe());
 		}
@@ -36,19 +36,20 @@ public class Controller
 		updateMenuOut();
 		updateMenuBoxes();
 		sui.cfgResBaseOut.setText("Capacità: " + model.getCapacity() + "\n" + "IndividualWorkload: " +
-				model.getWorkPersonLoad() + "\n" + "Restaurant Worlkload: " + model.getWorkResturantLoad()+ "\n"
-				+"Data odierna: " + model.getToday().getStringDate()+"Surplus %: " + model.getIncrement());
+				model.getWorkPersonLoad() + "\n" + "Restaurant Worlkload: " + model.getWorkResturantLoad() + "\n"
+				+ "Data odierna: " + model.getToday().getStringDate() + "Surplus %: " + model.getIncrement());
 		sui.cfgBaseInputCap.setText(Integer.toString(model.getCapacity()));
 		sui.cfgBaseInputIndWork.setText(Integer.toString(model.getWorkPersonLoad()));
 		sui.cfgBaseInputDate.setText(model.getToday().getStringDate());
 		sui.cfgBaseInputSurplus.setText(Integer.toString(model.getIncrement()));
 		generateGroceryList();
 	}
-
-	public String getTodayString(){
+	
+	public String getTodayString()
+	{
 		return model.getToday().getStringDate();
 	}
-
+	
 	public void clearInfo(String name)
 	{
 		switch (name)
@@ -57,12 +58,15 @@ public class Controller
 				model.setCapacity(0);
 				model.setWorkPersonLoad(0);
 				model.setIncrement(5);
-				try {
-					model.setToday(new DateOur("01","01","1444"));
-				} catch (ParseException e) {
+				try
+				{
+					model.setToday(new DateOur("01", "01", "1444"));
+				}
+				catch (ParseException e)
+				{
 					throw new RuntimeException(e); //mai
 				}
-				Writer.writeConfigBase(model.getCapacity(), model.getWorkPersonLoad(),model.getToday(), model.getIncrement());
+				Writer.writeConfigBase(model.getCapacity(), model.getWorkPersonLoad(), model.getToday(), model.getIncrement());
 				sui.cfgResBaseOut.setText("""
 						Capacità: 0
 						IndividualWorkload: 0
@@ -86,7 +90,7 @@ public class Controller
 			case "recipes.xml":
 				model.getRecipesSet().clear();
 				Writer.writeRecipes(model.getRecipesSet());
-				updateRecipeStringList();	//il break non serve perchè se cancello le ricette devo cancellare anche i menu ed i dish
+				updateRecipeStringList();    //il break non serve perchè se cancello le ricette devo cancellare anche i menu ed i dish
 			case "dishes.xml":
 				model.getDishesSet().clear();
 				Writer.writeDishes(model.getDishesSet());
@@ -102,14 +106,14 @@ public class Controller
 				break;
 		}
 	}
-
+	
 	public void writeManager()
 	{
 		//if(!model.getDrinksMap().isEmpty())
 		Writer.writeDrinks(model.getDrinksMap());
 		//if(!model.getExtraFoodsMap().isEmpty())
 		Writer.writeExtraFoods(model.getExtraFoodsMap());
-		Writer.writeConfigBase(model.getCapacity(), model.getWorkPersonLoad(),model.getToday(), model.getIncrement());
+		Writer.writeConfigBase(model.getCapacity(), model.getWorkPersonLoad(), model.getToday(), model.getIncrement());
 		Writer.writeRecipes(model.getRecipesSet());
 		//if(!model.getDishesSet().isEmpty())
 		Writer.writeDishes(model.getDishesSet());
@@ -126,24 +130,28 @@ public class Controller
 			String inputPercent = sui.cfgBaseInputSurplus.getText();
 			String todayString = sui.cfgBaseInputDate.getText().trim();
 			int capacity = Integer.parseInt(inputCapacity);
-			int workload= Integer.parseInt(inputWorkload);
-			int percent= Integer.parseInt(inputPercent);
+			int workload = Integer.parseInt(inputWorkload);
+			int percent = Integer.parseInt(inputPercent);
 			if (!checkDate(todayString))
 				sui.errorSetter("invalidDate");
-			else {
+			else
+			{
 				DateOur today = inputToDate(todayString);
 				if (capacity <= 0 || workload <= 0)
 					sui.errorSetter("minZero");
-				else if (percent>10){
+				else if (percent > 10)
+				{
 					sui.errorSetter("surplusTooGreat");
-				}else {
+				}
+				else
+				{
 					model.setCapacity(capacity);
 					model.setWorkPersonLoad(workload);
 					model.setToday(today);
 					model.setIncrement(percent);
 					sui.cfgResBaseOut.setText("Capacità: " + model.getCapacity() + "\n" + "IndividualWorkload: " +
-							model.getWorkPersonLoad() + "\n" + "Restaurant Worlkload: " + model.getWorkResturantLoad()+
-							"\n" +"Data odierna: " + model.getToday().getStringDate()+"Surplus %: " + model.getIncrement());
+							model.getWorkPersonLoad() + "\n" + "Restaurant Worlkload: " + model.getWorkResturantLoad() +
+							"\n" + "Data odierna: " + model.getToday().getStringDate() + "Surplus %: " + model.getIncrement());
 				}
 			}
 		}
@@ -160,20 +168,21 @@ public class Controller
 		{
 			String input = sui.cfgDrinksInput.getText();
 			if (!input.contains(":"))
-				throw new NumberFormatException ("");
-
+				throw new NumberFormatException("");
+			
 			String[] inputSplit = input.split(":");
-
+			
 			if (inputSplit[0].equals(""))
-				throw new NumberFormatException ("");
-			if(inputSplit.length<2)
-				throw new NumberFormatException ("");
-
+				throw new NumberFormatException("");
+			if (inputSplit.length < 2)
+				throw new NumberFormatException("");
+			
 			double quantity = Double.parseDouble(inputSplit[1]);
-
+			
 			if (quantity <= 0)
 				sui.errorSetter("minZero");
-			else {
+			else
+			{
 				model.getDrinksMap().put(inputSplit[0], quantity);
 				sui.cfgDrinksInput.setText("");
 				updateDrinkList();
@@ -185,23 +194,24 @@ public class Controller
 		}
 	}
 	
-	public void saveFoods(){
+	public void saveFoods()
+	{
 		try
 		{
 			String input = sui.cfgDrinksInput.getText();
-
+			
 			if (!input.contains(":"))
-				throw new NumberFormatException ("");
-
+				throw new NumberFormatException("");
+			
 			String[] inputSplit = input.split(":");
-
-			if(inputSplit.length<2)
-				throw new NumberFormatException ("");
+			
+			if (inputSplit.length < 2)
+				throw new NumberFormatException("");
 			if (inputSplit[0].equals(""))
-				throw new NumberFormatException ("");
+				throw new NumberFormatException("");
 			double quantity = Double.parseDouble(inputSplit[1]);
-
-			if(quantity<= 0)
+			
+			if (quantity <= 0)
 				sui.errorSetter("minZero");
 			else
 			{
@@ -216,10 +226,11 @@ public class Controller
 		}
 	}
 	
-	public void saveRecipe() {
+	public void saveRecipe()
+	{
 		try
 		{
-			boolean err=false;
+			boolean err = false;
 			String inputName = sui.cfgRecipeNameInput.getText();
 			String inputIngredients = sui.cfgRecipeIngredientsInput.getText();
 			String inputPortions = sui.cfgRecipePortionsInput.getText();
@@ -227,48 +238,50 @@ public class Controller
 			
 			Set<Ingredient> ingredientQuantitySet = new HashSet<>();
 			String[] lines = inputIngredients.split("\n");
-
+			
 			if (inputName.equals(""))
-				throw new NumberFormatException ("");
-
+				throw new NumberFormatException("");
+			
 			for (String line : lines)
 			{
-				if(!line.contains(":"))
-					throw new NumberFormatException ("");
-
+				if (!line.contains(":"))
+					throw new NumberFormatException("");
+				
 				String[] words = line.split(":");
-
-				if(words[0].equals(""))
-					throw new NumberFormatException ("");
-
-				if (words.length<3)
-					throw new NumberFormatException ("");
-
-				double quantity=Double.parseDouble(words[1]);
-				switch (words[2]){
+				
+				if (words[0].equals(""))
+					throw new NumberFormatException("");
+				
+				if (words.length < 3)
+					throw new NumberFormatException("");
+				
+				double quantity = Double.parseDouble(words[1]);
+				switch (words[2])
+				{
 					case "kg", "g", "hg", "L", "ml", "cl" ->
 					{
 					}
-					default -> {
-						throw new NumberFormatException ("");
+					default ->
+					{
+						throw new NumberFormatException("");
 					}
 				}
 				
 				String unit = words[2];
-				if(quantity<=0)
+				if (quantity <= 0)
 				{
 					err = true;
 					break;
 				}
-				ingredientQuantitySet.add(new Ingredient(words[0],unit,quantity));
+				ingredientQuantitySet.add(new Ingredient(words[0], unit, quantity));
 			}
-			int portions=Integer.parseInt(inputPortions);
+			int portions = Integer.parseInt(inputPortions);
 			double workLoad = Double.parseDouble(inputWorkload);
-			if(portions<=0 || workLoad<=0 || err)
+			if (portions <= 0 || workLoad <= 0 || err)
 				sui.errorSetter("minZero");
 			else
 			{
-				if(model.getRecipesSet().add(new Recipe(inputName, ingredientQuantitySet, portions, workLoad)))
+				if (model.getRecipesSet().add(new Recipe(inputName, ingredientQuantitySet, portions, workLoad)))
 				{
 					sui.cfgRecipeNameInput.setText(Model.CLEAR);
 					sui.cfgRecipeIngredientsInput.setText(Model.CLEAR);
@@ -278,7 +291,7 @@ public class Controller
 				}
 				else
 					sui.errorSetter("existingName");
-
+				
 			}
 		}
 		catch (NumberFormatException e)
@@ -286,23 +299,23 @@ public class Controller
 			sui.errorSetter("NumberFormatException");
 		}
 	}
-    
-    public void saveDish()
+	
+	public void saveDish()
 	{
 		try
 		{
 			String inputName = sui.cfgDishNameInput.getText();
-
-			if(inputName.equals(Model.CLEAR))
-				throw new NumberFormatException ("");
-
+			
+			if (inputName.equals(Model.CLEAR))
+				throw new NumberFormatException("");
+			
 			String inputRecipe = ((String) sui.cfgDishComboBox.getSelectedItem()).split("-")[0].trim();
 			
 			String inputStartDate = sui.cfgDishSDateInput.getText();
 			String inputEndDate = sui.cfgDishEDateInput.getText();
 			boolean perm = sui.cfgDishPermanentRadio.isSelected();
 			boolean seasonal = sui.cfgDishSeasonalRadio.isSelected();
-			if(!perm)
+			if (!perm)
 			{
 				if (!checkDate(inputStartDate) || !checkDate(inputEndDate))
 				{
@@ -315,13 +328,13 @@ public class Controller
 				inputStartDate = "01/01/1444";
 				inputEndDate = "31/12/1444";
 			}
-			boolean found=false;
+			boolean found = false;
 			for (Recipe r : model.getRecipesSet())
 			{
 				found = false;
 				if (r.getId().equals(inputRecipe))
 				{
-					if(model.getDishesSet().add(new Dish(inputName, r, inputStartDate, inputEndDate, seasonal, perm)))
+					if (model.getDishesSet().add(new Dish(inputName, r, inputStartDate, inputEndDate, seasonal, perm)))
 					{
 						updateDishStringList();
 						sui.cfgDishNameInput.setText(Model.CLEAR);
@@ -336,101 +349,113 @@ public class Controller
 			}
 			if (!found)
 				sui.errorSetter("noRecipe");
-		}catch (Exception e)
+		}
+		catch (Exception e)
 		{
 			sui.errorSetter("NumberFormatException");
 		}
 	}
-
+	
 	public void saveMenu()
 	{
 		try
 		{
-		String inputName = sui.cfgMenuNameInput.getText();
-		String inputs = sui.cfgMenuDishesInput.getText();
-
-		if (inputName.equals(Model.CLEAR))
-			throw new NumberFormatException("");
-
-		String[] inputList = inputs.split("\n");
-
-		String inputStartDate = sui.cfgMenuSDateInput.getText();
-		String inputEndDate = sui.cfgMenuEDateInput.getText();
-
-		boolean permanent = sui.cfgMenuPermanentRadio.isSelected();
-		boolean seasonal = sui.cfgMenuSeasonalRadio.isSelected();
-
-		ArrayList<Dish> dishesForMenu = new ArrayList<>();
-
-		if(!permanent)
-		{
-			if (!checkDate(inputStartDate) || !checkDate(inputEndDate)) {
-				sui.errorSetter("invalidDate");
-				return;
-			}
-		}
-		else
-		{
-			inputStartDate = "01/01/1444";
-			inputEndDate = "31/12/1444";
-		}
-		boolean found=false;
-		for (String s: inputList)
-		{
-			found = false;
-			if(!s.equals(""))
+			String inputName = sui.cfgMenuNameInput.getText();
+			String inputs = sui.cfgMenuDishesInput.getText();
+			
+			if (inputName.equals(Model.CLEAR))
+				throw new NumberFormatException("");
+			
+			String[] inputList = inputs.split("\n");
+			
+			String inputStartDate = sui.cfgMenuSDateInput.getText();
+			String inputEndDate = sui.cfgMenuEDateInput.getText();
+			
+			boolean permanent = sui.cfgMenuPermanentRadio.isSelected();
+			boolean seasonal = sui.cfgMenuSeasonalRadio.isSelected();
+			
+			ArrayList<Dish> dishesForMenu = new ArrayList<>();
+			
+			if (!permanent)
 			{
-				for (Dish d : model.getDishesSet()) {
-					if (d.getName().equals(s)) {
-						dishesForMenu.add(d);
-						found = true;
-						sui.cfgMenuNameInput.setText(Model.CLEAR);
-						sui.cfgMenuDishesInput.setText(Model.CLEAR);
-						sui.cfgMenuSDateInput.setText(Model.CLEAR);
-						sui.cfgMenuEDateInput.setText(Model.CLEAR);
-						break;
+				if (!checkDate(inputStartDate) || !checkDate(inputEndDate))
+				{
+					sui.errorSetter("invalidDate");
+					return;
+				}
+			}
+			else
+			{
+				inputStartDate = "01/01/1444";
+				inputEndDate = "31/12/1444";
+			}
+			boolean found = false;
+			for (String s : inputList)
+			{
+				found = false;
+				if (!s.equals(""))
+				{
+					for (Dish d : model.getDishesSet())
+					{
+						if (d.getName().equals(s))
+						{
+							dishesForMenu.add(d);
+							found = true;
+							sui.cfgMenuNameInput.setText(Model.CLEAR);
+							sui.cfgMenuDishesInput.setText(Model.CLEAR);
+							sui.cfgMenuSDateInput.setText(Model.CLEAR);
+							sui.cfgMenuEDateInput.setText(Model.CLEAR);
+							break;
+						}
 					}
 				}
 			}
-		}
-		if(!found)
-			sui.errorSetter("noDish");
-		else
-		{
-			ThematicMenu temp = new ThematicMenu(inputName, inputStartDate, inputEndDate, dishesForMenu, seasonal, permanent);
-			if(temp.getWorkThematicMenuLoad()<=((double)model.getWorkPersonLoad()*4/3)) {
-				boolean valid = true;
-				for (String s : sui.dishString) {
-					if (s.equals(temp.getName())) {
-						valid = false;
-						break;
-					}
-				}
-				if (valid)
+			if (!found)
+				sui.errorSetter("noDish");
+			else
+			{
+				ThematicMenu temp = new ThematicMenu(inputName, inputStartDate, inputEndDate, dishesForMenu, seasonal, permanent);
+				if (temp.getWorkThematicMenuLoad() <= ((double) model.getWorkPersonLoad() * 4 / 3))
 				{
-					if(model.getThematicMenusSet().add(temp)) {
-						updateMenuOut();
-						updateMenuBoxes();
+					boolean valid = true;
+					for (String s : sui.dishString)
+					{
+						if (s.equals(temp.getName()))
+						{
+							valid = false;
+							break;
+						}
 					}
-					else
-						sui.errorSetter("existingName");
+					if (valid)
+					{
+						if (model.getThematicMenusSet().add(temp))
+						{
+							updateMenuOut();
+							updateMenuBoxes();
+						}
+						else
+							sui.errorSetter("existingName");
+					}
+					else sui.errorSetter("sameNameAsDish");
 				}
-				else sui.errorSetter("sameNameAsDish");
-			}else sui.errorSetter("thiccMenu");
+				else sui.errorSetter("thiccMenu");
+			}
 		}
-		} catch (Exception e) {
+		catch (Exception e)
+		{
 			sui.errorSetter("NumberFormatException");
 		}
 	}
-
-	public static boolean checkDate (String s) {
-		if(s.equals(""))
+	
+	public static boolean checkDate(String s)
+	{
+		if (s.equals(""))
 			return false;
-		if(!s.contains("/"))
+		if (!s.contains("/"))
 			return false;
-		String [] pezzi = s.split("/");
-		if (pezzi.length<3) return false;
-		if(Integer.parseInt(pezzi[2])<=0)
+		String[] pezzi = s.split("/");
+		if (pezzi.length < 3) return false;
+		if (Integer.parseInt(pezzi[2]) <= 0)
 			return false;
 		switch (Integer.parseInt(pezzi[1]))
 		{
@@ -456,76 +481,88 @@ public class Controller
 		}
 		return false;
 	}
-
-	public ArrayList<Dish> stringListToDishList(ArrayList<String> list ) {
+	
+	public ArrayList<Dish> stringListToDishList(ArrayList<String> list)
+	{
 		ArrayList<Dish> dishes = new ArrayList<>();
-		for (String s: list) {
-			for (Dish d: model.getDishesSet()) {
+		for (String s : list)
+		{
+			for (Dish d : model.getDishesSet())
+			{
 				if (d.getName().equals(s))
 					dishes.add(d);
 			}
 		}
 		return dishes;
 	}
-
-	public void updateMenuOut() {
-		StringBuilder out= new StringBuilder();
-		for (ThematicMenu m: model.getThematicMenusSet()) {
+	
+	public void updateMenuOut()
+	{
+		StringBuilder out = new StringBuilder();
+		for (ThematicMenu m : model.getThematicMenusSet())
+		{
 			out.append(m.getName()).append(" - [").append(m.getStartPeriod().getStringDate()).append(" || ").append(m.getStartPeriod().getStringDate()).append("] - w.").append(m.getWorkThematicMenuLoad()).append(" \n");
 		}
 		sui.cfgResMenuOut.setText(out.toString().trim());
 		sui.setMenuList(out.toString().trim());
 	}
-
-	public Recipe stringToRecipe(String id) {
-			for (Recipe r :model.getRecipesSet() )
-			{
-				if (r.getId().equals(id))
-					return r;
-			}
+	
+	public Recipe stringToRecipe(String id)
+	{
+		for (Recipe r : model.getRecipesSet())
+		{
+			if (r.getId().equals(id))
+				return r;
+		}
 		return null; //non dovrebbe succedere
 	}
-
-	public void updateRecipeStringList() {
+	
+	public void updateRecipeStringList()
+	{
 		String[] recipes = new String[model.getRecipesSet().size()];
-		int i=0;
-		for (Recipe r: model.getRecipesSet())
+		int i = 0;
+		for (Recipe r : model.getRecipesSet())
 		{
-			recipes[i]=(r.getId() +" - "+ "["+r.getIngredientsList()+"] - p." + r.getPortions() + " - w." + r.getWorkLoadPortion());
+			recipes[i] = (r.getId() + " - " + "[" + r.getIngredientsList() + "] - p." + r.getPortions() + " - w." + r.getWorkLoadPortion());
 			i++;
 		}
-		DefaultComboBoxModel<String> model = new DefaultComboBoxModel<>( recipes );
+		DefaultComboBoxModel<String> model = new DefaultComboBoxModel<>(recipes);
 		sui.cfgDishComboBox.setModel(model);
-
-		StringBuilder compactedArray= new StringBuilder();
-		for (String s: recipes) {
+		
+		StringBuilder compactedArray = new StringBuilder();
+		for (String s : recipes)
+		{
 			compactedArray.append(s).append("\n");
 		}
 		sui.cfgResRecipesOut.setText(compactedArray.toString().trim());
 		sui.setRecipeList(compactedArray.toString().trim());
 	}
-//TODO fare i metodi con parametri che vengono da sui
-	public void updateDishStringList()	{
+	
+	//TODO fare i metodi con parametri che vengono da sui
+	public void updateDishStringList()
+	{
 		String[] dishes = new String[model.getDishesSet().size()];
-		int i=0;
-		for (Dish d: model.getDishesSet())
+		int i = 0;
+		for (Dish d : model.getDishesSet())
 		{
-			dishes[i]=(d.getName() + " - ["+d.getStartPeriod().getStringDate() + " || "+ d.getEndPeriod().getStringDate() + "] - " + "(" + d.getRecipe().getId() + ")");
+			dishes[i] = (d.getName() + " - [" + d.getStartPeriod().getStringDate() + " || " + d.getEndPeriod().getStringDate() + "] - " + "(" + d.getRecipe().getId() + ")");
 			i++;
 		}
-		DefaultComboBoxModel<String> model = new DefaultComboBoxModel<>( dishes );
+		DefaultComboBoxModel<String> model = new DefaultComboBoxModel<>(dishes);
 		sui.cfgMenuComboBox.setModel(model);
-
-		StringBuilder compactedArray= new StringBuilder();
-		for (String s: dishes) {
+		
+		StringBuilder compactedArray = new StringBuilder();
+		for (String s : dishes)
+		{
 			compactedArray.append(s).append("\n");
 		}
 		sui.cfgResDishesOut.setText(compactedArray.toString().trim());
 		sui.setDishList(compactedArray.toString().trim());
 	}
-
-	public void updateDrinkList(){
-		StringBuilder out= new StringBuilder();
+	
+	public void updateDrinkList()
+	{
+		StringBuilder out = new StringBuilder();
 		for (Map.Entry<String, Double> drink : model.getDrinksMap().entrySet())
 		{
 			out.append(drink.getKey()).append(":").append(drink.getValue().toString()).append("\n");
@@ -533,9 +570,10 @@ public class Controller
 		sui.setDrinkList(out.toString().trim());
 		sui.cfgResDrinksOut.setText(out.toString().trim());
 	}
-
-	public void updateFoodList(){
-		StringBuilder out= new StringBuilder();
+	
+	public void updateFoodList()
+	{
+		StringBuilder out = new StringBuilder();
 		for (Map.Entry<String, Double> food : model.getExtraFoodsMap().entrySet())
 		{
 			out.append(food.getKey()).append(":").append(food.getValue().toString()).append("\n");
@@ -543,21 +581,25 @@ public class Controller
 		sui.setFoodsList(out.toString().trim());
 		sui.cfgResFoodsOut.setText(out.toString().trim());
 	}
-
-	public void updateMenuBoxes(){
+	
+	public void updateMenuBoxes()
+	{
 		String[] out = makeMenuList();
-		DefaultComboBoxModel<String> model = new DefaultComboBoxModel<>( out );
+		DefaultComboBoxModel<String> model = new DefaultComboBoxModel<>(out);
 		sui.empNewBookMenuBox.setModel(model);
 		sui.cfgResDatiMenuBox.setModel(model);
 	}
-
-	public void writeMenuComp(String menuName){
+	
+	public void writeMenuComp(String menuName)
+	{
 		StringBuilder out = new StringBuilder();
-		for (ThematicMenu menu: model.getThematicMenusSet()){
+		for (ThematicMenu menu : model.getThematicMenusSet())
+		{
 			if (menu.getName().equals(menuName))
 			{
 				out.append(menuName).append(" w.").append(menu.getWorkThematicMenuLoad()).append("\n");
-				for (Dish d: menu.getDishes()) {
+				for (Dish d : menu.getDishes())
+				{
 					out.append("    ").append(d.getName()).append("\n");
 				}
 				break;
@@ -565,35 +607,39 @@ public class Controller
 		}
 		sui.cfgResDatiMenuOut.setText(out.toString());
 	}
-
+	
 	public String[] makeMenuList()
 	{
 		String[] out = new String[model.getThematicMenusSet().size()];
 		int i = 0;
-		for (ThematicMenu m : model.getThematicMenusSet()) {
+		for (ThematicMenu m : model.getThematicMenusSet())
+		{
 			out[i] = m.getName();
 			i++;
 		}
 		return out;
 	}
-
-
-	public DateOur inputToDate(String input){
+	
+	
+	public DateOur inputToDate(String input)
+	{
 		String[] bookDates;
 		try
 		{
 			bookDates = input.split("/");
-			return new DateOur(bookDates[0],bookDates[1],bookDates[2]);
+			return new DateOur(bookDates[0], bookDates[1], bookDates[2]);
 		}
-		catch (Exception e) {
+		catch (Exception e)
+		{
 			sui.errorSetter("invalidDate");
 		}
 		return null;
 	}
-
-	public HashMap<Dish,Integer> inputToOrder(String in, DateOur date) {
+	
+	public HashMap<Dish, Integer> inputToOrder(String in, DateOur date)
+	{
 		String[] lines = in.split("\n");
-		HashMap<Dish,Integer> order = new HashMap<>();
+		HashMap<Dish, Integer> order = new HashMap<>();
 		boolean found;
 		try
 		{
@@ -616,11 +662,12 @@ public class Controller
 						if (menu.isValid(date))
 						{
 							found = true;
-							for (Dish dish : model.getDishesSet()) {
-									if (order.containsKey(dish))
-										order.put(dish, order.get(dish) + num);
-									else
-										order.put(dish, num);
+							for (Dish dish : model.getDishesSet())
+							{
+								if (order.containsKey(dish))
+									order.put(dish, order.get(dish) + num);
+								else
+									order.put(dish, num);
 							}
 							break;
 						}
@@ -638,7 +685,7 @@ public class Controller
 					{
 						if (name.equals(dish.getName()))
 						{
-							if(dish.isValid(date))
+							if (dish.isValid(date))
 							{
 								found = true;
 								if (order.containsKey(dish))
@@ -664,66 +711,73 @@ public class Controller
 				}
 			}
 			return order;
-		}catch (NumberFormatException e)
+		}
+		catch (NumberFormatException e)
 		{
 			sui.errorSetter("noQuantity");
 			return new HashMap<>();
 		}
 	}
-
+	
 	public void seeBookings(DateOur data)
 	{
-		if(model.getBookingMap().containsKey(data))
+		if (model.getBookingMap().containsKey(data))
 		{
 			ArrayList<Booking> dayBookings = new ArrayList<>(model.getBookingMap().get(data));
 			StringBuilder name = new StringBuilder();
 			StringBuilder number = new StringBuilder();
 			StringBuilder work = new StringBuilder();
 			int capacity = 0, workload = 0;
-
+			
 			for (Booking b : dayBookings)
 			{
 				name.append(b.getName()).append("\n");
 				number.append(b.getNumber()).append("\n");
-				work.append(b.getWorkload()).append("\n") ;
+				work.append(b.getWorkload()).append("\n");
 				capacity += b.getNumber();
 				workload += b.getWorkload();
 			}
 			sui.empSeeBookNameAreaOut.setText(name.toString().trim());
 			sui.empSeeBookNumAreaOut.setText(number.toString().trim());
 			sui.empSeeBookWorkloadAreaOut.setText(work.toString().trim());
-			sui.empSeeBookCapacityTotalOut.setText(Integer.toString(model.getCapacity()-capacity));
-			sui.empSeeBookWorkloadTotalOut.setText(Double.toString(model.getWorkResturantLoad()-workload));
+			sui.empSeeBookCapacityTotalOut.setText(Integer.toString(model.getCapacity() - capacity));
+			sui.empSeeBookWorkloadTotalOut.setText(Double.toString(model.getWorkResturantLoad() - workload));
 		}
 		else
 			sui.errorSetter("noBookings");
 	}
-
-	public void saveBooking ()
+	
+	public void saveBooking()
 	{
 		try
 		{
 			String name = sui.empNewBookNameInput.getText();
 			DateOur date = inputToDate(sui.empNewBookDateInput.getText());
-			if (date !=null && date.getDate().after(model.getToday().getDate()))
+			if (date != null && date.getDate().after(model.getToday().getDate()))
 			{
 				int number = Integer.parseInt(sui.empNewBookNumInput.getText()), workload = 0;
 				HashMap<Dish, Integer> order = inputToOrder(sui.empNewBookOrderInput.getText(), date);
-				if (!order.isEmpty()) {
-					if (number > 0) {
+				if (!order.isEmpty())
+				{
+					if (number > 0)
+					{
 						for (Map.Entry<Dish, Integer> dish : order.entrySet())
 							workload += dish.getKey().getRecipe().getWorkLoadPortion() * dish.getValue();
-						if (manageBooking(name, date, number, workload, order)) {
+						if (manageBooking(name, date, number, workload, order))
+						{
 							sui.empNewBookNameInput.setText(Model.CLEAR);
 							sui.empNewBookDateInput.setText(Model.CLEAR);
 							sui.empNewBookNumInput.setText(Model.CLEAR);
 							sui.empNewBookOrderInput.setText(Model.CLEAR);
 						}
-					} else
+					}
+					else
 						sui.errorSetter("minZero");
 				}
 			}
-		}catch(NumberFormatException e){
+		}
+		catch (NumberFormatException e)
+		{
 			sui.errorSetter("NumberFormatException");
 		}
 	}
@@ -732,15 +786,16 @@ public class Controller
 	/**
 	 * Adds a new booking to the restaurant's booking system for the specified date, with the provided information.
 	 *
-	 * @param name The name of the person making the booking.
-	 * @param date The date of the booking (must be of type DateOur).
-	 * @param number The number of guests in the booking.
+	 * @param name     The name of the person making the booking.
+	 * @param date     The date of the booking (must be of type DateOur).
+	 * @param number   The number of guests in the booking.
 	 * @param workload The expected workload for the restaurant staff for the booking.
-	 * @param order A HashMap of the dishes and the quantities of each that the guests will order.
+	 * @param order    A HashMap of the dishes and the quantities of each that the guests will order.
 	 *
 	 * @return true if the booking was successfully added, false otherwise (for example, if the restaurant is already at capacity or the workload is too high).
 	 */
-	public boolean manageBooking(String name, DateOur date, int number, int workload, HashMap<Dish, Integer> order) {
+	public boolean manageBooking(String name, DateOur date, int number, int workload, HashMap<Dish, Integer> order)
+	{
 		// Create a new ArrayList to hold the bookings for the specified date
 		ArrayList<Booking> day = new ArrayList<>();
 		// Set the initial capacity and workload based on the inputs
@@ -748,56 +803,67 @@ public class Controller
 		int work = workload;
 		
 		// Retrieve the bookings for the specified date, if they exist
-		if (!model.getBookingMap().containsKey(date)) {
+		if (!model.getBookingMap().containsKey(date))
+		{
 			// If there are no existing bookings for the date, check if the restaurant has capacity and workload available to add the new booking
-			if (capacity <= model.getCapacity() && work <= model.getWorkResturantLoad()) {
+			if (capacity <= model.getCapacity() && work <= model.getWorkResturantLoad())
+			{
 				// If there is capacity and workload available, create a new Booking object and add it to the ArrayList for the date
 				day.add(new Booking(name, number, workload, order));
 				// Add the ArrayList to the booking map with the specified date
 				model.getBookingMap().put(date, day);
 				return true;
-			} else {
+			}
+			else
+			{
 				// If there is no capacity or workload available, set an error message and return false
 				sui.errorSetter("fullRestaurant");
 				return false;
 			}
-		} else {
+		}
+		else
+		{
 			// If there are existing bookings for the date, calculate the total capacity and workload based on all bookings for the date
-			for (Booking b : day) {
+			for (Booking b : day)
+			{
 				capacity += b.getNumber();
 				work += b.getWorkload();
 			}
 			// Check if the restaurant has capacity and workload available to add the new booking
-			if (capacity <= model.getCapacity() && work <= model.getWorkResturantLoad()) {
+			if (capacity <= model.getCapacity() && work <= model.getWorkResturantLoad())
+			{
 				// If there is capacity and workload available, create a new Booking object and add it to the ArrayList for the date
 				day.add(new Booking(name, number, workload, order));
 				// Update the booking map with the ArrayList for the specified date
 				model.getBookingMap().put(date, day);
 				return true;
-			} else {
+			}
+			else
+			{
 				// If there is no capacity or workload available, set an error message and return false
 				sui.errorSetter("fullRestaurant");
 				return false;
 			}
 		}
 	}
-
-	public HashMap<Dish,Integer> dishToMap (HashMap<String,Integer> map)	{
-		HashMap<Dish,Integer> out = new HashMap<>();
+	
+	public HashMap<Dish, Integer> dishToMap(HashMap<String, Integer> map)
+	{
+		HashMap<Dish, Integer> out = new HashMap<>();
 		for (Map.Entry<String, Integer> s : map.entrySet())
 		{
-			for(Dish dish: model.getDishesSet())
+			for (Dish dish : model.getDishesSet())
 			{
-				if(dish.getName().equals(s.getKey()))
+				if (dish.getName().equals(s.getKey()))
 				{
-					out.put(dish,s.getValue());
+					out.put(dish, s.getValue());
 					break;
 				}
 			}
 		}
 		return out;
 	}
-
+	
 	public void writeBookings()
 	{
 		Writer.writeBookings(model.getBookingMap());
@@ -811,200 +877,210 @@ public class Controller
 	private void generateGroceryList()
 	{
 		Set<Ingredient> grocerySet = new HashSet<>();
-		HashMap<Ingredient,Ingredient> surplusSet = new HashMap<>();
-		double quantity=0.0,surplus=0.0;
-		int multi=0;
+		HashMap<String, Double> surplusMap = new HashMap<>();
+		
+		double quantity = 0.0, surplus = 0.0;
+		int multi = 0;
 		Recipe recipe;
-		int numberOfPeople=0;
+		int numberOfPeople = 0;
 		
 		HashMap<Dish, Integer> allDish = new HashMap<>();
 		
-		if(model.getBookingMap().containsKey(model.getToday()))
+		if (model.getBookingMap().containsKey(model.getToday()))
 		{
-			ArrayList <Booking> book = new ArrayList<>(model.getBookingMap().get(model.getToday()));
-			for (Booking b: book)
+			ArrayList<Booking> book = new ArrayList<>(model.getBookingMap().get(model.getToday()));
+			for (Booking b : book)
 			{
- 				numberOfPeople+=b.getNumber();
+				numberOfPeople += b.getNumber();
 				for (Map.Entry<Dish, Integer> entry : b.getOrder().entrySet())
 				{
 					Dish dish = entry.getKey();
-					if(allDish.containsKey(dish))
+					if (allDish.containsKey(dish))
 						allDish.put(dish, entry.getValue() + allDish.get(dish));
 					else
 						allDish.put(dish, entry.getValue());
 				}
 			}
+			
 			for (Map.Entry<Dish, Integer> entry : allDish.entrySet())
 			{
 				recipe = entry.getKey().getRecipe();
-
+				
 				for (Ingredient ingredient : recipe.getIngredients())
 				{
-					switch (ingredient.getUnit()){
+					switch (ingredient.getUnit().toLowerCase())
+					{
 						case "kg":
-							ingredient.setQuantity(ingredient.getQuantity()*1000);
+							ingredient.setQuantity(ingredient.getQuantity() * 1000);
+							ingredient.setUnit("g");
 							break;
 						case "hg":
-							ingredient.setQuantity(ingredient.getQuantity()*100);
+							ingredient.setQuantity(ingredient.getQuantity() * 100);
+							ingredient.setUnit("g");
 							break;
 						case "ml":
-							ingredient.setQuantity(ingredient.getQuantity()/1000);
+							ingredient.setQuantity(ingredient.getQuantity() / 1000);
+							ingredient.setUnit("L");
 							break;
 						case "cl":
-							ingredient.setQuantity(ingredient.getQuantity()/100);
+							ingredient.setQuantity(ingredient.getQuantity() / 100);
+							ingredient.setUnit("L");
 							break;
 					}
-					multi = entry.getValue()/recipe.getPortions();
-					int resto = entry.getValue()%recipe.getPortions();
-
-					if(multi == 0)
+					
+					multi = entry.getValue() / recipe.getPortions();
+					int resto = entry.getValue() % recipe.getPortions();
+					
+					if (multi == 0)
 					{
 						multi++;
-						surplus=ingredient.getQuantity()*(recipe.getPortions()-entry.getValue());
+						surplus = ingredient.getQuantity() * (recipe.getPortions() - entry.getValue());
 					}
-					if(resto!=0)
+					if (resto != 0)
 					{
 						multi++;
-						surplus=ingredient.getQuantity()/recipe.getPortions()*resto;
+						surplus = ingredient.getQuantity() / recipe.getPortions() * resto;
 					}
-
-					quantity = ingredient.getQuantity()*multi;
-
+					
+					quantity = ingredient.getQuantity() * multi;
+					
 					if (grocerySet.contains(ingredient))
 					{
 						double delta = quantity;
-						quantity+= ingredient.getQuantity();
+						quantity += ingredient.getQuantity();
 						delta = quantity - delta;
-						if (delta<surplusSet.get(ingredient))
+						if (delta < surplusMap.get(ingredient.getName()))
 						{
-							surplusSet.put(ingredient.getKey(),(surplusSet.get(ingredient.getKey())-delta));
+							surplusMap.put(ingredient.getName(), (surplusMap.get(ingredient.getName()) - delta));
 						}
 						else
 						{
-							grocerySet.put(ingredient.getKey(), quantity);
-							surplusSet.put(ingredient.getKey(),surplusSet.get(ingredient.getKey())+surplus);
+							grocerySet.add(new Ingredient(ingredient.getName(),ingredient.getUnit(),quantity));
+							surplusMap.put(ingredient.getName(), surplusMap.get(ingredient.getName()) + surplus);
 						}
 					}
 					else
 					{
-						grocerySet.put(ingredient.getKey(),quantity);
-						surplusSet.put(ingredient.getKey(),surplus);
+						grocerySet.add(new Ingredient(ingredient.getName(),ingredient.getUnit(),quantity));
+						surplusMap.put(ingredient.getName(), surplus);
 					}
 				}
 			}
-
-			grocerySet.replaceAll((k, v) -> v+(v * (double)model.getIncrement()/100.0)); //incremento del 5% ogni ingrediente
-
-			grocerySet = new HashMap<>(compareWithRegister(grocerySet));
-
-			HashMap <String,Double> drink = new HashMap<>(model.getDrinksMap());
-			HashMap <String,Double> food = new HashMap<>(model.getExtraFoodsMap());
-
-			final int n=numberOfPeople;
-			drink.replaceAll((k,v)-> Math.ceil(v*n));
-			food.replaceAll((k,v)-> Math.ceil(v*n));
-
-			drink = new HashMap<>(compareWithRegister(drink));
-			food = new HashMap<>(compareWithRegister(food));
-
-		//	model.setGroceryMap(grocerySet); //todo vedere se serve
-
+			
+			for (Ingredient i : grocerySet)//incremento del 5% ogni ingrediente
+			{
+				i.setQuantity(i.getQuantity()+i.getQuantity()*model.getIncrement()/100.0);
+			}
+			
+			grocerySet = new HashSet<>(compareWithRegister(grocerySet));
+			
+			//HashMap<String, Double> drink = new HashMap<>(model.getDrinksMap());
+			//HashMap<String, Double> food = new HashMap<>(model.getExtraFoodsMap());
+			
+			Set <Ingredient> drink = new HashSet<>();
+			Set <Ingredient> food = new HashSet<>();
+			
+			for (Map.Entry<String, Double> map : model.getDrinksMap().entrySet())
+				drink.add(new Ingredient(map.getKey(),"L",map.getValue()*numberOfPeople));
+			for (Map.Entry<String, Double> map : model.getExtraFoodsMap().entrySet())
+				food.add(new Ingredient(map.getKey(),"g",map.getValue()*numberOfPeople));
+			
+			
+			drink = new HashSet<>(compareWithRegister(drink));
+			food = new HashSet<>(compareWithRegister(food));
+			
+			//	model.setGroceryMap(grocerySet); //todo vedere se serve
+			
 			updateRegister(grocerySet);
 			updateRegister(drink);
 			updateRegister(food);
-
+			
 			model.setGroceryMap(grocerySet);
 			
 			sui.wareListOut.setText(groceriesToString(grocerySet, drink, food));
-			sui.wareListMagOut.setText(registerToString());
+			sui.wareListMagOut.setText(setToString(model.getRegistro()));
 		}
 		else
 			sui.wareListOut.setText("Non essendoci prenotazioni per oggi la lista della spesa è vuota");
 	}
-
-
-	private HashMap<String,Double> compareWithRegister(HashMap<String,Double> map)
+	
+	
+	private Set<Ingredient> compareWithRegister(Set<Ingredient> set)
 	{
-		for (Map.Entry<String, Double> mag: model.getRegistro().entrySet())
+		for (Ingredient reg:model.getRegistro())
 		{
-			if(map.containsKey(mag.getKey()))
+			for (Ingredient ingredient:set) //mannaggia al set che non ha un .get
 			{
-				double q=map.get(mag.getKey())-mag.getValue();
-				if(q<=0)
-					map.remove(mag.getKey());
-				else
-					map.put(mag.getKey(), q);
+				if(reg.equals(ingredient)) //todo in teoria l'equals dovrebbe guardare solo il nome, vero anakin?
+				{
+					double q = reg.getQuantity() - ingredient.getQuantity();
+					if (q <= 0)
+						set.remove(ingredient);
+					else
+						ingredient.setQuantity(q);
+					break;
+				}
 			}
 		}
-		return map;
+		return set;
 	}
-
-
-	private void updateRegister(HashMap<String,Double> map)
+	
+	private void updateRegister(Set<Ingredient> set)
 	{
-		for (Map.Entry<String, Double> ingredient : map.entrySet())
+		for (Ingredient ingredient: set)
 		{
-			if(model.getRegistro().containsKey(ingredient.getKey()))
-				model.getRegistro().put(ingredient.getKey(),ingredient.getValue()+model.getRegistro().get(ingredient.getKey()));
+			if (model.getRegistro().contains(ingredient))
+			{
+				for (Ingredient reg:model.getRegistro())
+				{
+					if (reg.equals(ingredient))
+					{
+						model.getRegistro().add(new Ingredient(ingredient.getName(), ingredient.getUnit(), (ingredient.getQuantity()) + reg.getQuantity()));
+						break;
+					}
+				}
+			}
 			else
-				model.getRegistro().put(ingredient.getKey(),ingredient.getValue());
+				model.getRegistro().add(ingredient);
 		}
 	}
-
-	private String registerToString(){
-		String out ="";
+	
+	/*private String registerToString()
+	{
+		String out = "";
 		for (Map.Entry<String, Double> entry : model.getRegistro().entrySet())
 		{
 			String k = entry.getKey();
-			if (model.getExtraFoodsMap().containsKey(k)){
+			if (model.getExtraFoodsMap().containsKey(k))
+			{
 				out += k + ":" + entry.getValue() + " hg\n";
 			}
-			else if (model.getDrinksMap().containsKey(k)){
+			else if (model.getDrinksMap().containsKey(k))
+			{
 				out += k + ":" + entry.getValue() + " L\n";
-			}else out += k + ":" + entry.getValue() + " g\n";
+			}
+			else out += k + ":" + entry.getValue() + " g\n";
 			
 		}
 		return out.trim();
-	}
+	}*/
 	
-	
-	private String groceriesToString(HashMap<String, Double> ingredients, HashMap<String, Double> drinks, HashMap<String, Double> foods){
+	private String groceriesToString(Set <Ingredient> ingredients, Set <Ingredient> drinks, Set <Ingredient> foods)
+	{
 		String out = "";
-		out += groceryIngredientsMapToString(ingredients) + "\n";
-		out += groceryFoodsMapToString(foods) + "\n";
-		out += groceryDrinksMapToString(drinks);
+		out += setToString(ingredients) + "\n";
+		out += setToString(foods) + "\n";
+		out += setToString(drinks);
 		return out;
 	}
-
-
-	private String groceryDrinksMapToString(HashMap<String, Double> drinks)
+	private String setToString(Set<Ingredient> set)
 	{
-		String out ="";
-		for (Map.Entry<String, Double> entry : drinks.entrySet())
+		String out = "";
+		for (Ingredient entry: set)
 		{
-			out= out+entry.getKey()+" : "+entry.getValue()+" L" +"\n";
+			out = out + entry.getName() + " : " + entry.getQuantity() + " : " +entry.getUnit() + "\n";
 		}
 		return out.trim();
-	}
-	private String groceryFoodsMapToString(HashMap<String, Double> foods)
-	{
-		String out ="";
-		for (Map.Entry<String, Double> entry : foods.entrySet())
-		{
-			out= out+entry.getKey()+" : "+entry.getValue()+" hg" +"\n";
-		}
-		return out.trim();
-	}
-
-
-	private String groceryIngredientsMapToString(HashMap<String, Double> ingredients)
-	{
-		String out ="";
-		for (Map.Entry<String, Double> entry : model.getGroceryMap().entrySet())
-		{
-			out= out+entry.getKey()+" : "+entry.getValue()+" g" +"\n";
-		}
-		return out.trim();
-
+		
 	}
 }

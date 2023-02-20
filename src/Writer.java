@@ -334,7 +334,7 @@ public class Writer
 		}
 	}
 	
-	public static void writeRegister(HashMap <String,Double> register)
+	public static void writeRegister(Set<Ingredient> register)
 	{
 		XMLOutputFactory xmlof = null;
 		XMLStreamWriter xmlw = null;
@@ -345,12 +345,13 @@ public class Writer
 			xmlw.writeStartDocument("utf-8", "1.0");
 			xmlw.writeCharacters("\n");
 			xmlw.writeStartElement("register"); // scrittura del tag radice <register>
-			for (Map.Entry<String,Double> reg : register.entrySet())
+			for (Ingredient ingredient : register)
 			{
 				xmlw.writeCharacters("\n\t");
 				xmlw.writeStartElement("ingredient"); // <ingredient>
-				xmlw.writeAttribute("name", reg.getKey());
-				xmlw.writeAttribute("quantity", reg.getValue().toString());
+				xmlw.writeAttribute("name", ingredient.getName());
+				xmlw.writeAttribute("unit", ingredient.getUnit());
+				xmlw.writeAttribute("quantity", Double.toString(ingredient.getQuantity()));
 				xmlw.writeEndElement(); // </ingredient>
 			}
 			xmlw.writeCharacters("\n");
