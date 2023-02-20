@@ -1045,26 +1045,6 @@ public class Controller
 		}
 	}
 	
-	/*private String registerToString()
-	{
-		String out = "";
-		for (Map.Entry<String, Double> entry : model.getRegistro().entrySet())
-		{
-			String k = entry.getKey();
-			if (model.getExtraFoodsMap().containsKey(k))
-			{
-				out += k + ":" + entry.getValue() + " hg\n";
-			}
-			else if (model.getDrinksMap().containsKey(k))
-			{
-				out += k + ":" + entry.getValue() + " L\n";
-			}
-			else out += k + ":" + entry.getValue() + " g\n";
-			
-		}
-		return out.trim();
-	}*/
-	
 	private String groceriesToString(Set <Ingredient> ingredients, Set <Ingredient> drinks, Set <Ingredient> foods)
 	{
 		String out = "";
