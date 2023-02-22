@@ -1047,10 +1047,14 @@ public class Controller
 	
 	private String groceriesToString(Set <Ingredient> ingredients, Set <Ingredient> drinks, Set <Ingredient> foods)
 	{
+		if(ingredients.isEmpty() && drinks.isEmpty() && foods.isEmpty())
+			return "La lista della spesa è vuota perché tutti gli ingredienti necessari sono già in magazzino";
+		
 		String out = "";
-		out += setToString(ingredients) + "\n";
+		out = setToString(ingredients) + "\n";
 		out += setToString(foods) + "\n";
 		out += setToString(drinks);
+		
 		return out;
 	}
 	private String setToString(Set<Ingredient> set)
