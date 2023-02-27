@@ -15,6 +15,8 @@
 		<ingredient name="tonno" quantity="100.0" unity="g"></ingredient></recipe>
 	<recipe id="test" portions="1" workLoadPortion="1.0">
 		<ingredient name="test" quantity="100.0" unity="g"></ingredient></recipe>
+	<recipe id="adsdas" portions="1" workLoadPortion="1.0">
+		<ingredient name="aaa" quantity="10000.0" unity="g"></ingredient></recipe>
 	<recipe id="polpette" portions="4" workLoadPortion="2.0">
 		<ingredient name="carne" quantity="200.0" unity="g"></ingredient></recipe>
 	<recipe id="Pizza" portions="1" workLoadPortion="1.0">

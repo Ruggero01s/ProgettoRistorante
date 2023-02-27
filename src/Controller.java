@@ -1,4 +1,8 @@
 import javax.swing.*;
+import java.nio.charset.StandardCharsets;
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
+import java.security.SecureRandom;
 import java.text.ParseException;
 import java.util.*;
 
@@ -256,18 +260,13 @@ public class Controller
 					throw new NumberFormatException("");
 				
 				double quantity = Double.parseDouble(words[1]);
-				switch (words[2])
-				{
-					case "kg", "g", "hg", "L", "ml", "cl" ->
-					{
-					}
-					default ->
-					{
-						throw new NumberFormatException("");
-					}
-				}
+				quantity = checkUnit(words[2], quantity);
+				String unit;
+				if (words[2].toLowerCase().contains("g"))
+					unit = "g";
+				else
+					unit = "L";
 				
-				String unit = words[2];
 				if (quantity <= 0)
 				{
 					err = true;
@@ -299,6 +298,42 @@ public class Controller
 			sui.errorSetter("NumberFormatException");
 		}
 	}
+	
+	/**
+	 * Converts the given quantity to a standardized unit based on the given unit.
+	 *
+	 * @param unit the unit of measurement for the quantity
+	 * @param quantity the quantity to be standardized
+	 * @return the standardized quantity
+	 * @throws NumberFormatException if the unit is not recognized
+	 */
+	private double checkUnit(String unit, Double quantity)
+	{
+		// Check if the unit is not 'g' or 'l', and convert to a standardized unit if necessary
+		if (!(unit.equalsIgnoreCase("g") || unit.equalsIgnoreCase("l")))
+		{
+			switch (unit.toLowerCase())
+			{
+				// Convert to kilograms or kiloliters
+				case "kg", "kl" -> quantity *= 1000;
+				// Convert to hectograms or hectoliters
+				case "hg", "hl" -> quantity *= 100;
+				// Convert to decagrams or decaliters
+				case "dag", "dal" -> quantity *= 10;
+				// Convert to decigrams or deciliters
+				case "dg", "dl" -> quantity /= 10;
+				// Convert to centigrams or centiliters
+				case "cg", "cl" -> quantity /= 100;
+				// Convert to milligrams or milliliters
+				case "mg", "ml" -> quantity /= 1000;
+				// Throw an exception if the unit is not recognized
+				default -> throw new NumberFormatException("Unit not recognized: " + unit);
+			}
+		}
+		// Return the standardized quantity
+		return quantity;
+	}
+	
 	
 	public void saveDish()
 	{
@@ -782,7 +817,6 @@ public class Controller
 		}
 	}
 	
-	
 	/**
 	 * Adds a new booking to the restaurant's booking system for the specified date, with the provided information.
 	 *
@@ -874,7 +908,7 @@ public class Controller
 		Writer.writeRegister(model.getRegistro());
 	}
 	
-	private void generateGroceryList()
+	private void generateGroceryList()  //todo sta cosa va snellita e chiamata tramite un pulsante
 	{
 		Set<Ingredient> grocerySet = new HashSet<>();
 		HashMap<String, Double> surplusMap = new HashMap<>();
@@ -908,26 +942,6 @@ public class Controller
 				
 				for (Ingredient ingredient : recipe.getIngredients())
 				{
-					switch (ingredient.getUnit().toLowerCase())
-					{
-						case "kg":
-							ingredient.setQuantity(ingredient.getQuantity() * 1000);
-							ingredient.setUnit("g");
-							break;
-						case "hg":
-							ingredient.setQuantity(ingredient.getQuantity() * 100);
-							ingredient.setUnit("g");
-							break;
-						case "ml":
-							ingredient.setQuantity(ingredient.getQuantity() / 1000);
-							ingredient.setUnit("L");
-							break;
-						case "cl":
-							ingredient.setQuantity(ingredient.getQuantity() / 100);
-							ingredient.setUnit("L");
-							break;
-					}
-					
 					multi = entry.getValue() / recipe.getPortions();
 					int resto = entry.getValue() % recipe.getPortions();
 					
@@ -955,13 +969,13 @@ public class Controller
 						}
 						else
 						{
-							grocerySet.add(new Ingredient(ingredient.getName(),ingredient.getUnit(),quantity));
+							grocerySet.add(new Ingredient(ingredient.getName(), ingredient.getUnit(), quantity));
 							surplusMap.put(ingredient.getName(), surplusMap.get(ingredient.getName()) + surplus);
 						}
 					}
 					else
 					{
-						grocerySet.add(new Ingredient(ingredient.getName(),ingredient.getUnit(),quantity));
+						grocerySet.add(new Ingredient(ingredient.getName(), ingredient.getUnit(), quantity));
 						surplusMap.put(ingredient.getName(), surplus);
 					}
 				}
@@ -969,7 +983,7 @@ public class Controller
 			
 			for (Ingredient i : grocerySet)//incremento del 5% ogni ingrediente
 			{
-				i.setQuantity(i.getQuantity()+i.getQuantity()*model.getIncrement()/100.0);
+				i.setQuantity(i.getQuantity() + i.getQuantity() * model.getIncrement() / 100.0);
 			}
 			
 			grocerySet = new HashSet<>(compareWithRegister(grocerySet));
@@ -977,13 +991,13 @@ public class Controller
 			//HashMap<String, Double> drink = new HashMap<>(model.getDrinksMap());
 			//HashMap<String, Double> food = new HashMap<>(model.getExtraFoodsMap());
 			
-			Set <Ingredient> drink = new HashSet<>();
-			Set <Ingredient> food = new HashSet<>();
+			Set<Ingredient> drink = new HashSet<>();
+			Set<Ingredient> food = new HashSet<>();
 			
 			for (Map.Entry<String, Double> map : model.getDrinksMap().entrySet())
-				drink.add(new Ingredient(map.getKey(),"L",map.getValue()*numberOfPeople));
+				drink.add(new Ingredient(map.getKey(), "L", map.getValue() * numberOfPeople));
 			for (Map.Entry<String, Double> map : model.getExtraFoodsMap().entrySet())
-				food.add(new Ingredient(map.getKey(),"g",map.getValue()*numberOfPeople));
+				food.add(new Ingredient(map.getKey(), "g", map.getValue() * numberOfPeople));
 			
 			
 			drink = new HashSet<>(compareWithRegister(drink));
@@ -1007,11 +1021,11 @@ public class Controller
 	
 	private Set<Ingredient> compareWithRegister(Set<Ingredient> set)
 	{
-		for (Ingredient reg:model.getRegistro())
+		for (Ingredient reg : model.getRegistro())
 		{
-			for (Ingredient ingredient:set) //mannaggia al set che non ha un .get
+			for (Ingredient ingredient : set) //mannaggia al set che non ha un .get
 			{
-				if(reg.equals(ingredient)) //todo in teoria l'equals dovrebbe guardare solo il nome, vero anakin?
+				if (reg.equals(ingredient)) //todo in teoria l'equals dovrebbe guardare solo il nome, vero anakin?
 				{
 					double q = reg.getQuantity() - ingredient.getQuantity();
 					if (q <= 0)
@@ -1027,11 +1041,11 @@ public class Controller
 	
 	private void updateRegister(Set<Ingredient> set)
 	{
-		for (Ingredient ingredient: set)
+		for (Ingredient ingredient : set)
 		{
 			if (model.getRegistro().contains(ingredient))
 			{
-				for (Ingredient reg:model.getRegistro())
+				for (Ingredient reg : model.getRegistro())
 				{
 					if (reg.equals(ingredient))
 					{
@@ -1045,9 +1059,9 @@ public class Controller
 		}
 	}
 	
-	private String groceriesToString(Set <Ingredient> ingredients, Set <Ingredient> drinks, Set <Ingredient> foods)
+	private String groceriesToString(Set<Ingredient> ingredients, Set<Ingredient> drinks, Set<Ingredient> foods)
 	{
-		if(ingredients.isEmpty() && drinks.isEmpty() && foods.isEmpty())
+		if (ingredients.isEmpty() && drinks.isEmpty() && foods.isEmpty())
 			return "La lista della spesa è vuota perché tutti gli ingredienti necessari sono già in magazzino";
 		
 		String out = "";
@@ -1057,14 +1071,113 @@ public class Controller
 		
 		return out;
 	}
+	
 	private String setToString(Set<Ingredient> set)
 	{
 		String out = "";
-		for (Ingredient entry: set)
+		for (Ingredient entry : set)
 		{
-			out = out + entry.getName() + " : " + entry.getQuantity() + " : " +entry.getUnit() + "\n";
+			out = out + entry.getName() + " : " + entry.getQuantity() + " : " + entry.getUnit() + "\n";
 		}
 		return out.trim();
 		
 	}
+
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	//metodi che ci serviranno più tardi
+	
+	// The pepper to use for hashing the password
+	private static final String PEPPER = "testPepper";
+	
+	/**
+	 * Hashes and peppers the given password using SHA-256.
+	 *
+	 * @param password the password to hash and pepper
+	 * @return the hashed and peppered password as a Base64-encoded string
+	 * @throws NoSuchAlgorithmException if the SHA-256 algorithm is not supported by the system
+	 */
+	public static String hashAndPepperPassword(String password) throws NoSuchAlgorithmException
+	{
+		// Generate a random salt for the password hash
+		byte[] salt = generateSalt();
+		
+		// Add the pepper to the password
+		String pepperedPassword = password + PEPPER;
+		
+		// Hash the peppered password using SHA-256 and the salt
+		byte[] hashedPassword = hashPassword(pepperedPassword.getBytes(), salt);
+		
+		// Encode the hashed password and salt as Base64 and return the result
+		return Base64.getEncoder().encodeToString(hashedPassword) + ":" + Base64.getEncoder().encodeToString(salt);
+	}
+	
+	/**
+	 * Generates a random salt for use in password hashing.
+	 *
+	 * @return the salt as a byte array
+	 */
+	private static byte[] generateSalt() {
+		SecureRandom random = new SecureRandom();
+		byte[] salt = new byte[16];
+		random.nextBytes(salt);
+		return salt;
+	}
+	
+	/**
+	 * Hashes the given data using SHA-256 and the given salt.
+	 *
+	 * @param data the data to hash
+	 * @param salt the salt to use for hashing
+	 * @return the hashed data as a byte array
+	 * @throws NoSuchAlgorithmException if the SHA-256 algorithm is not supported by the system
+	 */
+	private static byte[] hashPassword(byte[] data, byte[] salt) throws NoSuchAlgorithmException {
+		MessageDigest md = MessageDigest.getInstance("SHA-256");
+		md.update(salt);
+		return md.digest(data);
+	}
+	
+	/**
+	 * Checks if the given password matches the hashed and peppered password.
+	 *
+	 * @param password the password to check
+	 * @param hashedPassword the hashed and peppered password as a Base64-encoded string
+	 * @return true if the passwords match, false otherwise
+	 * @throws NoSuchAlgorithmException if the SHA-256 algorithm is not supported by the system
+	 */
+	public static boolean checkPassword(String password, String hashedPassword) throws NoSuchAlgorithmException {
+		// Split the hashed password and salt
+		String[] parts = hashedPassword.split(":");
+		if (parts.length != 2) {
+			return false;
+		}
+		byte[] hashedData = Base64.getDecoder().decode(parts[0]);
+		byte[] salt = Base64.getDecoder().decode(parts[1]);
+		
+		// Add the pepper to the password and hash it with the salt
+		String pepperedPassword = password + PEPPER;
+		byte[] hashedPepperedPassword = hashPassword(pepperedPassword.getBytes(StandardCharsets.UTF_8), salt);
+		
+		// Compare the hashed peppered password to the stored hash
+		return MessageDigest.isEqual(hashedData, hashedPepperedPassword);
+	}
+	
 }
