@@ -1083,7 +1083,25 @@ public class Controller
 		
 	}
 
-	
+	/*public void ritorna()
+	{
+		String text = sui.wareReturnListText.getText().trim();
+		if (!text.isEmpty())
+		{
+			for (String s: text.split("\n"))
+			{
+				String[] t = s.split(":");
+				if (t.length<3 ||t[0].isEmpty() || t[2].isEmpty())
+					throw new RuntimeException();
+				String name = t[0], unit = t[2];
+				Double quantity = Double.parseDouble(t[1]);
+				
+				if(quantity<=0)
+					throw new RuntimeException();
+				
+			}
+		}
+	}*/
 	
 	
 	
@@ -1179,5 +1197,7 @@ public class Controller
 		// Compare the hashed peppered password to the stored hash
 		return MessageDigest.isEqual(hashedData, hashedPepperedPassword);
 	}
+	
+	
 	
 }
