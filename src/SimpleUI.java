@@ -2,6 +2,7 @@ import javax.swing.*;
 import javax.swing.border.Border;
 import java.awt.*;
 import java.awt.event.*;
+import java.util.Objects;
 
 public class SimpleUI extends JFrame {
     // Enum for the different states of the frame
@@ -111,11 +112,10 @@ public class SimpleUI extends JFrame {
     JTextArea cfgRecipeAreaOut = new JTextArea();
     JButton cfgRecipeSendButton = new JButton("Conferma ricetta");
     JScrollPane cfgRecipeScroll = new JScrollPane(cfgRecipeAreaOut);
-    private String recipeList;//commento todo
-
+    
     public void setRecipeList(String list) {
-        this.recipeList = list;
-        cfgRecipeAreaOut.setText(this.recipeList);
+        //commento todo
+        cfgRecipeAreaOut.setText(list);
     }
 
     //------------------------------------------------------------------------------------------
@@ -145,10 +145,7 @@ public class SimpleUI extends JFrame {
     JComboBox<String> cfgDishComboBox = new JComboBox<>(recipeString);
     JTextArea cfgDishSDateInput = new JTextArea();
     JTextArea cfgDishEDateInput = new JTextArea();
-
-    //------------------------------------------------------------------------------------------
-    //CONFIG_MENUS
-    private String menuList;
+    
     JLabel cfgMenuTextTitle = new JLabel("Inserisci dati menu");
     JLabel cfgMenuTextName = new JLabel("Inserisci nome: ");
     JLabel cfgMenuTextOut = new JLabel("Elenco menu inseriti: ");
@@ -159,8 +156,9 @@ public class SimpleUI extends JFrame {
     JButton cfgMenuSendButton = new JButton("Conferma menu");
 
     public void setMenuList(String list) {
-        this.menuList = list;
-        cfgMenuAreaOut.setText(this.menuList);
+        //------------------------------------------------------------------------------------------
+        //CONFIG_MENUS
+        cfgMenuAreaOut.setText(list);
     }
 
     JRadioButton cfgMenuPermanentRadio = new JRadioButton("Permanente");
@@ -679,7 +677,7 @@ public class SimpleUI extends JFrame {
         cfgMenuPanel.add(cfgMenuComboBox, c);
         cfgMenuComboBox.addActionListener(e ->
         {
-            String selectedItem = ((String) cfgMenuComboBox.getSelectedItem()).split("-")[0].trim();
+            String selectedItem = ((String) Objects.requireNonNull(cfgMenuComboBox.getSelectedItem())).split("-")[0].trim();
             cfgMenuDishesInput.setText(cfgMenuDishesInput.getText() + selectedItem + "\n");
         });
 
@@ -733,9 +731,7 @@ public class SimpleUI extends JFrame {
         c.gridx = 2;
         c.gridy = 6;
         cfgMenuPanel.add(cfgMenuSendButton, c);
-        cfgMenuSendButton.addActionListener(e -> {
-            ctrl.saveMenu();
-        });
+        cfgMenuSendButton.addActionListener(e -> ctrl.saveMenu());
 
         //Resconto tab
         titlePadding.gridx = 0;
@@ -787,9 +783,7 @@ public class SimpleUI extends JFrame {
         c.gridy = 8;
         cfgResPanel.add(cfgResDatiMenuBox, c);
         cfgResDatiMenuBox.addActionListener(e ->
-        {
-            ctrl.writeMenuComp((String) cfgResDatiMenuBox.getSelectedItem());
-        });
+                ctrl.writeMenuComp((String) cfgResDatiMenuBox.getSelectedItem()));
         c.gridx = 1;
         c.gridy = 8;
         cfgResPanel.add(cfgResDatiMenuScroll, c);
@@ -892,16 +886,12 @@ public class SimpleUI extends JFrame {
         c.gridx = 0;
         c.gridy = 7;
         empSeeBookingsPanel.add(empSeeBookWrite, c);
-        empSeeBookWrite.addActionListener(e -> {
-            ctrl.writeBookings();
-        });
+        empSeeBookWrite.addActionListener(e -> ctrl.writeBookings());
 
         c.gridx = 1;
         c.gridy = 7;
         empSeeBookingsPanel.add(empSeeBookClear, c);
-        empSeeBookClear.addActionListener(e -> {
-            ctrl.clearInfo("bookings");
-        });
+        empSeeBookClear.addActionListener(e -> ctrl.clearInfo("bookings"));
 
         // NewBooking prenotazioni
         titlePadding.gridx = 0;
@@ -942,9 +932,7 @@ public class SimpleUI extends JFrame {
         c.gridx = 2;
         c.gridy = 6;
         empNewBookingPanel.add(empNewBookSend, c);
-        empNewBookSend.addActionListener(e -> {
-            ctrl.saveBooking();
-        });
+        empNewBookSend.addActionListener(e -> ctrl.saveBooking());
 
         c.gridx = 0;
         c.gridy = 6;
@@ -1030,7 +1018,7 @@ public class SimpleUI extends JFrame {
         wareListPanel.add(buttonBack12, c);
         c.gridx = 1;
         c.gridy = 4;
-        wareListSend.addActionListener(e->{ctrl.writeRegister();});
+        wareListSend.addActionListener(e-> ctrl.writeRegister());
         wareListPanel.add(wareListSend, c);
 
         //RETURNLIST PANEL
@@ -1082,90 +1070,55 @@ public class SimpleUI extends JFrame {
     }
 
     public void errorSetter(String code) {
-        switch (code) {
-            case "minZero":
-                JOptionPane.showMessageDialog(getContentPane(), "Numero inserito < 0",
-                        "Err", JOptionPane.ERROR_MESSAGE);
-                break;
-            case "NumberFormatException":
-                JOptionPane.showMessageDialog(getContentPane(), "Formato incorretto",
-                        "Err", JOptionPane.ERROR_MESSAGE);
-                break;
-            case "noRecipe":
-                JOptionPane.showMessageDialog(getContentPane(), "Inserisci prima una ricetta!",
-                        "Err", JOptionPane.ERROR_MESSAGE);
-                break;
-            case "noDish":
-                JOptionPane.showMessageDialog(getContentPane(), "Piatto non trovato",
-                        "Err", JOptionPane.ERROR_MESSAGE);
-                break;
-            case "0Dish":
-                JOptionPane.showMessageDialog(getContentPane(), "Inserisci almeno un piatto!",
-                        "Err", JOptionPane.ERROR_MESSAGE);
-                break;
-            case "invalidDate":
-                JOptionPane.showMessageDialog(getContentPane(), "Data non valide",
-                        "Err", JOptionPane.ERROR_MESSAGE);
-                break;
-            case "fullRestaurant":
-                JOptionPane.showMessageDialog(getContentPane(), "Ristorante pieno o troppo carico",
-                        "Err", JOptionPane.ERROR_MESSAGE);
-                break;
-            case "thiccMenu":
-                JOptionPane.showMessageDialog(getContentPane(), "Il menù è troppo impegnativo, riduci il suo carico",
-                        "Err", JOptionPane.ERROR_MESSAGE);
-                break;
-            case "nameSameAsDish":
-                JOptionPane.showMessageDialog(getContentPane(), "Il menù è troppo impegnativo, riduci il suo carico",
-                        "Err", JOptionPane.ERROR_MESSAGE);
-                break;
-            case "notFound":
-                JOptionPane.showMessageDialog(getContentPane(), "Piatto o menù non trovato",
-                        "Err", JOptionPane.ERROR_MESSAGE);
-                break;
-            case "noBookings":
-                JOptionPane.showMessageDialog(getContentPane(), "Nessuna prenotazione trovata",
-                        "Err", JOptionPane.ERROR_MESSAGE);
-                break;
-            case "noQuantity":
-                JOptionPane.showMessageDialog(getContentPane(), "Quantità di un elemento non valida",
-                        "Err", JOptionPane.ERROR_MESSAGE);
-                break;
-            case "outOfDate":
-                JOptionPane.showMessageDialog(getContentPane(), "Menù o piatto non disponibile in questa data",
-                        "Err", JOptionPane.ERROR_MESSAGE);
-                break;
-            case "existingName":
-                JOptionPane.showMessageDialog(getContentPane(), "Nome già in uso",
-                        "Err", JOptionPane.ERROR_MESSAGE);
-                break;
-            case "surplusTooGreat":
-                JOptionPane.showMessageDialog(getContentPane(), "Surplus troppo grande, max 10%",
-                        "Err", JOptionPane.ERROR_MESSAGE);
-                break;
-            case "noIngredient":
-                JOptionPane.showMessageDialog(getContentPane(), "Ingrediente non trovato",
-                        "Err", JOptionPane.ERROR_MESSAGE);
-                break;
-            case "invalidQuantity":
-                JOptionPane.showMessageDialog(getContentPane(), "Quantità non valida",
-                        "Err", JOptionPane.ERROR_MESSAGE);
-                break;
-            case "notToday":
-                JOptionPane.showMessageDialog(getContentPane(), "Non è possibile prenotare per la giornata odierna",
-                        "Err", JOptionPane.ERROR_MESSAGE);
-                break;
-            case "workloadTooHigh":
-                JOptionPane.showMessageDialog(getContentPane(), "Workload troppo alto",
-                        "Err", JOptionPane.ERROR_MESSAGE);
-                break;
-            case "orderForTooLittle":
-                JOptionPane.showMessageDialog(getContentPane(), "Deve esserci almeno un piatto o menù per persona",
-                        "Err", JOptionPane.ERROR_MESSAGE);
-                break;
-            default:
-                JOptionPane.showMessageDialog(getContentPane(), "Errore",
-                        "Err", JOptionPane.ERROR_MESSAGE);
+        switch (code)
+        {
+            case "minZero" -> JOptionPane.showMessageDialog(getContentPane(), "Numero inserito < 0",
+                    "Err", JOptionPane.ERROR_MESSAGE);
+            case "NumberFormatException" -> JOptionPane.showMessageDialog(getContentPane(), "Formato incorretto",
+                    "Err", JOptionPane.ERROR_MESSAGE);
+            case "noRecipe" -> JOptionPane.showMessageDialog(getContentPane(), "Inserisci prima una ricetta!",
+                    "Err", JOptionPane.ERROR_MESSAGE);
+            case "noDish" -> JOptionPane.showMessageDialog(getContentPane(), "Piatto non trovato",
+                    "Err", JOptionPane.ERROR_MESSAGE);
+            case "0Dish" -> JOptionPane.showMessageDialog(getContentPane(), "Inserisci almeno un piatto!",
+                    "Err", JOptionPane.ERROR_MESSAGE);
+            case "invalidDate" -> JOptionPane.showMessageDialog(getContentPane(), "Data non valide",
+                    "Err", JOptionPane.ERROR_MESSAGE);
+            case "fullRestaurant" -> JOptionPane.showMessageDialog(getContentPane(), "Ristorante pieno o troppo carico",
+                    "Err", JOptionPane.ERROR_MESSAGE);
+            case "thiccMenu" ->
+                    JOptionPane.showMessageDialog(getContentPane(), "Il menù è troppo impegnativo, riduci il suo carico",
+                            "Err", JOptionPane.ERROR_MESSAGE);
+            case "nameSameAsDish" ->
+                    JOptionPane.showMessageDialog(getContentPane(), "Il menù è troppo impegnativo, riduci il suo carico",//todo cambiare questo messaggio
+                            "Err", JOptionPane.ERROR_MESSAGE);
+            case "notFound" -> JOptionPane.showMessageDialog(getContentPane(), "Piatto o menù non trovato",
+                    "Err", JOptionPane.ERROR_MESSAGE);
+            case "noBookings" -> JOptionPane.showMessageDialog(getContentPane(), "Nessuna prenotazione trovata",
+                    "Err", JOptionPane.ERROR_MESSAGE);
+            case "noQuantity" -> JOptionPane.showMessageDialog(getContentPane(), "Quantità di un elemento non valida",
+                    "Err", JOptionPane.ERROR_MESSAGE);
+            case "outOfDate" ->
+                    JOptionPane.showMessageDialog(getContentPane(), "Menù o piatto non disponibile in questa data",
+                            "Err", JOptionPane.ERROR_MESSAGE);
+            case "existingName" -> JOptionPane.showMessageDialog(getContentPane(), "Nome già in uso",
+                    "Err", JOptionPane.ERROR_MESSAGE);
+            case "surplusTooGreat" -> JOptionPane.showMessageDialog(getContentPane(), "Surplus troppo grande, max 10%",
+                    "Err", JOptionPane.ERROR_MESSAGE);
+            case "noIngredient" -> JOptionPane.showMessageDialog(getContentPane(), "Ingrediente non trovato",
+                    "Err", JOptionPane.ERROR_MESSAGE);
+            case "invalidQuantity" -> JOptionPane.showMessageDialog(getContentPane(), "Quantità non valida",
+                    "Err", JOptionPane.ERROR_MESSAGE);
+            case "notToday" ->
+                    JOptionPane.showMessageDialog(getContentPane(), "Non è possibile prenotare per la giornata odierna",
+                            "Err", JOptionPane.ERROR_MESSAGE);
+            case "workloadTooHigh" -> JOptionPane.showMessageDialog(getContentPane(), "Workload troppo alto",
+                    "Err", JOptionPane.ERROR_MESSAGE);
+            case "orderForTooLittle" ->
+                    JOptionPane.showMessageDialog(getContentPane(), "Deve esserci almeno un piatto o menù per persona",
+                            "Err", JOptionPane.ERROR_MESSAGE);
+            default -> JOptionPane.showMessageDialog(getContentPane(), "Errore",
+                    "Err", JOptionPane.ERROR_MESSAGE);
         }
         getContentPane().repaint();
     }

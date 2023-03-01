@@ -3,8 +3,9 @@ import java.util.HashMap;
 public class Booking
 {
     private String name;
-    private int number,workload;
-    private HashMap<Dish,Integer> order = new HashMap<>();
+    private final int number;
+    private int workload;
+    private HashMap<Dish,Integer> order;
 
 
     public Booking(String name, int number, int workload, HashMap<Dish, Integer> order) {
@@ -17,27 +18,15 @@ public class Booking
     public int getNumber() {
         return number;
     }
-
-    public void setNumber(int number) {
-        this.number = number;
-    }
-
+    
     public int getWorkload() {
         return workload;
     }
-
-    public void setWorkload(int workload) {
-        this.workload = workload;
-    }
-
+    
     public HashMap<Dish, Integer> getOrder() {
         return order;
     }
-
-    public void setOrder(HashMap<Dish, Integer> order) {
-        this.order = order;
-    }
-
+    
     public String getName() {
         return name;
     }

@@ -22,8 +22,8 @@ public class Writer
 	
 	public static void writePeople(ArrayList<Person> people)
 	{
-		XMLOutputFactory xmlof = null;
-		XMLStreamWriter xmlw = null;
+		XMLOutputFactory xmlof;
+		XMLStreamWriter xmlw;
 		try
 		{
 			xmlof = XMLOutputFactory.newInstance();
@@ -58,8 +58,8 @@ public class Writer
 	public static void writeConfigBase(int capacity, int workPersonLoad, DateOur today, int increment)
 	{
 		
-		XMLOutputFactory xmlof = null;
-		XMLStreamWriter xmlw = null;
+		XMLOutputFactory xmlof;
+		XMLStreamWriter xmlw;
 		try
 		{
 			xmlof = XMLOutputFactory.newInstance();
@@ -90,8 +90,8 @@ public class Writer
 	
 	public static void writeDrinks(HashMap<String, Double> drinks)
 	{
-		XMLOutputFactory xmlof = null;
-		XMLStreamWriter xmlw = null;
+		XMLOutputFactory xmlof;
+		XMLStreamWriter xmlw ;
 		try
 		{
 			xmlof = XMLOutputFactory.newInstance();
@@ -124,8 +124,8 @@ public class Writer
 	
 	public static void writeExtraFoods(HashMap<String, Double> foods)
 	{
-		XMLOutputFactory xmlof = null;
-		XMLStreamWriter xmlw = null;
+		XMLOutputFactory xmlof ;
+		XMLStreamWriter xmlw ;
 		try
 		{
 			xmlof = XMLOutputFactory.newInstance();
@@ -158,8 +158,8 @@ public class Writer
 
 	public static void writeRecipes(Set <Recipe> recipes)
 	{
-		XMLOutputFactory xmlof = null;
-		XMLStreamWriter xmlw = null;
+		XMLOutputFactory xmlof ;
+		XMLStreamWriter xmlw ;
 		try
 		{
 			xmlof = XMLOutputFactory.newInstance();
@@ -201,8 +201,8 @@ public class Writer
 
 	public static void writeDishes(Set<Dish> dishes)
 	{
-		XMLOutputFactory xmlof = null;
-		XMLStreamWriter xmlw = null;
+		XMLOutputFactory xmlof ;
+		XMLStreamWriter xmlw;
 		try
 		{
 			xmlof = XMLOutputFactory.newInstance();
@@ -242,8 +242,8 @@ public class Writer
 	
 	public static void writeThematicMenu(Set<ThematicMenu> menus)
 	{
-		XMLOutputFactory xmlof = null;
-		XMLStreamWriter xmlw = null;
+		XMLOutputFactory xmlof;
+		XMLStreamWriter xmlw ;
 		try
 		{
 			xmlof = XMLOutputFactory.newInstance();
@@ -286,8 +286,8 @@ public class Writer
 
 	public static void writeBookings(HashMap <DateOur,ArrayList<Booking>> bookings)
 	{
-		XMLOutputFactory xmlof = null;
-		XMLStreamWriter xmlw = null;
+		XMLOutputFactory xmlof ;
+		XMLStreamWriter xmlw ;
 		try
 		{
 			xmlof = XMLOutputFactory.newInstance();
@@ -336,8 +336,8 @@ public class Writer
 	
 	public static void writeRegister(Set<Ingredient> register)
 	{
-		XMLOutputFactory xmlof = null;
-		XMLStreamWriter xmlw = null;
+		XMLOutputFactory xmlof;
+		XMLStreamWriter xmlw ;
 		try
 		{
 			xmlof = XMLOutputFactory.newInstance();
