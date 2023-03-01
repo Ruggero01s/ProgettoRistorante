@@ -15,9 +15,17 @@ public class Model {
     private Set<Recipe> recipesSet= new HashSet<>();
     private Set<ThematicMenu> thematicMenusSet= new HashSet<>();
     private HashMap<DateOur,ArrayList<Booking>>  bookingMap = new HashMap<>();
-    private Set<Ingredient> grocerySet = new HashSet<>();
+    private Set<Ingredient> registroAfterMeal = new HashSet<>();
     private Set<Ingredient> registro = new HashSet<>();
-    
+
+    public Set<Ingredient> getRegistroAfterMeal() {
+        return registroAfterMeal;
+    }
+
+    public void setRegistroAfterMeal(Set<Ingredient> registroAfterMeal) {
+        this.registroAfterMeal = registroAfterMeal;
+    }
+
     public Set<Ingredient> getRegistro()
     {
         return registro;
@@ -26,14 +34,6 @@ public class Model {
     public void setRegistro(Set<Ingredient> registro)
     {
         this.registro = registro;
-    }
-    
-    public Set<Ingredient> getGrocerySet() {
-        return grocerySet;
-    }
-
-    public void setGroceryMap(Set<Ingredient> grocerySet) {
-        this.grocerySet = grocerySet;
     }
 
     public int getWorkPersonLoad() {

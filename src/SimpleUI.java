@@ -21,6 +21,9 @@ public class SimpleUI extends JFrame {
     boolean DishPermaRadio = false;
     boolean DishSeasRadio = false;
 
+    private final int WIDTH = 400;
+
+    private final int HEIGHT = 400;
     //GENERAL
     JButton managerButton = new JButton("Manager");
     JButton employeeButton = new JButton("Employee");
@@ -60,6 +63,7 @@ public class SimpleUI extends JFrame {
     JLabel cfgBaseDateText = new JLabel("Inserisci data odierna:");
     JLabel cfgBaseSurplusText = new JLabel("Surplus da comprare (%):");
     JButton cfgBaseSendButton = new JButton("Conferma");
+    JButton cfgBaseNextDayButton = new JButton("Prossimo giorno");
     JTextArea cfgBaseInputCap = new JTextArea();
     JTextArea cfgBaseInputIndWork = new JTextArea();
     JTextArea cfgBaseInputDate = new JTextArea();
@@ -178,6 +182,7 @@ public class SimpleUI extends JFrame {
     JLabel cfgResFoodsText = new JLabel("Dati cibi extra:");
     JLabel cfgResRecipesText = new JLabel("Dati ricette:");
     JLabel cfgResDishesText = new JLabel("Dati piatti:");
+    JLabel cfgResMenuCartaText = new JLabel("Menù alla carta:");
     JLabel cfgResMenuText = new JLabel("Dati menu:");
     JTextArea cfgResBaseOut = new JTextArea();
     JTextArea cfgResDrinksOut = new JTextArea();
@@ -194,6 +199,8 @@ public class SimpleUI extends JFrame {
     JComboBox cfgResDatiMenuBox = new JComboBox();
     JTextArea cfgResDatiMenuOut = new JTextArea();
     JScrollPane cfgResDatiMenuScroll = new JScrollPane(cfgResDatiMenuOut);
+    JTextArea cfgResMenuCartaOut = new JTextArea();
+    JScrollPane cfgResMenuCartaScroll = new JScrollPane(cfgResMenuCartaOut);
     //------------------------------------------------------------------------------------------
     //CONFIG_WRITING AND CLEAR
     JButton cfgBaseClearButton = new JButton("Clear Cap&IndWork");
@@ -209,10 +216,8 @@ public class SimpleUI extends JFrame {
     //EMPLOYEE
     //EMPLOYEE GENERAL
     JTabbedPane empTabbedPane = new JTabbedPane();
-    public JPanel empSeeBookingsPanel = new JPanel(new GridBagLayout());
-    public JPanel empNewBookingPanel = new JPanel(new GridBagLayout());
-    public JPanel empStatsPanel = new JPanel(new GridBagLayout());
-    public JPanel empExtra = new JPanel(new GridBagLayout());
+    JPanel empSeeBookingsPanel = new JPanel(new GridBagLayout());
+     JPanel empNewBookingPanel = new JPanel(new GridBagLayout());
     //-------------------------------------------------------------------------------------------
     //EMPLOY SEE BOOKINGS
     JLabel empSeeBookText = new JLabel("Prenotazioni:");
@@ -266,12 +271,14 @@ public class SimpleUI extends JFrame {
     //-------------------------------------------------------------------------------------------
     //WAREHOUSE RETURNLIST
     JPanel wareReturnListPanel = new JPanel(new GridBagLayout());
-    JLabel wareReturnListText = new JLabel("Lista ritorni: ");
+    JLabel wareReturnListOutText = new JLabel("Lista fine giornata: ");
     JTextArea wareReturnListOut = new JTextArea();
-    JScrollPane wareReturnListScroll = new JScrollPane(wareReturnListOut);
+    JScrollPane wareReturnListOutScroll = new JScrollPane(wareReturnListOut);
     JButton wareReturnListSend = new JButton("Conferma");
-
-    //===============================================================================================
+    JLabel wareReturnListInText = new JLabel("Modifiche (ingrediente:delta): ");
+    JTextArea wareReturnListIn = new JTextArea();
+    JScrollPane wareReturnListInScroll = new JScrollPane(wareReturnListIn);
+//===============================================================================================
 //===============================================================================================
     Border border = BorderFactory.createLineBorder(Color.GRAY, 1);
 
@@ -399,12 +406,13 @@ public class SimpleUI extends JFrame {
         cfgMenuAreaOut.setBorder(border);
         cfgFoodsAreaOut.setBorder(border);
         cfgResDatiMenuOut.setBorder(border);
+        cfgResMenuCartaOut.setBorder(border);
         cfgBaseInputSurplus.setBorder(border);
 
 
-        cfgResBaseScroll.setPreferredSize(new Dimension(300, 70));
-        cfgResDrinksScroll.setPreferredSize(new Dimension(300, 100));
-        cfgResFoodsScroll.setPreferredSize(new Dimension(300, 100));
+        cfgResBaseScroll.setPreferredSize(new Dimension(400, 70));
+        cfgResDrinksScroll.setPreferredSize(new Dimension(400, 100));
+        cfgResFoodsScroll.setPreferredSize(new Dimension(400, 100));
         cfgResRecipesScroll.setPreferredSize(new Dimension(300, 100));
         cfgResDishesScroll.setPreferredSize(new Dimension(300, 100));
         cfgResMenuScroll.setPreferredSize(new Dimension(300, 100));
@@ -414,6 +422,7 @@ public class SimpleUI extends JFrame {
         cfgRecipeScroll.setPreferredSize(new Dimension(300, 100));
         cfgDishAreaScroll.setPreferredSize(new Dimension(300, 100));
         cfgMenuAreaScroll.setPreferredSize(new Dimension(300, 100));
+        cfgResMenuCartaScroll.setPreferredSize(new Dimension(400, 70));
 
         cfgResBaseScroll.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS);
         cfgResDrinksScroll.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS);
@@ -427,6 +436,7 @@ public class SimpleUI extends JFrame {
         cfgDishAreaScroll.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS);
         cfgMenuAreaScroll.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS);
         cfgResDatiMenuScroll.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS);
+        cfgResMenuCartaScroll.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS);
 
         cfgResBaseOut.setEditable(false);
         cfgResDrinksOut.setEditable(false);
@@ -439,7 +449,7 @@ public class SimpleUI extends JFrame {
         cfgRecipeAreaOut.setEditable(false);
         cfgDishAreaOut.setEditable(false);
         cfgMenuAreaOut.setEditable(false);
-
+        cfgResMenuCartaOut.setEditable(false);
 
 
         cfgWriteButton.addActionListener(e -> ctrl.writeManager());
@@ -500,6 +510,10 @@ public class SimpleUI extends JFrame {
         c.gridy = 5;
         cfgBaseSendButton.addActionListener(e -> ctrl.saveConfig());
         cfgBasePanel.add(cfgBaseSendButton, c);
+        c.gridx = 2;
+        c.gridy = 5;
+        cfgBaseNextDayButton.addActionListener(e -> ctrl.nextDay());
+        cfgBasePanel.add(cfgBaseNextDayButton, c);
 
         // Drinks & Food
 
@@ -732,63 +746,55 @@ public class SimpleUI extends JFrame {
         cfgResPanel.add(cfgResBaseText, c);
         c.gridx = 1;
         c.gridy = 1;
-        c.gridwidth = 4;
         cfgResPanel.add(cfgResBaseScroll, c);
-        c.gridwidth = 1;
         c.gridx = 0;
         c.gridy = 2;
         cfgResPanel.add(cfgResDrinksText, c);
         c.gridx = 1;
         c.gridy = 2;
-        c.gridwidth = 4;
         cfgResPanel.add(cfgResDrinksScroll, c);
-        c.gridwidth = 1;
         c.gridx = 0;
         c.gridy = 3;
         cfgResPanel.add(cfgResFoodsText, c);
         c.gridx = 1;
         c.gridy = 3;
-        c.gridwidth = GridBagConstraints.REMAINDER;
         cfgResPanel.add(cfgResFoodsScroll, c);
-        c.gridwidth = 1;
         c.gridx = 0;
         c.gridy = 4;
         cfgResPanel.add(cfgResRecipesText, c);
         c.gridx = 1;
         c.gridy = 4;
-        c.gridwidth = GridBagConstraints.REMAINDER;
         cfgResPanel.add(cfgResRecipesScroll, c);
-        c.gridwidth = 1;
         c.gridx = 0;
         c.gridy = 5;
         cfgResPanel.add(cfgResDishesText, c);
         c.gridx = 1;
         c.gridy = 5;
-        c.gridwidth = GridBagConstraints.REMAINDER;
         cfgResPanel.add(cfgResDishesScroll, c);
-        c.gridwidth = 1;
         c.gridx = 0;
         c.gridy = 6;
         cfgResPanel.add(cfgResMenuText, c);
         c.gridx = 1;
         c.gridy = 6;
-        c.gridwidth = GridBagConstraints.REMAINDER;
         cfgResPanel.add(cfgResMenuScroll, c);
-        c.gridwidth = 1;
         c.gridx = 0;
         c.gridy = 7;
+        cfgResPanel.add(cfgResMenuCartaText, c);
+        c.gridx = 1;
+        c.gridy = 7;
+        cfgResPanel.add(cfgResMenuCartaScroll, c);
+        c.gridx = 0;
+        c.gridy = 8;
         cfgResPanel.add(cfgResDatiMenuBox, c);
         cfgResDatiMenuBox.addActionListener(e ->
         {
             ctrl.writeMenuComp((String) cfgResDatiMenuBox.getSelectedItem());
         });
         c.gridx = 1;
-        c.gridy = 7;
-        c.gridwidth = GridBagConstraints.REMAINDER;
-        cfgResPanel.add(cfgResDatiMenuScroll, c);
-        c.gridwidth = 1;
-        c.gridx = 4;
         c.gridy = 8;
+        cfgResPanel.add(cfgResDatiMenuScroll, c);
+        c.gridx = 4;
+        c.gridy = 9;
         cfgResPanel.add(buttonBack6, c);
 
 
@@ -985,17 +991,23 @@ public class SimpleUI extends JFrame {
     }
 
     private void wareInit() {
-        wareListText.setText(wareListText.getText() + ctrl.getTodayString());
-        wareListMagText.setText(wareListMagText.getText() + ctrl.getTodayString());
+        wareListText.setText("Lista aggiornata al " + ctrl.getTodayString());
+        wareListMagText.setText("Magazzino aggiornato al " + ctrl.getTodayString());
 
-        wareListScroll.setPreferredSize(new Dimension(300, 100));
+        wareListScroll.setPreferredSize(new Dimension(400, 100));
         wareListScroll.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS);
     
-        wareListMagScroll.setPreferredSize(new Dimension(300, 100));
+        wareListMagScroll.setPreferredSize(new Dimension(400, 100));
         wareListMagScroll.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS);
         
-        wareReturnListScroll.setPreferredSize(new Dimension(300, 100));
-        wareReturnListScroll.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS);
+        wareReturnListOutScroll.setPreferredSize(new Dimension(400, 100));
+        wareReturnListOutScroll.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS);
+        wareReturnListInScroll.setPreferredSize(new Dimension(400, 100));
+        wareReturnListInScroll.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS);
+
+        wareListOut.setEditable(false);
+        wareListMagOut.setEditable(false);
+        wareReturnListOut.setEditable(false);
 
         buttonBack12.addActionListener(back);
         buttonBack13.addActionListener(back);
@@ -1024,21 +1036,28 @@ public class SimpleUI extends JFrame {
         //RETURNLIST PANEL
         c.gridx = 0;
         c.gridy = 0;
-        wareReturnListPanel.add(wareReturnListText, c);
+        wareReturnListPanel.add(wareReturnListOutText, c);
         c.gridx = 0;
         c.gridy = 1;
-        wareReturnListPanel.add(wareReturnListScroll, c);
+        wareReturnListOut.setText(ctrl.setToString(ctrl.model.getRegistroAfterMeal()));
+        wareReturnListPanel.add(wareReturnListOutScroll, c);
         c.gridx = 0;
         c.gridy = 2;
+        wareReturnListPanel.add(wareReturnListInText, c);
+        c.gridx = 0;
+        c.gridy = 3;
+        wareReturnListPanel.add(wareReturnListInScroll, c);
+        c.gridx = 0;
+        c.gridy = 4;
         wareReturnListPanel.add(buttonBack13, c);
         c.gridx = 1;
-        c.gridy = 2;
-        //wareReturnListSend.addActionListener(e->ctrl.ritorna()); //todo
+        c.gridy = 4;
+        wareReturnListSend.addActionListener(e->ctrl.warehouseChanges());
         wareReturnListPanel.add(wareReturnListSend, c);
 
 
         wareTabbedPane.add("Lista della spesa", wareListPanel);
-        wareTabbedPane.add("Lista ritorni:", wareReturnListPanel);  //todo cambiare nome
+        wareTabbedPane.add("Lista fine giornata:", wareReturnListPanel);  //todo cambiare nome
     }
 
     // Method to update the UI based on the current state
@@ -1085,7 +1104,7 @@ public class SimpleUI extends JFrame {
                         "Err", JOptionPane.ERROR_MESSAGE);
                 break;
             case "invalidDate":
-                JOptionPane.showMessageDialog(getContentPane(), "Date non valide",
+                JOptionPane.showMessageDialog(getContentPane(), "Data non valide",
                         "Err", JOptionPane.ERROR_MESSAGE);
                 break;
             case "fullRestaurant":
@@ -1124,6 +1143,29 @@ public class SimpleUI extends JFrame {
                 JOptionPane.showMessageDialog(getContentPane(), "Surplus troppo grande, max 10%",
                         "Err", JOptionPane.ERROR_MESSAGE);
                 break;
+            case "noIngredient":
+                JOptionPane.showMessageDialog(getContentPane(), "Ingrediente non trovato",
+                        "Err", JOptionPane.ERROR_MESSAGE);
+                break;
+            case "invalidQuantity":
+                JOptionPane.showMessageDialog(getContentPane(), "Quantità non valida",
+                        "Err", JOptionPane.ERROR_MESSAGE);
+                break;
+            case "notToday":
+                JOptionPane.showMessageDialog(getContentPane(), "Non è possibile prenotare per la giornata odierna",
+                        "Err", JOptionPane.ERROR_MESSAGE);
+                break;
+            case "workloadTooHigh":
+                JOptionPane.showMessageDialog(getContentPane(), "Workload troppo alto",
+                        "Err", JOptionPane.ERROR_MESSAGE);
+                break;
+            case "orderForTooLittle":
+                JOptionPane.showMessageDialog(getContentPane(), "Deve esserci almeno un piatto o menù per persona",
+                        "Err", JOptionPane.ERROR_MESSAGE);
+                break;
+            default:
+                JOptionPane.showMessageDialog(getContentPane(), "Errore",
+                        "Err", JOptionPane.ERROR_MESSAGE);
         }
         getContentPane().repaint();
     }

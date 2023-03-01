@@ -87,7 +87,7 @@ public class ThematicMenu
 		this.permanent = permanent;
 	}
 
-	public void calcWorkThematicMenuLoad ()
+	private void calcWorkThematicMenuLoad ()
 	{
 		this.workThematicMenuLoad=0;
 		for (Dish dish: dishes)
