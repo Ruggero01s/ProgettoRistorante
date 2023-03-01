@@ -1054,7 +1054,7 @@ public class Controller {
         ArrayList<Booking> book = new ArrayList<>(model.getBookingMap().get(model.getToday()));
         for (Booking b : book)
             for (Map.Entry<Dish, Integer> entry : b.getOrder().entrySet())
-                for (Ingredient ingredient: entry.getKey().getRecipe().getIngredients())
+                for (Ingredient ingredient: entry.getKey().getRecipe().getIngredients()) //todo perchè non fare removeAll(recipe.getIngredients())?
                     registroNow.remove(ingredient);
 
         for (Map.Entry<String, Double> drink : model.getDrinksMap().entrySet())
