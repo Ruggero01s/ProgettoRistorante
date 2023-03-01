@@ -52,11 +52,7 @@ public class Model {
     public void setToday(DateOur today) {
         this.today = today;
     }
-
-    public void setWorkloadRestaurant(double workloadRestaurant) {
-        this.workloadRestaurant = workloadRestaurant;
-    }
-
+    
     public HashMap<DateOur, ArrayList<Booking>> getBookingMap() {
         return bookingMap;
     }

@@ -3,9 +3,11 @@ import java.text.ParseException;
 public class Dish
 {
     private String name;
-    private DateOur startPeriod, endPeriod;
+    private final DateOur startPeriod;
+    private final DateOur endPeriod;
     private Recipe recipe;
-    private boolean seasonal,permanent;
+    private final boolean seasonal;
+    private final boolean permanent;
 
     public Dish(String name, Recipe recipe, String startPeriod, String endPeriod, boolean seasonal, boolean permanent) throws ParseException {
         this.name = name;
@@ -31,43 +33,23 @@ public class Dish
     public boolean isSeasonal() {
         return seasonal;
     }
-
-    public void setSeasonal(boolean seasonal) {
-        this.seasonal = seasonal;
-    }
-
+    
     public boolean isPermanent() {
         return permanent;
     }
-
-    public void setPermanent(boolean permanent) {
-        this.permanent = permanent;
-    }
-
+    
     public DateOur getStartPeriod() {
         return startPeriod;
     }
-
-    public void setStartPeriod(DateOur startPeriod) {
-        this.startPeriod = startPeriod;
-    }
-
+    
     public DateOur getEndPeriod() {
         return endPeriod;
     }
-
-    public void setEndPeriod(DateOur endPeriod) {
-        this.endPeriod = endPeriod;
-    }
-
+    
     public Recipe getRecipe() {
         return recipe;
     }
-
-    public void setRecipe(Recipe recipe) {
-        this.recipe = recipe;
-    }
-
+    
     public boolean equals(Object d) {
         if (d == this) return true;
         if (!(d instanceof Dish)) {

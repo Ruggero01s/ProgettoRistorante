@@ -20,8 +20,8 @@ public class Reader
 	
 	public ArrayList<Person> readPeople()
 	{
-		XMLInputFactory xmlif = null;
-		XMLStreamReader xmlr = null;
+		XMLInputFactory xmlif;
+		XMLStreamReader xmlr;
 		
 		ArrayList<Person> listP = new ArrayList<>();
 		
@@ -31,8 +31,8 @@ public class Reader
 			xmlr = xmlif.createXMLStreamReader(new FileInputStream(Writer.ROOT + Writer.PEOPLE_NAME_FILE));
 			while (xmlr.hasNext())
 			{ // continua a leggere finche ha eventi a disposizione
-				boolean manager = false, employee = false, storageWorker = false;
-				String name = "";
+				boolean manager, employee, storageWorker;
+				String name;
 				if (xmlr.getEventType() == XMLStreamConstants.START_ELEMENT) // inizio di un elemento
 				{
 					if (xmlr.getLocalName().equals("person"))
@@ -42,10 +42,8 @@ public class Reader
 						String empl = xmlr.getAttributeValue(2);
 						String stor = xmlr.getAttributeValue(3);
 						manager = mana.equals("true");
-						if (empl.equals("true")) employee = true;
-						else employee = false;
-						if (stor.equals("true")) storageWorker = true;
-						else storageWorker = false;
+						employee = empl.equals("true");
+						storageWorker = stor.equals("true");
 						listP.add(new Person(name, manager, employee, storageWorker));
 					}
 				}
@@ -62,14 +60,14 @@ public class Reader
 	
 	public void readConfig(Model model)
 	{
-		XMLInputFactory xmlif = null;
-		XMLStreamReader xmlr = null;
+		XMLInputFactory xmlif;
+		XMLStreamReader xmlr;
 		
 		try
 		{
 			xmlif = XMLInputFactory.newInstance();
 			xmlr = xmlif.createXMLStreamReader(new FileInputStream(Writer.ROOT + Writer.CONFIG_NAME_FILE));
-			String[] today = {};
+			String[] today;
 			while (xmlr.hasNext())
 			{ // continua a leggere finche ha eventi a disposizione
 				if (xmlr.getEventType() == XMLStreamConstants.START_ELEMENT) // inizio di un elemento
@@ -95,8 +93,8 @@ public class Reader
 	
 	public HashMap<String, Double> readDrinks()
 	{
-		XMLInputFactory xmlif = null;
-		XMLStreamReader xmlr = null;
+		XMLInputFactory xmlif;
+		XMLStreamReader xmlr;
 		
 		HashMap<String, Double> drinks = new HashMap<>();
 		
@@ -149,8 +147,8 @@ public class Reader
 	
 	public HashSet<Recipe> readRecipes()
 	{
-		XMLInputFactory xmlif = null;
-		XMLStreamReader xmlr = null;
+		XMLInputFactory xmlif;
+		XMLStreamReader xmlr;
 		
 		HashSet<Recipe> recipes = new HashSet<>();
 		
@@ -170,14 +168,14 @@ public class Reader
 				{
 					switch (xmlr.getLocalName())
 					{
-						case "recipe":
+						case "recipe" ->
+						{
 							id = xmlr.getAttributeValue(0);
 							portions = Integer.parseInt(xmlr.getAttributeValue(1));
 							workLoadPortion = Double.parseDouble(xmlr.getAttributeValue(2));
-							break;
-						case "ingredient":
-							ingredients.add(new Ingredient(xmlr.getAttributeValue(0), xmlr.getAttributeValue(2),Double.parseDouble(xmlr.getAttributeValue(1))));
-							break;
+						}
+						case "ingredient" ->
+								ingredients.add(new Ingredient(xmlr.getAttributeValue(0), xmlr.getAttributeValue(2), Double.parseDouble(xmlr.getAttributeValue(1))));
 					}
 				}
 				if (xmlr.getEventType() == XMLStreamConstants.END_ELEMENT)
@@ -219,16 +217,15 @@ public class Reader
 				{
 					switch (xmlr.getLocalName())
 					{
-						case "dish":
+						case "dish" ->
+						{
 							name = xmlr.getAttributeValue(0);
 							startPeriod = xmlr.getAttributeValue(1);
 							endPeriod = xmlr.getAttributeValue(2);
 							seasonal = Boolean.parseBoolean(xmlr.getAttributeValue(3));
 							permanent = Boolean.parseBoolean(xmlr.getAttributeValue(4));
-							break;
-						case "recipe":
-							id = xmlr.getAttributeValue(0);
-							break;
+						}
+						case "recipe" -> id = xmlr.getAttributeValue(0);
 					}
 				}
 				if (xmlr.getEventType() == XMLStreamConstants.END_ELEMENT)
@@ -250,8 +247,8 @@ public class Reader
 	
 	public HashSet<ThematicMenu> readThematicMenu()
 	{
-		XMLInputFactory xmlif = null;
-		XMLStreamReader xmlr = null;
+		XMLInputFactory xmlif;
+		XMLStreamReader xmlr;
 		
 		HashSet<ThematicMenu> menu = new HashSet<>();
 		try
@@ -268,16 +265,15 @@ public class Reader
 				{
 					switch (xmlr.getLocalName())
 					{
-						case "menu":
+						case "menu" ->
+						{
 							name = xmlr.getAttributeValue(0);
 							startPeriod = xmlr.getAttributeValue(1);
 							endPeriod = xmlr.getAttributeValue(2);
 							seasonal = Boolean.parseBoolean(xmlr.getAttributeValue(3));
 							permanent = Boolean.parseBoolean(xmlr.getAttributeValue(4));
-							break;
-						case "dish":
-							dishes.add(xmlr.getAttributeValue(0));
-							break;
+						}
+						case "dish" -> dishes.add(xmlr.getAttributeValue(0));
 					}
 				}
 				if (xmlr.getEventType() == XMLStreamConstants.END_ELEMENT)
@@ -299,15 +295,15 @@ public class Reader
 	
 	public HashMap<DateOur, ArrayList<Booking>> readBooking()
 	{
-		XMLInputFactory xmlif = null;
-		XMLStreamReader xmlr = null;
+		XMLInputFactory xmlif;
+		XMLStreamReader xmlr;
 		
 		HashMap<DateOur, ArrayList<Booking>> bookings = new HashMap<>();
 		try
 		{
 			xmlif = XMLInputFactory.newInstance();
 			xmlr = xmlif.createXMLStreamReader(new FileInputStream(Writer.ROOT + Writer.BOOKINGS_NAME_FILE));
-			String name = "", date = "";
+			String name = "";
 			String[] dateString = {};
 			int number = 0, workload = 0;
 			ArrayList<Booking> book = new ArrayList<>();
@@ -319,33 +315,33 @@ public class Reader
 				{
 					switch (xmlr.getLocalName())
 					{
-						case "booking":
-							dateString = xmlr.getAttributeValue(0).split("/");
-							break;
-						case "book":
+						case "booking" -> dateString = xmlr.getAttributeValue(0).split("/");
+						case "book" ->
+						{
 							name = xmlr.getAttributeValue(0);
 							number = Integer.parseInt(xmlr.getAttributeValue(1));
 							workload = Integer.parseInt(xmlr.getAttributeValue(2));
-							break;
-						case "order":
-							order.put(xmlr.getAttributeValue(0), Integer.parseInt(xmlr.getAttributeValue(1)));
-							break;
+						}
+						case "order" ->
+								order.put(xmlr.getAttributeValue(0), Integer.parseInt(xmlr.getAttributeValue(1)));
 					}
 				}
 				if (xmlr.getEventType() == XMLStreamConstants.END_ELEMENT)
 					switch (xmlr.getLocalName())
 					{
-						case "booking":
+						case "booking" ->
+						{
 							if (dateString.length == 0) //per evitare rotture in lettura
 								return new HashMap<>();
 							ArrayList<Booking> out = new ArrayList<>(book);
 							bookings.put(new DateOur(dateString[0], dateString[1], dateString[2]), out);
 							book.clear();
-							break;
-						case "book":
+						}
+						case "book" ->
+						{
 							book.add(new Booking(name, number, workload, ctrl.dishToMap(order)));
 							order.clear();
-							break;
+						}
 					}
 				xmlr.next();
 			}

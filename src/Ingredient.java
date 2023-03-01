@@ -1,5 +1,3 @@
-import java.io.DataInput;
-
 public class Ingredient
 {
 	private String name,unit;
@@ -25,11 +23,6 @@ public class Ingredient
 	public String getUnit()
 	{
 		return unit;
-	}
-	
-	public void setUnit(String unit)
-	{
-		this.unit = unit;
 	}
 	
 	public double getQuantity()

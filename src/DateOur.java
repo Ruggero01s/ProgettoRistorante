@@ -19,12 +19,12 @@ public class DateOur
 
 	public boolean bet(DateOur s, DateOur e)
 	{
-		boolean result = false,result2=false;
+		boolean result = false,result2;
 		if(s.getDate().get(Calendar.YEAR)<e.getDate().get(Calendar.YEAR))
 		{
 			Calendar temp = Calendar.getInstance();
 			SimpleDateFormat format = new SimpleDateFormat("dd/MM/yyyy");
-			java.util.Date dateFormat = null;
+			java.util.Date dateFormat;
 			try {
 				dateFormat = format.parse("31/12/".concat(Integer.toString(s.getDate().get(Calendar.YEAR))));
 			} catch (ParseException ex) {
@@ -49,13 +49,7 @@ public class DateOur
 		return result;
 	}
 	
-
-	public DateOur(String day, String month) throws ParseException
-	{
-		SimpleDateFormat format = new SimpleDateFormat("dd/MM/yyyy");
-		java.util.Date dateFormat = format.parse(day.concat("/".concat(month).concat("/").concat("1444")));
-		this.date.setTime(dateFormat);
-	}
+	
 	/**
 	 * Trasformo una data in una stringa
 	 * @return stringa della data
@@ -104,16 +98,6 @@ public class DateOur
 		if (s.get(Calendar.DAY_OF_YEAR)==e.get(Calendar.DAY_OF_YEAR)) return true;
 		return this.date.before(e) && this.date.after(s);
 	}
-
-
-	/*
-	public void test()
-	{
-		DateFormat Date = DateFormat.getDateInstance(); //inizializzazione
-		Calendar calendar = Calendar.getInstance(); //inizializzazione calendar
-		System.out.println("Data lunga: " + calendar.getTime());
-		String currentDate = Date.format(calendar.getTime()); //format la rende una stringa
-		System.out.println("Data corta: " + currentDate);
-	}
-	*/
+	
+	
 }

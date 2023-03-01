@@ -5,7 +5,7 @@ public class ThematicMenu
 {
 	private String name;
 	private DateOur startPeriod,endPeriod;
-	private ArrayList <Dish> dishes = new ArrayList<>();
+	private ArrayList <Dish> dishes;
 	private boolean seasonal,permanent;
 	private double workThematicMenuLoad;
 	
@@ -36,19 +36,9 @@ public class ThematicMenu
 		return startPeriod;
 	}
 	
-	public void setStartPeriod(DateOur startPeriod)
-	{
-		this.startPeriod = startPeriod;
-	}
-	
 	public DateOur getEndPeriod()
 	{
 		return endPeriod;
-	}
-	
-	public void setEndPeriod(DateOur endPeriod)
-	{
-		this.endPeriod = endPeriod;
 	}
 	
 	public ArrayList<Dish> getDishes()
@@ -56,37 +46,19 @@ public class ThematicMenu
 		return dishes;
 	}
 	
-	public void setDishes(ArrayList<Dish> dishes)
-	{
-		this.dishes = dishes;
-	}
-	
 	public double getWorkThematicMenuLoad()
 	{
 		return workThematicMenuLoad;
 	}
 	
-	public void setWorkThematicMenuLoad(double workThematicMenuLoad)
-	{
-		this.workThematicMenuLoad = workThematicMenuLoad;
-	}
-
 	public boolean isSeasonal() {
 		return seasonal;
 	}
-
-	public void setSeasonal(boolean seasonal) {
-		this.seasonal = seasonal;
-	}
-
+	
 	public boolean isPermanent() {
 		return permanent;
 	}
-
-	public void setPermanent(boolean permanent) {
-		this.permanent = permanent;
-	}
-
+	
 	private void calcWorkThematicMenuLoad ()
 	{
 		this.workThematicMenuLoad=0;

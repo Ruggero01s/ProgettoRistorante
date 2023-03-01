@@ -1,14 +1,12 @@
-import java.util.HashMap;
 import java.util.HashSet;
-import java.util.Map;
 import java.util.Set;
 
 public class  Recipe
 {
-    private String id;
+    private final String id;
     private Set<Ingredient> ingredients;
-    private int portions;
-    private double workLoadPortion;
+    private final int portions;
+    private final double workLoadPortion;
 
     public Recipe(String id, Set<Ingredient> ingredients, int portions, double workLoadPortion) {
         this.id = id;
@@ -20,10 +18,6 @@ public class  Recipe
     public String getId() {
         return id;
     }
-
-    public void setId(String id) {
-        this.id = id;
-    }
     
     
     public Set<Ingredient> getIngredients()
@@ -31,27 +25,14 @@ public class  Recipe
         return ingredients;
     }
     
-    public void setIngredients(Set<Ingredient> ingredients)
-    {
-        this.ingredients = ingredients;
-    }
-    
     public int getPortions() {
         return portions;
     }
-
-    public void setPortions(int portions) {
-        this.portions = portions;
-    }
-
+    
     public double getWorkLoadPortion() {
         return workLoadPortion;
     }
-
-    public void setWorkLoadPortion(double workLoadPortion) {
-        this.workLoadPortion = workLoadPortion;
-    }
-
+    
     public boolean equals(Object r) {
         if (r == this) return true;
         if (!(r instanceof Recipe)) {

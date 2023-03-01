@@ -86,7 +86,7 @@ public class Controller {
             case "recipes.xml":
                 model.getRecipesSet().clear();
                 Writer.writeRecipes(model.getRecipesSet());
-                updateRecipeStringList();    //il break non serve perchè se cancello le ricette devo cancellare anche i menu ed i dish
+                updateRecipeStringList();    //il break non serve perchè se cancello le ricette devo cancellare anche i menu e i dish
             case "dishes.xml":
                 model.getDishesSet().clear();
                 Writer.writeDishes(model.getDishesSet());
@@ -307,7 +307,7 @@ public class Controller {
             if (inputName.equals(Model.CLEAR))
                 throw new NumberFormatException("");
 
-            String inputRecipe = ((String) sui.cfgDishComboBox.getSelectedItem()).split("-")[0].trim();
+            String inputRecipe = ((String) Objects.requireNonNull(sui.cfgDishComboBox.getSelectedItem())).split("-")[0].trim(); //todo sto robo
 
             String inputStartDate = sui.cfgDishSDateInput.getText();
             String inputEndDate = sui.cfgDishEDateInput.getText();
@@ -323,8 +323,8 @@ public class Controller {
                 inputEndDate = "31/12/1444";
             }
             boolean found=false;
-            for (Recipe r : model.getRecipesSet()) {
-                found = false;
+            for (Recipe r : model.getRecipesSet())
+            {
                 if (r.getId().equals(inputRecipe)) {
                     if (model.getDishesSet().add(new Dish(inputName, r, inputStartDate, inputEndDate, seasonal, perm))) {
                         updateDishStringList();
@@ -719,15 +719,18 @@ public class Controller {
         // If there is capacity and workload available, create a new Booking object and add it to the ArrayList for the date
         // Update the booking map with the ArrayList for the specified date
         // If there is no capacity or workload available, set an error message and return false
-        if (!model.getBookingMap().containsKey(date)) {
-            // If there are no existing bookings for the date, check if the restaurant has capacity and workload available to add the new booking
-        } else {
+        if (model.getBookingMap().containsKey(date))
+        {
             // If there are existing bookings for the date, calculate the total capacity and workload based on all bookings for the date
             for (Booking b : day) {
                 capacity += b.getNumber();
                 work += b.getWorkload();
             }
             // Check if the restaurant has capacity and workload available to add the new booking
+        }
+        else //todo sto robo non ha senso
+        {
+            // If there are no existing bookings for the date, check if the restaurant has capacity and workload available to add the new booking
         }
         if (capacity <= model.getCapacity() && work <= model.getWorkResturantLoad()) {
             // If there is capacity and workload available, create a new Booking object and add it to the ArrayList for the date
@@ -763,18 +766,17 @@ public class Controller {
         Writer.writeRegister(model.getRegistro());
     }
 
-    private void generateGroceryList()  //todo sta cosa va snellita e chiamata tramite un pulsante
+    private void generateGroceryList()  //todo sta cosa va snellita
     {
         Set<Ingredient> grocerySet = new HashSet<>();
         HashMap<String, Double> surplusMap = new HashMap<>();
 
-        double quantity = 0.0, surplus = 0.0;
-        int multi = 0;
+        double quantity, surplus = 0.0;
+        int multi;
         Recipe recipe;
 
         if (model.getBookingMap().containsKey(model.getToday()))
         {
-            int numberOfPeople = 0;
             HashMap<Dish, Integer> allDish = new HashMap<>();
             ArrayList<Booking> book = new ArrayList<>(model.getBookingMap().get(model.getToday()));
             Set <Ingredient> foods = new HashSet<>();
@@ -818,7 +820,6 @@ public class Controller {
                         foods.add(i);
                     }
                 }
-                numberOfPeople += b.getNumber();
                 for (Map.Entry<Dish, Integer> entry : b.getOrder().entrySet()) {
                     Dish dish = entry.getKey();
                     if (allDish.containsKey(dish))
@@ -837,12 +838,7 @@ public class Controller {
                 for (Ingredient ingredient : recipe.getIngredients()) {
                     multi = entry.getValue() / recipe.getPortions();
                     int resto = entry.getValue() % recipe.getPortions();
-
-                   /* if (multi == 0)
-                    {
-                        multi++;
-                        surplus = ingredient.getQuantity() * (recipe.getPortions() - entry.getValue());
-                    }*/
+    
                     if (resto != 0)
                     {
                         multi++;
@@ -878,13 +874,8 @@ public class Controller {
 
             Set<Ingredient> drink = new HashSet<>();
             Set<Ingredient> food = new HashSet<>();
-
-          /*  for (Map.Entry<String, Double> map : model.getDrinksMap().entrySet())
-                drink.add(new Ingredient(map.getKey(), "L",  Math.ceil(map.getValue() * numberOfPeople)));
-            for (Map.Entry<String, Double> map : model.getExtraFoodsMap().entrySet())
-                food.add(new Ingredient(map.getKey(), "hg", map.getValue() * numberOfPeople));*/
-
-
+    
+    
             drink = new HashSet<>(compareWithRegister(drink));
             food = new HashSet<>(compareWithRegister(food));
 
@@ -904,7 +895,7 @@ public class Controller {
         for (Ingredient reg : model.getRegistro()) {
             for (Ingredient ingredient : set) //mannaggia al set che non ha un .get
             {
-                if (reg.equals(ingredient)) //todo in teoria l'equals dovrebbe guardare solo il nome, vero anakin?
+                if (reg.equals(ingredient))
                 {
                     double q =  ingredient.getQuantity() - reg.getQuantity() ;
                     if (q <= 0)
@@ -936,7 +927,7 @@ public class Controller {
         if (ingredients.isEmpty() && drinks.isEmpty() && foods.isEmpty())
             return "La lista della spesa è vuota perché tutti gli ingredienti necessari sono già in magazzino";
 
-        String out = "";
+        String out;
         out = setToString(ingredients) + "\n";
         out += setToString(foods) + "\n";
         out += setToString(drinks);
@@ -945,11 +936,11 @@ public class Controller {
     }
 
     public String setToString(Set<Ingredient> set) {
-        String out = "";
+        StringBuilder out = new StringBuilder();
         for (Ingredient entry : set) {
-            out = out + entry.getName() + ":" + entry.getQuantity() + ":" + entry.getUnit() + "\n";
+            out.append(entry.getName()).append(":").append(entry.getQuantity()).append(":").append(entry.getUnit()).append("\n");
         }
-        return out.trim();
+        return out.toString().trim();
     }
 
     public void warehouseChanges()
@@ -1054,8 +1045,7 @@ public class Controller {
         ArrayList<Booking> book = new ArrayList<>(model.getBookingMap().get(model.getToday()));
         for (Booking b : book)
             for (Map.Entry<Dish, Integer> entry : b.getOrder().entrySet())
-                for (Ingredient ingredient: entry.getKey().getRecipe().getIngredients()) //todo perchè non fare removeAll(recipe.getIngredients())?
-                    registroNow.remove(ingredient);
+                registroNow.removeAll(entry.getKey().getRecipe().getIngredients());
 
         for (Map.Entry<String, Double> drink : model.getDrinksMap().entrySet())
             registroNow.removeIf(ingredient -> ingredient.getName().equals(drink.getKey()));
@@ -1096,13 +1086,13 @@ public class Controller {
 
     private void menu()
     {
-        String menus="";
+        StringBuilder menus= new StringBuilder();
         for (Dish dish:model.getDishesSet())
          if(dish.isValid(model.getToday()))
-             menus+=dish.getName()+"\n";
-        if(menus.isEmpty())
-            menus="Non ci sono piatti disponibili per la data ordierna";
-        sui.cfgResMenuCartaOut.setText(menus);
+             menus.append(dish.getName()).append("\n");
+        if(menus.length() == 0)
+            menus = new StringBuilder("Non ci sono piatti disponibili per la data ordierna");
+        sui.cfgResMenuCartaOut.setText(menus.toString());
     }
 
 
