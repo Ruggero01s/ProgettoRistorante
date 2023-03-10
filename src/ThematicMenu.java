@@ -1,15 +1,17 @@
-import java.text.ParseException;
 import java.util.ArrayList;
 
 public class ThematicMenu
 {
-	private String name;
-	private DateOur startPeriod,endPeriod;
-	private ArrayList <Dish> dishes;
-	private boolean seasonal,permanent;
-	private double workThematicMenuLoad;
+	private final String name; //nome del menu tematico
+	private final DateOur startPeriod; //inizio periodo di validità
+	private final DateOur endPeriod; //fine periodo di validità
+	private  ArrayList <Dish> dishes; //elenco dei piatti contenuti nel menu
+	private final boolean seasonal; //true se stagionale
+	private final boolean permanent; //true se permanente
+	private double workThematicMenuLoad; //workLoad del menu
 	
-	public ThematicMenu(String name, String startPeriod, String endPeriod, ArrayList<Dish> dishes, boolean seasonal, boolean permanent) throws ParseException {
+	public ThematicMenu(String name, String startPeriod, String endPeriod, ArrayList<Dish> dishes, boolean seasonal, boolean permanent)
+	{
 		this.name = name;
 		String[] startPezzi = startPeriod.split("/");
 		String[] endPezzi = endPeriod.split("/");
@@ -24,11 +26,6 @@ public class ThematicMenu
 	public String getName()
 	{
 		return name;
-	}
-	
-	public void setName(String name)
-	{
-		this.name = name;
 	}
 	
 	public DateOur getStartPeriod()
@@ -59,21 +56,28 @@ public class ThematicMenu
 		return permanent;
 	}
 	
+	/**
+	 * Calcola in automatico il workload del menu
+	 */
 	private void calcWorkThematicMenuLoad ()
 	{
 		this.workThematicMenuLoad=0;
 		for (Dish dish: dishes)
 			this.workThematicMenuLoad+=dish.getRecipe().getWorkLoadPortion();
 	}
-
-	public boolean equals(Object o) {
-		if (o == this) return true;
-		if (!(o instanceof ThematicMenu))
-		{
+	
+	/**
+	 * override dell'equals
+	 * @param obj oggetto da confrontare
+	 * @return true se i nomi sono uguali e sono entrambi dello stesso tipo, false altrimenti
+	 */
+	public boolean equals(Object obj) {
+		if (obj == this)
+			return true;
+		if (!(obj instanceof ThematicMenu))
 			return false;
-		}
 
-		ThematicMenu menu = (ThematicMenu) o;
+		ThematicMenu menu = (ThematicMenu) obj;
 
 		return this.name.equals(menu.getName());
 	}
@@ -84,10 +88,14 @@ public class ThematicMenu
 		result = 31 * result + name.hashCode();
 		return result;
 	}
-
+	/**
+	 * Controllo la validità di un menu
+	 * @param date data da controllare
+	 * @return true se il menu è valido nella date, false altrimenti
+	 */
 	public boolean isValid(DateOur date)
 	{
-		if(this.permanent)
+		if(this.permanent) //i piatti permanenti sono sempre validi
 			return true;
 		else
 		{
@@ -95,7 +103,6 @@ public class ThematicMenu
 				return date.bet(this.startPeriod,this.endPeriod);
 			else
 				return date.between(this.startPeriod, this.endPeriod);
-
 		}
 	}
 }

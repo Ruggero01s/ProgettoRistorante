@@ -1,6 +1,3 @@
 <?xml version="1.0" encoding="utf-8"?>
 <menus>
-	<menu name="Italia" startDate="01/01/2023" endDate="29/06/2023" seasonal="true" permanent="false">
-		<dish name="PastaCoTonno"></dish>
-		<dish name="Polpett"></dish></menu>
 </menus>

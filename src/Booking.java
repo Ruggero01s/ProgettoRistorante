@@ -2,10 +2,10 @@ import java.util.HashMap;
 
 public class Booking
 {
-    private String name;
-    private final int number;
-    private int workload;
-    private HashMap<Dish,Integer> order;
+    private final String name; //nome della prenotazione
+    private final int number; //coperti della prenotazione
+    private final int workload; //workload totale
+    private  HashMap<Dish,Integer> order; //insieme dei piatti ordinati con la relativa quantità
 
 
     public Booking(String name, int number, int workload, HashMap<Dish, Integer> order) {
@@ -30,8 +30,5 @@ public class Booking
     public String getName() {
         return name;
     }
-
-    public void setName(String name) {
-        this.name = name;
-    }
+    
 }

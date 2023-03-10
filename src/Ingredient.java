@@ -1,7 +1,8 @@
 public class Ingredient
 {
-	private String name,unit;
-	private double quantity;
+	private final String name; //nome dell'ingrediente
+	private final String unit; //unità di misura dell'ingrediente
+	private double quantity; //quantità dell'ingrediente
 	
 	public Ingredient(String name, String unit, double quantity)
 	{
@@ -13,11 +14,6 @@ public class Ingredient
 	public String getName()
 	{
 		return name;
-	}
-	
-	public void setName(String name)
-	{
-		this.name = name;
 	}
 	
 	public String getUnit()
@@ -35,21 +31,27 @@ public class Ingredient
 		this.quantity = quantity;
 	}
 	
-	
 	@Override
-	public int hashCode() {
+	public int hashCode()
+	{
 		int result = 11;
 		result = 31 * result + name.hashCode();
 		return result;
 	}
 	
-	public boolean equals(Object i) {
-		if (i == this) return true;
-		if (!(i instanceof Ingredient)) {
+	/**
+	 * override dell'equals
+	 * @param obj oggetto da controllare
+	 * @return true se i nomi sono uguali e sono entrambi dello stesso tipo, false altrimenti
+	 */
+	public boolean equals(Object obj)
+	{
+		if (obj == this)
+			return true;
+		if (!(obj instanceof Ingredient))
 			return false;
-		}
-		Ingredient ingredient = (Ingredient) i;
 		
+		Ingredient ingredient = (Ingredient) obj;
 		return this.name.equals(ingredient.getName());
 	}
 }

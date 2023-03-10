@@ -3,10 +3,10 @@ import java.util.Set;
 
 public class  Recipe
 {
-    private final String id;
-    private Set<Ingredient> ingredients;
-    private final int portions;
-    private final double workLoadPortion;
+    private final String id; //nome della ricetta
+    private Set<Ingredient> ingredients; //elenco d'ingredienti
+    private final int portions; //numero di porzioni
+    private final double workLoadPortion; //workload della ricetta per porzione
 
     public Recipe(String id, Set<Ingredient> ingredients, int portions, double workLoadPortion) {
         this.id = id;
@@ -33,14 +33,18 @@ public class  Recipe
         return workLoadPortion;
     }
     
-    public boolean equals(Object r) {
-        if (r == this) return true;
-        if (!(r instanceof Recipe)) {
+    /**
+     * override dell'equals
+     * @param obj oggetto da controllare
+     * @return true se i nomi sono uguali e sono entrambi dello stesso tipo, false altrimenti
+     */
+    public boolean equals(Object obj) {
+        if (obj == this)
+            return true;
+        if (!(obj instanceof Recipe))
             return false;
-        }
 
-        Recipe recipe = (Recipe) r;
-
+        Recipe recipe = (Recipe) obj;
         return this.id.equals((recipe.id));
     }
 
@@ -50,7 +54,12 @@ public class  Recipe
         result = 31 * result + id.hashCode();
         return result;
     }
-
+    
+    
+    /**
+     * toString della lista degli ingredienti
+     * @return string contenente tutti gli ingredienti
+     */
     public String getIngredientsList()
     {
         StringBuilder out= new StringBuilder();

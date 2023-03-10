@@ -3,7 +3,6 @@ import java.nio.charset.StandardCharsets;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.security.SecureRandom;
-import java.text.ParseException;
 import java.util.*;
 
 public class Controller {
@@ -23,9 +22,6 @@ public class Controller {
         model.setExtraFoodsMap(reader.readExtraFoods());
         model.setRecipesSet(reader.readRecipes());
         model.setDishesSet(reader.readDishes());
-        for (Dish d : model.getDishesSet()) {
-            model.getRecipesSet().add(d.getRecipe());
-        }
         model.setThematicMenusSet(reader.readThematicMenu());
         model.setBookingMap(reader.readBooking());
         model.setRegistro(reader.readRegister());
@@ -57,11 +53,8 @@ public class Controller {
                 model.setCapacity(0);
                 model.setWorkPersonLoad(0);
                 model.setIncrement(5);
-                try {
-                    model.setToday(new DateOur("01", "01", "1444"));
-                } catch (ParseException e) {
-                    throw new RuntimeException(e); //mai
-                }
+                model.setToday(new DateOur("01", "01", "1444"));
+               
                 Writer.writeConfigBase(model.getCapacity(), model.getWorkPersonLoad(), model.getToday(), model.getIncrement());
                 sui.cfgResBaseOut.setText("""
                         Capacità: 0
@@ -475,21 +468,35 @@ public class Controller {
     }
 
     public void updateRecipeStringList() {
-        String[] recipes = new String[model.getRecipesSet().size()];
-        int i = 0;
-        for (Recipe r : model.getRecipesSet()) {
-            recipes[i] = (r.getId() + " - " + "[" + r.getIngredientsList() + "] - p." + r.getPortions() + " - w." + r.getWorkLoadPortion());
-            i++;
+        
+        if(model.getRecipesSet().isEmpty() || (model.getRecipesSet() == null))
+        {
+            String [] noRecipe = {"Non ci sono ricette inserite"};
+            DefaultComboBoxModel<String> model = new DefaultComboBoxModel<>(noRecipe);
+            sui.cfgDishComboBox.setModel(model);
+            sui.cfgResRecipesOut.setText(noRecipe[0]);
+            sui.setRecipeList(noRecipe[0]);
         }
-        DefaultComboBoxModel<String> model = new DefaultComboBoxModel<>(recipes);
-        sui.cfgDishComboBox.setModel(model);
-
-        StringBuilder compactedArray = new StringBuilder();
-        for (String s : recipes) {
-            compactedArray.append(s).append("\n");
+        else
+        {
+            String[] recipes = new String[model.getRecipesSet().size()];
+            int i = 0;
+            for (Recipe recipe : model.getRecipesSet())
+            {
+                recipes[i] = (recipe.getId() + " - " + "[" + recipe.getIngredientsList() + "] - p." + recipe.getPortions() + " - w." + recipe.getWorkLoadPortion());
+                i++;
+            }
+            DefaultComboBoxModel<String> model = new DefaultComboBoxModel<>(recipes);
+            sui.cfgDishComboBox.setModel(model);
+    
+            StringBuilder compactedArray = new StringBuilder();
+            for (String s : recipes)
+            {
+                compactedArray.append(s).append("\n");
+            }
+            sui.cfgResRecipesOut.setText(compactedArray.toString().trim());
+            sui.setRecipeList(compactedArray.toString().trim());
         }
-        sui.cfgResRecipesOut.setText(compactedArray.toString().trim());
-        sui.setRecipeList(compactedArray.toString().trim());
     }
 
     //TODO fare i metodi con parametri che vengono da sui

@@ -1,15 +1,14 @@
-import java.text.ParseException;
-
 public class Dish
 {
-    private String name;
-    private final DateOur startPeriod;
-    private final DateOur endPeriod;
-    private Recipe recipe;
-    private final boolean seasonal;
-    private final boolean permanent;
+    private final String name; //nome del piatto
+    private final DateOur startPeriod; //inizio periodo di validità del piatto
+    private final DateOur endPeriod; //fine periodo di validità del piatto
+    private final Recipe recipe; //ricetta associata al piatto
+    private final boolean seasonal;// se un piatto è stagionale o no
+    private final boolean permanent; // se un piatto è permanente o no
 
-    public Dish(String name, Recipe recipe, String startPeriod, String endPeriod, boolean seasonal, boolean permanent) throws ParseException {
+    public Dish(String name, Recipe recipe, String startPeriod, String endPeriod, boolean seasonal, boolean permanent)
+    {
         this.name = name;
 
         String[] periodDateStart = startPeriod.split("/");
@@ -25,11 +24,7 @@ public class Dish
     public String getName() {
         return name;
     }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
+    
     public boolean isSeasonal() {
         return seasonal;
     }
@@ -50,13 +45,18 @@ public class Dish
         return recipe;
     }
     
-    public boolean equals(Object d) {
-        if (d == this) return true;
-        if (!(d instanceof Dish)) {
+    /**
+     * override dell'equals
+     * @param obj oggetto da controllare
+     * @return true se i nomi sono uguali e sono entrambi dello stesso tipo, false altrimenti
+     */
+    public boolean equals(Object obj) {
+        if (obj == this)
+            return true;
+        if (!(obj instanceof Dish))
             return false;
-        }
 
-        Dish dish = (Dish) d;
+        Dish dish = (Dish) obj;
 
         return this.name.equals(dish.getName());
     }
@@ -67,10 +67,15 @@ public class Dish
         result = 31 * result + name.hashCode();
         return result;
     }
-
+    
+    /**
+     * Controllo la validità di un piatto
+     * @param date data da controllare
+     * @return true se il piatto è valido nella date, false altrimenti
+     */
     public boolean isValid(DateOur date)
     {
-        if(this.permanent)
+        if(this.permanent) //se è permanente è sempre valido
             return true;
         else
         {
@@ -78,7 +83,6 @@ public class Dish
                 return date.bet(this.startPeriod,this.endPeriod);
             else
                 return date.between(this.startPeriod, this.endPeriod);
-
         }
     }
 }
