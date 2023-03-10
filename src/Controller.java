@@ -307,7 +307,7 @@ public class Controller {
             if (inputName.equals(Model.CLEAR))
                 throw new NumberFormatException("");
 
-            String inputRecipe = ((String) Objects.requireNonNull(sui.cfgDishComboBox.getSelectedItem())).split("-")[0].trim(); //todo sto robo
+            String inputRecipe = sui.cfgDishComboBox.getSelectedItem().toString().split("-")[0].trim(); //todo sto robo
 
             String inputStartDate = sui.cfgDishSDateInput.getText();
             String inputEndDate = sui.cfgDishEDateInput.getText();
@@ -721,17 +721,14 @@ public class Controller {
         // If there is no capacity or workload available, set an error message and return false
         if (model.getBookingMap().containsKey(date))
         {
+            day = new ArrayList<>(model.getBookingMap().get(date));
             // If there are existing bookings for the date, calculate the total capacity and workload based on all bookings for the date
             for (Booking b : day) {
                 capacity += b.getNumber();
                 work += b.getWorkload();
             }
-            // Check if the restaurant has capacity and workload available to add the new booking
         }
-        else //todo sto robo non ha senso
-        {
-            // If there are no existing bookings for the date, check if the restaurant has capacity and workload available to add the new booking
-        }
+        // Check if the restaurant has capacity and workload available to add the new booking
         if (capacity <= model.getCapacity() && work <= model.getWorkResturantLoad()) {
             // If there is capacity and workload available, create a new Booking object and add it to the ArrayList for the date
             day.add(new Booking(name, number, workload, order));
