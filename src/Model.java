@@ -17,7 +17,18 @@ public class Model {
     private HashMap<DateOur,ArrayList<Booking>>  bookingMap = new HashMap<>();
     private Set<Ingredient> registroAfterMeal = new HashSet<>();
     private Set<Ingredient> registro = new HashSet<>();
-
+    private ArrayList<User> users = new ArrayList<>();
+    
+    public ArrayList<User> getUsers()
+    {
+        return users;
+    }
+    
+    public void setUsers(ArrayList<User> users)
+    {
+        this.users = users;
+    }
+    
     public Set<Ingredient> getRegistroAfterMeal() {
         return registroAfterMeal;
     }

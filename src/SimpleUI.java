@@ -7,6 +7,7 @@ import java.util.Objects;
 public class SimpleUI extends JFrame {
     // Enum for the different states of the frame
     private enum State {
+        PASSWORD,
         LOGIN,
         MANAGER,
         EMPLOYEE,
@@ -26,11 +27,11 @@ public class SimpleUI extends JFrame {
 
     private final int HEIGHT = 400;
     //GENERAL
-    JButton managerButton = new JButton("Manager");
-    JButton employeeButton = new JButton("Employee");
-    JButton warehouseWorkerButton = new JButton("Warehouse Worker");
-    JPanel loginPanel = new JPanel(new GridBagLayout());
-    JTabbedPane cfgTabbedPane = new JTabbedPane();
+    private JButton managerButton = new JButton("Manager");
+    private JButton employeeButton = new JButton("Employee");
+    private JButton warehouseWorkerButton = new JButton("Warehouse Worker");
+    private JPanel loginPanel = new JPanel(new GridBagLayout());
+    private JTabbedPane cfgTabbedPane = new JTabbedPane();
     JLabel titleText = new JLabel("Title");
     private GridBagConstraints c = new GridBagConstraints();
     private GridBagConstraints titlePadding = new GridBagConstraints();
@@ -55,7 +56,30 @@ public class SimpleUI extends JFrame {
     JButton buttonBack11 = new JButton("Back");
     JButton buttonBack12 = new JButton("Back");
     JButton buttonBack13 = new JButton("Back");
-
+    JButton buttonBack14 = new JButton("Back");
+    JButton buttonBack15 = new JButton("Back");
+    
+    //------------------------------------------------------------------------------------------
+    //PASSWORD
+    private JTabbedPane passTabbedPane = new JTabbedPane();
+    private JPanel passLoginPanel = new JPanel(new GridBagLayout());
+    private JPanel passSavePanel = new JPanel(new GridBagLayout());
+    private JLabel passLoginTitle= new JLabel("Inserisci username e password per accedere");
+    private JLabel passLoginUserLabel = new JLabel("Inserisci username: ");
+    JTextArea passLoginUserText = new JTextArea();
+    private JLabel passLoginPasswordLabel = new JLabel("Inserisci password: ");
+    JPasswordField passLoginPasswordField = new JPasswordField();
+    private JButton passLoginButton = new JButton("Login");
+    private JLabel passSaveTitle= new JLabel("Creazione nuovo utente");
+    private JLabel passSaveUsernameLabel = new JLabel("Inserisci username: ");
+    JTextArea passSaveUserText = new JTextArea();
+    private JLabel passSavePasswordLabel = new JLabel("Inserisci password: ");
+    JPasswordField passSavePasswordField = new JPasswordField();
+    private JLabel passSavePassword2Label = new JLabel("conferma password: ");
+    JPasswordField passSavePassword2Field = new JPasswordField();
+    
+    private JButton passSaveButton = new JButton("Save");
+    
     //------------------------------------------------------------------------------------------
     //CONFIG_BASE
     JLabel cfgBaseText = new JLabel("Inserisci dati ristorante:");
@@ -295,6 +319,10 @@ public class SimpleUI extends JFrame {
         state = State.LOGIN;
         updateUI();
     };
+    ActionListener backToLogin = e -> {
+        state = State.PASSWORD;
+        updateUI();
+    };
 
     public void init() {
         c.insets = new Insets(5, 5, 5, 5); // Top, left, bottom, right padding
@@ -302,16 +330,75 @@ public class SimpleUI extends JFrame {
         endPadding.insets = new Insets(20, 5, 0, 5);
         c.fill = GridBagConstraints.HORIZONTAL;
         endPadding.fill = GridBagConstraints.HORIZONTAL;
-
+    
+        passInit();
         logInit();
         cfgInit();
         empInit();
         wareInit();
         // Set the initial state
-        state = State.LOGIN;
+        state = State.PASSWORD;
         updateUI();
     }
 
+    private void passInit()
+    {
+       
+        
+        c.gridx = 0;
+        c.gridy = 0;
+        passLoginPanel.add(passLoginTitle, c);
+        c.gridx = 0;
+        c.gridy = 1;
+        passLoginPanel.add(passLoginUserLabel, c);
+        c.gridx = 1;
+        c.gridy = 1;
+        passLoginPanel.add(passLoginUserText, c);
+        c.gridx = 0;
+        c.gridy = 2;
+        passLoginPanel.add(passLoginPasswordLabel, c);
+        c.gridx = 1;
+        c.gridy = 2;
+        passLoginPanel.add(passLoginPasswordField, c);
+        c.gridx = 0;
+        c.gridy = 3;
+        passLoginPanel.add(buttonBack14, c);
+        c.gridx = 2;
+        c.gridy = 3;
+        passLoginPanel.add(passLoginButton, c);
+        
+        c.gridx = 0;
+        c.gridy = 0;
+        passSavePanel.add(passSaveTitle,c);
+        c.gridx = 0;
+        c.gridy = 1;
+        passSavePanel.add(passSaveUsernameLabel,c);
+        c.gridx = 1;
+        c.gridy = 1;
+        passSavePanel.add(passSaveUserText,c);
+        c.gridx = 0;
+        c.gridy = 2;
+        passSavePanel.add(passSavePasswordLabel,c);
+        c.gridx = 1;
+        c.gridy = 2;
+        passSavePanel.add(passSavePasswordField,c);
+        c.gridx = 0;
+        c.gridy = 3;
+        passSavePanel.add(passSavePassword2Label,c);
+        c.gridx = 1;
+        c.gridy = 3;
+        passSavePanel.add(passSavePassword2Field,c);
+        //todo buttons
+        c.gridx = 0;
+        c.gridy = 5;
+        passSavePanel.add(buttonBack15,c);
+        c.gridx = 2;
+        c.gridy = 5;
+        passSavePanel.add(passSaveButton,c);
+        
+        passTabbedPane.addTab("Login",passLoginPanel);
+        passTabbedPane.addTab("Sign Up", passSavePanel);
+    }
     private void logInit() {
         // Add the UI components to the login panel
         c.gridx = 0;
@@ -1054,14 +1141,13 @@ public class SimpleUI extends JFrame {
         getContentPane().removeAll();
 
         // Add the appropriate components based on the current state
-        if (state == State.LOGIN) {
-            getContentPane().add(loginPanel);
-        } else if (state == State.MANAGER) {
-            getContentPane().add(cfgTabbedPane);
-        } else if (state == State.EMPLOYEE) {
-            getContentPane().add(empTabbedPane);
-        } else if (state == State.WAREHOUSE_WORKER) {
-            getContentPane().add(wareTabbedPane);
+        switch (state)
+        {
+            case PASSWORD -> getContentPane().add(passTabbedPane);
+            case LOGIN -> getContentPane().add(loginPanel);
+            case MANAGER -> getContentPane().add(cfgTabbedPane);
+            case EMPLOYEE -> getContentPane().add(empTabbedPane);
+            case WAREHOUSE_WORKER -> getContentPane().add(wareTabbedPane);
         }
 
         // Refresh the frame

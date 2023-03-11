@@ -18,33 +18,34 @@ public class Reader
 		this.ctrl = ctrl;
 	}
 	
-	public ArrayList<Person> readPeople()
+	public ArrayList<User> readPeople()
 	{
 		XMLInputFactory xmlif;
 		XMLStreamReader xmlr;
 		
-		ArrayList<Person> listP = new ArrayList<>();
+		ArrayList<User> listP = new ArrayList<>();
 		
 		try
 		{
 			xmlif = XMLInputFactory.newInstance();
-			xmlr = xmlif.createXMLStreamReader(new FileInputStream(Writer.ROOT + Writer.PEOPLE_NAME_FILE));
+			xmlr = xmlif.createXMLStreamReader(new FileInputStream(Writer.ROOT + Writer.USERS_NAME_FILE));
 			while (xmlr.hasNext())
 			{ // continua a leggere finche ha eventi a disposizione
 				boolean manager, employee, storageWorker;
-				String name;
+				String name,password;
 				if (xmlr.getEventType() == XMLStreamConstants.START_ELEMENT) // inizio di un elemento
 				{
 					if (xmlr.getLocalName().equals("person"))
 					{
 						name = xmlr.getAttributeValue(0);
-						String mana = xmlr.getAttributeValue(1);
-						String empl = xmlr.getAttributeValue(2);
-						String stor = xmlr.getAttributeValue(3);
+						password = xmlr.getAttributeValue(1);
+						String mana = xmlr.getAttributeValue(2);
+						String empl = xmlr.getAttributeValue(3);
+						String stor = xmlr.getAttributeValue(4);
 						manager = mana.equals("true");
 						employee = empl.equals("true");
 						storageWorker = stor.equals("true");
-						listP.add(new Person(name, manager, employee, storageWorker));
+						listP.add(new User(name, password, manager, employee, storageWorker));
 					}
 				}
 				xmlr.next();
@@ -52,7 +53,7 @@ public class Reader
 		}
 		catch (Exception e)
 		{
-			System.out.println(ERRORE + Writer.PEOPLE_NAME_FILE);
+			System.out.println(ERRORE + Writer.USERS_NAME_FILE);
 			System.out.println(e.getMessage());
 		}
 		return listP;

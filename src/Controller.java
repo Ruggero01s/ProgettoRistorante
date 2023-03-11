@@ -16,7 +16,9 @@ public class Controller {
         sui.init();
     }
 
-    private void loadModel() {
+    private void loadModel()
+    {
+        model.setUsers(reader.readPeople());
         reader.readConfig(model);
         model.setDrinksMap(reader.readDrinks());
         model.setExtraFoodsMap(reader.readExtraFoods());

@@ -6,7 +6,7 @@ import java.util.*;
 public class Writer
 {
 	public static final String ROOT = "saves/";
-	public static final String PEOPLE_NAME_FILE = "people.xml";
+	public static final String USERS_NAME_FILE = "users.xml";
 	public static final String CONFIG_NAME_FILE = "config.xml";
 	public static final String DRINKS_NAME_FILE = "drinks.xml";
 	public static final String EXTRA_FOODS_NAME_FILE = "extraFoods.xml";
@@ -20,29 +20,30 @@ public class Writer
 	private static final String SALUTO = "\nOutput generato correttamente, arrivederci";
 	private static final String ERRORE = "\nErrore nel writer: ";
 	
-	public static void writePeople(ArrayList<Person> people)
+	public static void writePeople(ArrayList<User> people)
 	{
 		XMLOutputFactory xmlof;
 		XMLStreamWriter xmlw;
 		try
 		{
 			xmlof = XMLOutputFactory.newInstance();
-			xmlw = xmlof.createXMLStreamWriter(new FileOutputStream(ROOT + PEOPLE_NAME_FILE), "utf-8");
+			xmlw = xmlof.createXMLStreamWriter(new FileOutputStream(ROOT + USERS_NAME_FILE), "utf-8");
 			xmlw.writeStartDocument("utf-8", "1.0");
 			xmlw.writeCharacters("\n");
-			xmlw.writeStartElement("people"); // scrittura del tag radice <people>
-			for (Person p : people)
+			xmlw.writeStartElement("users"); // scrittura del tag radice <users>
+			for (User p : people)
 			{
 				xmlw.writeCharacters("\n\t");
-				xmlw.writeStartElement("person");
+				xmlw.writeStartElement("user");
 				xmlw.writeAttribute("name", p.getName());
+				xmlw.writeAttribute("password", p.getPassword());
 				xmlw.writeAttribute("manager", String.valueOf(p.isManager()));
 				xmlw.writeAttribute("employee", String.valueOf(p.isEmployee()));
 				xmlw.writeAttribute("storageWorker", String.valueOf(p.isStorageWorker()));
-				xmlw.writeEndElement(); // </person>
+				xmlw.writeEndElement(); // </user>
 			}
 			xmlw.writeCharacters("\n");
-			xmlw.writeEndElement();//</people>
+			xmlw.writeEndElement();//</users>
 			xmlw.writeEndDocument(); // scrittura della fine del documento
 			xmlw.flush(); // svuota il buffer e procede alla scrittura
 			xmlw.close(); // chiusura del documento e delle risorse impiegate
