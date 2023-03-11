@@ -18,6 +18,27 @@ public class Model {
     private Set<Ingredient> registroAfterMeal = new HashSet<>();
     private Set<Ingredient> registro = new HashSet<>();
     private ArrayList<User> users = new ArrayList<>();
+    private User theUser;
+    
+    public User getTheUser()
+    {
+        return theUser;
+    }
+    
+    public double getWorkloadRestaurant()
+    {
+        return workloadRestaurant;
+    }
+    
+    public void setWorkloadRestaurant(double workloadRestaurant)
+    {
+        this.workloadRestaurant = workloadRestaurant;
+    }
+    
+    public void setTheUser(User theUser)
+    {
+        this.theUser = theUser;
+    }
     
     public ArrayList<User> getUsers()
     {

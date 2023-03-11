@@ -35,7 +35,7 @@ public class Reader
 				String name,password;
 				if (xmlr.getEventType() == XMLStreamConstants.START_ELEMENT) // inizio di un elemento
 				{
-					if (xmlr.getLocalName().equals("person"))
+					if (xmlr.getLocalName().equals("user"))
 					{
 						name = xmlr.getAttributeValue(0);
 						password = xmlr.getAttributeValue(1);

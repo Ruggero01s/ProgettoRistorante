@@ -343,7 +343,6 @@ public class SimpleUI extends JFrame {
 
     private void passInit()
     {
-       
         
         c.gridx = 0;
         c.gridy = 0;
@@ -360,10 +359,7 @@ public class SimpleUI extends JFrame {
         c.gridx = 1;
         c.gridy = 2;
         passLoginPanel.add(passLoginPasswordField, c);
-        c.gridx = 0;
-        c.gridy = 3;
-        passLoginPanel.add(buttonBack14, c);
-        c.gridx = 2;
+        c.gridx = 1;
         c.gridy = 3;
         passLoginPanel.add(passLoginButton, c);
         
@@ -389,15 +385,18 @@ public class SimpleUI extends JFrame {
         c.gridy = 3;
         passSavePanel.add(passSavePassword2Field,c);
         //todo buttons
-        c.gridx = 0;
-        c.gridy = 5;
-        passSavePanel.add(buttonBack15,c);
-        c.gridx = 2;
+        c.gridx = 1;
         c.gridy = 5;
         passSavePanel.add(passSaveButton,c);
         
         passTabbedPane.addTab("Login",passLoginPanel);
         passTabbedPane.addTab("Sign Up", passSavePanel);
+        passSaveButton.addActionListener(e -> {
+            ctrl.saveUser();
+        });
+        passLoginButton.addActionListener(e ->{
+            ctrl.login();
+        });
     }
     private void logInit() {
         // Add the UI components to the login panel
@@ -416,19 +415,39 @@ public class SimpleUI extends JFrame {
         c.gridx = 2;
         c.gridy = 1;
         loginPanel.add(warehouseWorkerButton, c);
+    
+        c.gridx = 1;
+        c.gridy = 2;
+        loginPanel.add(buttonBack14, c);
 
         managerButton.addActionListener(e -> {
-            state = State.MANAGER;
-            updateUI();
+            if(ctrl.checkPermission("manager"))
+            {
+                state = State.MANAGER;
+                updateUI();
+            }
+            else
+                errorSetter("invalidPermission");
         });
         employeeButton.addActionListener(e -> {
-            state = State.EMPLOYEE;
-            updateUI();
+            if(ctrl.checkPermission("employee"))
+            {
+                state = State.EMPLOYEE;
+                updateUI();
+            }
+            else
+                errorSetter("invalidPermission");
         });
         warehouseWorkerButton.addActionListener(e -> {
-            state = State.WAREHOUSE_WORKER;
-            updateUI();
+            if(ctrl.checkPermission("warehouse worker"))
+            {
+                state = State.WAREHOUSE_WORKER;
+                updateUI();
+            }
+            else
+                errorSetter("invalidPermission");
         });
+        buttonBack14.addActionListener(backToLogin);
     }
 
     private void cfgInit() {
@@ -1154,6 +1173,12 @@ public class SimpleUI extends JFrame {
         getContentPane().revalidate();
         getContentPane().repaint();
     }
+    
+    public void login()
+    {
+        state=State.LOGIN;
+        updateUI();
+    }
 
     public void errorSetter(String code) {
         switch (code)
@@ -1203,6 +1228,12 @@ public class SimpleUI extends JFrame {
             case "orderForTooLittle" ->
                     JOptionPane.showMessageDialog(getContentPane(), "Deve esserci almeno un piatto o menù per persona",
                             "Err", JOptionPane.ERROR_MESSAGE);
+            case "passwordFailed" -> JOptionPane.showMessageDialog(getContentPane(), "Password non corretta",
+                    "Err", JOptionPane.ERROR_MESSAGE);
+            case "invalidUsername" -> JOptionPane.showMessageDialog(getContentPane(), "Username non corretto",
+                    "Err", JOptionPane.ERROR_MESSAGE);
+            case "invalidPermission" -> JOptionPane.showMessageDialog(getContentPane(), "Non hai i permessi per entrare in questa finestra",
+                    "Err", JOptionPane.ERROR_MESSAGE);
             default -> JOptionPane.showMessageDialog(getContentPane(), "Errore",
                     "Err", JOptionPane.ERROR_MESSAGE);
         }

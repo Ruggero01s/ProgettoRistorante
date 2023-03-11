@@ -1107,7 +1107,99 @@ public class Controller {
     //metodi che ci serviranno più tardi
 
     // The pepper to use for hashing the password
-    private static final String PEPPER = "testPepper";
+    
+    public void saveUser()
+    {
+        String name = sui.passSaveUserText.getText().trim();
+        String password = Arrays.toString(sui.passSavePasswordField.getPassword()).trim();
+        if (!name.isEmpty() && !password.isEmpty())
+        {
+            boolean doppler = false;
+            if(model.getUsers().size()==0)
+            {
+                for (User user : model.getUsers())
+                {
+                    if (user.getName().equals(name))
+                    {
+                        sui.errorSetter("invalidUsername");
+                        doppler = true;
+                        break;
+                    }
+                }
+            }
+            if(!doppler)
+            {
+                if (password.equals(Arrays.toString(sui.passSavePassword2Field.getPassword()).trim()))
+                {
+                    boolean manager = true, employee = true, storageWorker = true; //todo prenderlo dai pulsanti
+                    User user = new User(name, password, manager, employee, storageWorker);
+                    user.hashAndSaltPassword();
+                    model.getUsers().add(user);
+                    Writer.writePeople(model.getUsers());
+                    sui.passSaveUserText.setText(Model.CLEAR);
+                    sui.passSavePasswordField.setText(Model.CLEAR);
+                    sui.passSavePassword2Field.setText(Model.CLEAR);
+                }
+                else
+                    sui.errorSetter("passwordFailed");
+            }
+        }
+        else
+            sui.errorSetter("NumberFormatException");
+    }
+    
+    public void login()
+    {
+        String name = sui.passLoginUserText.getText().trim();
+        String password = Arrays.toString(sui.passLoginPasswordField.getPassword()).trim();
+        if (!name.isEmpty() && !password.isEmpty())
+        {
+            boolean found = false;
+            for (User user :model.getUsers())
+            {
+                if(user.getName().equals(name))
+                {
+                    found = true;
+                    if(user.checkPassword(password))
+                    {
+                        sui.login();
+                        model.setTheUser(user);
+                        sui.passLoginPasswordField.setText(Model.CLEAR);
+                        sui.passLoginUserText.setText(Model.CLEAR);
+                    }
+                    else
+                        sui.errorSetter("passwordFailed");
+                    break;
+                }
+            }
+            if(!found)
+                sui.errorSetter("invalidUsername");
+        }
+        else
+            sui.errorSetter("NumberFormatException");
+    }
+    
+    public boolean checkPermission (String role)
+    {
+        switch (role)
+        {
+            case "manager" -> {
+                return model.getTheUser().isManager();
+            }
+            case "employee" -> {
+                return model.getTheUser().isEmployee();
+            }
+            case "warehouse worker" -> {
+                return model.getTheUser().isStorageWorker();
+            }
+            default -> {
+            return false;
+        }
+        }
+    }
+    
+    
+   
 
     /**
      * Hashes and peppers the given password using SHA-256.
@@ -1116,16 +1208,13 @@ public class Controller {
      * @return the hashed and peppered password as a Base64-encoded string
      * @throws NoSuchAlgorithmException if the SHA-256 algorithm is not supported by the system
      */
-    public static String hashAndPepperPassword(String password) throws NoSuchAlgorithmException {
+    public static String hashAndPepperPassword(String password) throws NoSuchAlgorithmException
+    {
         // Generate a random salt for the password hash
         byte[] salt = generateSalt();
-
         // Add the pepper to the password
-        String pepperedPassword = password + PEPPER;
-
         // Hash the peppered password using SHA-256 and the salt
-        byte[] hashedPassword = hashPassword(pepperedPassword.getBytes(), salt);
-
+        byte[] hashedPassword = hashPassword(password.getBytes(), salt);
         // Encode the hashed password and salt as Base64 and return the result
         return Base64.getEncoder().encodeToString(hashedPassword) + ":" + Base64.getEncoder().encodeToString(salt);
     }
@@ -1174,8 +1263,7 @@ public class Controller {
         byte[] salt = Base64.getDecoder().decode(parts[1]);
 
         // Add the pepper to the password and hash it with the salt
-        String pepperedPassword = password + PEPPER;
-        byte[] hashedPepperedPassword = hashPassword(pepperedPassword.getBytes(StandardCharsets.UTF_8), salt);
+        byte[] hashedPepperedPassword = hashPassword(password.getBytes(StandardCharsets.UTF_8), salt);
 
         // Compare the hashed peppered password to the stored hash
         return MessageDigest.isEqual(hashedData, hashedPepperedPassword);
