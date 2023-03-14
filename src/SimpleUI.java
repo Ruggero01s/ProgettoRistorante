@@ -1183,7 +1183,7 @@ public class SimpleUI extends JFrame {
     public void errorSetter(String code) {
         switch (code)
         {
-            case "minZero" -> JOptionPane.showMessageDialog(getContentPane(), "Numero inserito < 0",
+            case "minZero" -> JOptionPane.showMessageDialog(getContentPane(), "Numero inserito < 0", //todo costanti con gli errori
                     "Err", JOptionPane.ERROR_MESSAGE);
             case "NumberFormatException" -> JOptionPane.showMessageDialog(getContentPane(), "Formato incorretto",
                     "Err", JOptionPane.ERROR_MESSAGE);

@@ -24,35 +24,18 @@ public class User
         return password;
     }
     
-    public void setPassword(String password)
-    {
-        this.password = password;
-    }
-    
     public boolean isManager() {
         return manager;
     }
-
-    public void setManager(boolean manager) {
-        this.manager = manager;
-    }
-
+    
     public boolean isEmployee() {
         return employee;
     }
-
-    public void setEmployee(boolean employee) {
-        this.employee = employee;
-    }
-
+    
     public boolean isStorageWorker() {
         return storageWorker;
     }
-
-    public void setStorageWorker(boolean storageWorker) {
-        this.storageWorker = storageWorker;
-    }
-
+    
     public String getName() {
         return name;
     }
@@ -62,24 +45,19 @@ public class User
     }
     
     /**
-     * Hashes and salt the given password using SHA-256.
-     *
+     * applico hash e sale alla password
      */
     public void hashAndSaltPassword()
     {
-        // Generate a random salt for the password hash
-        byte[] salt = generateSalt();
-        // Hash the password using SHA-256 and the salt
+        byte[] salt = generateSalt(); //genero il sale
         byte[] hashedPassword;
         hashedPassword = hashPassword(this.password.getBytes(), salt);
-        // Encode the hashed password and salt as Base64 and return the result
         this.password= Base64.getEncoder().encodeToString(hashedPassword) + ":" + Base64.getEncoder().encodeToString(salt);
     }
     
     /**
-     * Generates a random salt for use in password hashing.
-     *
-     * @return the salt as a byte array
+     * Genera un sale casuale per le password
+     * @return il sale come array di bite
      */
     private byte[] generateSalt()
     {
@@ -90,11 +68,11 @@ public class User
     }
     
     /**
-     * Hashes the given data using SHA-256 and the given salt.
+     * hasho la password utilizzando SHA-256 ed il sale che viene passato
      *
-     * @param pass the data to hash
-     * @param salt the salt to use for hashing
-     * @return the hashed data as a byte array
+     * @param pass password da hashare
+     * @param salt il sale
+     * @return password hashata
      */
     private byte[] hashPassword(byte[] pass, byte[] salt)
     {
@@ -112,27 +90,20 @@ public class User
     }
     
     /**
-     * Checks if the given password matches the hashed and peppered password.
+     * La strina in ingresso viene hashata e paragonata alla password salvata
      *
-     * @param password       the password to check
-     * @return true if the passwords match, false otherwise
+     * @param password       stringa da checkare
+     * @return true se coincidono, false altrimenti
      */
     public boolean checkPassword(String password)
     {
-        // Split the hashed password and salt
-        String[] parts = this.password.split(":");
-        /*if (parts.length != 2)
-        {
-            return false;
-        }*/
+        String[] parts = this.password.split(":"); //separo password e sale
         byte[] hashedData = Base64.getDecoder().decode(parts[0]);
         byte[] salt = Base64.getDecoder().decode(parts[1]);
         
-        //  hash it with the salt
-        byte[] hashedPepperedPassword = hashPassword(password.getBytes(StandardCharsets.UTF_8), salt);
-        
-        // Compare the hashed password to the stored hash
-        return MessageDigest.isEqual(hashedData, hashedPepperedPassword);
+        byte[] hashedPepperedPassword = hashPassword(password.getBytes(StandardCharsets.UTF_8), salt); //hasho la stringa in ingresso
+       
+        return MessageDigest.isEqual(hashedData, hashedPepperedPassword); //paragono password e stringa
     }
     
 }
