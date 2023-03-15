@@ -1284,40 +1284,36 @@ public class Controller
 	{
 		String name = sui.passSaveUserText.getText().trim();
 		String password = Arrays.toString(sui.passSavePasswordField.getPassword()).trim();
-		if (!name.isEmpty() && !password.isEmpty())
-		{
-			boolean doppler = false;
-			if (model.getUsers().size() == 0)
-			{
-				for (User user : model.getUsers())
-				{
-					if (user.getName().equals(name))
-					{
-						sui.errorSetter("invalidUsername");
-						doppler = true;
-						break;
-					}
-				}
-			}
-			if (!doppler)
-			{
-				if (password.equals(Arrays.toString(sui.passSavePassword2Field.getPassword()).trim()))
-				{
-					boolean manager = true, employee = true, storageWorker = true; //todo prenderlo dai pulsanti
-					User user = new User(name, password, manager, employee, storageWorker);
-					user.hashAndSaltPassword();
-					model.getUsers().add(user);
-					Writer.writePeople(model.getUsers());
-					sui.passSaveUserText.setText(Model.CLEAR);
-					sui.passSavePasswordField.setText(Model.CLEAR);
-					sui.passSavePassword2Field.setText(Model.CLEAR);
-				}
-				else
-					sui.errorSetter("passwordFailed");
-			}
-		}
-		else
-			sui.errorSetter("NumberFormatException");
+        boolean manager = sui.passManCheck.isSelected(), employee = sui.passEmpCheck.isSelected(), storageWorker = sui.passWareCheck.isSelected();
+        if(manager || employee || storageWorker)
+        {
+            if (!name.isBlank() && !password.isBlank()) {
+                boolean doppler = false;
+                if (model.getUsers().size() == 0) {
+                    for (User user : model.getUsers()) {
+                        if (user.getName().equals(name)) {
+                            sui.errorSetter("invalidUsername");
+                            doppler = true;
+                            break;
+                        }
+                    }
+                }
+                if (!doppler) {
+                    if (password.equals(Arrays.toString(sui.passSavePassword2Field.getPassword()).trim())) {
+                        User user = new User(name, password, manager, employee, storageWorker);
+                        user.hashAndSaltPassword();
+                        model.getUsers().add(user);
+                        Writer.writePeople(model.getUsers());
+                        sui.passSaveUserText.setText(Model.CLEAR);
+                        sui.passSavePasswordField.setText(Model.CLEAR);
+                        sui.passSavePassword2Field.setText(Model.CLEAR);
+                    } else
+                        sui.errorSetter("passwordFailed");
+                }
+            } else
+                sui.errorSetter("NumberFormatException");
+        } else
+            sui.errorSetter("notEnoughRoles");
 	}
 	
 	public void login()

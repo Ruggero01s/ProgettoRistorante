@@ -77,7 +77,11 @@ public class SimpleUI extends JFrame {
     JPasswordField passSavePasswordField = new JPasswordField();
     private JLabel passSavePassword2Label = new JLabel("conferma password: ");
     JPasswordField passSavePassword2Field = new JPasswordField();
-    
+
+    JCheckBox passManCheck = new JCheckBox("Manager");
+    JCheckBox passEmpCheck = new JCheckBox("Employee");
+    JCheckBox passWareCheck = new JCheckBox("Warehouse Worker");
+
     private JButton passSaveButton = new JButton("Save");
     
     //------------------------------------------------------------------------------------------
@@ -385,10 +389,20 @@ public class SimpleUI extends JFrame {
         c.gridy = 3;
         passSavePanel.add(passSavePassword2Field,c);
         //todo buttons
+        c.gridx = 0;
+        c.gridy = 4;
+        passSavePanel.add(passManCheck,c);
+        c.gridx = 1;
+        c.gridy = 4;
+        passSavePanel.add(passEmpCheck,c);
+        c.gridx = 2;
+        c.gridy = 4;
+        passSavePanel.add(passWareCheck,c);
         c.gridx = 1;
         c.gridy = 5;
         passSavePanel.add(passSaveButton,c);
-        
+
+
         passTabbedPane.addTab("Login",passLoginPanel);
         passTabbedPane.addTab("Sign Up", passSavePanel);
         passSaveButton.addActionListener(e -> {
@@ -1231,6 +1245,8 @@ public class SimpleUI extends JFrame {
             case "passwordFailed" -> JOptionPane.showMessageDialog(getContentPane(), "Password non corretta",
                     "Err", JOptionPane.ERROR_MESSAGE);
             case "invalidUsername" -> JOptionPane.showMessageDialog(getContentPane(), "Username non corretto",
+                    "Err", JOptionPane.ERROR_MESSAGE);
+            case "notEnoughRoles" -> JOptionPane.showMessageDialog(getContentPane(), "Seleziona almeno un ruolo",
                     "Err", JOptionPane.ERROR_MESSAGE);
             case "invalidPermission" -> JOptionPane.showMessageDialog(getContentPane(), "Non hai i permessi per entrare in questa finestra",
                     "Err", JOptionPane.ERROR_MESSAGE);
