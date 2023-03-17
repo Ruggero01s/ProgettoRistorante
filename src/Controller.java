@@ -328,8 +328,8 @@ public class Controller
 	}
 	
 	/**
-	 *Converto e checko la validità delle unità
-	 * @param unit unita d'ingresso
+	 * Converto e checko la validità delle unità
+	 * @param unit     unita d'ingresso
 	 * @param quantity quantità da convertire
 	 * @return quantità convertita
 	 */
@@ -524,14 +524,20 @@ public class Controller
 		if (Integer.parseInt(pezzi[2]) <= 0) //se anno minore di 0 errore
 			return false;
 		return switch (Integer.parseInt(pezzi[1])) //controllo mesi e giorni
-		{
-			case 1, 3, 5, 7, 8, 10, 12 -> (Integer.parseInt(pezzi[0]) <= 31 || Integer.parseInt(pezzi[0]) > 0);
-			case 2 -> (Integer.parseInt(pezzi[0]) <= 29 || Integer.parseInt(pezzi[0]) > 0);
-			case 4, 6, 9, 11 -> (Integer.parseInt(pezzi[0]) <= 30 || Integer.parseInt(pezzi[0]) > 0);
-			default ->  false;
-		};
+				{
+					case 1, 3, 5, 7, 8, 10, 12 -> (Integer.parseInt(pezzi[0]) <= 31 || Integer.parseInt(pezzi[0]) > 0);
+					case 2 -> (Integer.parseInt(pezzi[0]) <= 29 || Integer.parseInt(pezzi[0]) > 0);
+					case 4, 6, 9, 11 -> (Integer.parseInt(pezzi[0]) <= 30 || Integer.parseInt(pezzi[0]) > 0);
+					default -> false;
+				};
 	}
 	
+	/**
+	 * Metodo che riceve in ingresso una stringa
+	 * contenente piatti e la trasforma in un array list
+	 * @param list stringa di piatti
+	 * @return Array list di piatti
+	 */
 	public ArrayList<Dish> stringListToDishList(ArrayList<String> list)
 	{
 		ArrayList<Dish> dishes = new ArrayList<>();
@@ -546,6 +552,10 @@ public class Controller
 		return dishes;
 	}
 	
+	/**
+	 * Metodo che aggiorna la GUI scrivendo in output
+	 * tutti i menu tematici con i relativi dati
+	 */
 	public void updateMenuOut()
 	{
 		StringBuilder out = new StringBuilder();
@@ -557,6 +567,11 @@ public class Controller
 		sui.setMenuList(out.toString().trim());
 	}
 	
+	/**
+	 * Metodo che trasforma una stringa in una ricetta
+	 * @param id ricetta in forma di stringa
+	 * @return ricetta
+	 */
 	public Recipe stringToRecipe(String id)
 	{
 		for (Recipe r : model.getRecipesSet())
@@ -564,13 +579,16 @@ public class Controller
 			if (r.getId().equals(id))
 				return r;
 		}
+		sui.errorSetter("errore"); //errore generico
 		return null; //non dovrebbe succedere
 	}
 	
+	/**
+	 * Metodo che serve per aggiornare le ricette nella GUI
+	 */
 	public void updateRecipeStringList()
 	{
-		
-		if (model.getRecipesSet().isEmpty() || (model.getRecipesSet() == null))
+		if (model.getRecipesSet().isEmpty() || (model.getRecipesSet() == null)) //se le ricette sono vuote
 		{
 			String[] noRecipe = {"Non ci sono ricette inserite"};
 			DefaultComboBoxModel<String> model = new DefaultComboBoxModel<>(noRecipe);
@@ -578,11 +596,11 @@ public class Controller
 			sui.cfgResRecipesOut.setText(noRecipe[0]);
 			sui.setRecipeList(noRecipe[0]);
 		}
-		else
+		else //se c'è almeno una ricetta
 		{
 			String[] recipes = new String[model.getRecipesSet().size()];
 			int i = 0;
-			for (Recipe recipe : model.getRecipesSet())
+			for (Recipe recipe : model.getRecipesSet()) //trasformo le ricette in stringa
 			{
 				recipes[i] = (recipe.getId() + " - " + "[" + recipe.getIngredientsList() + "] - p." + recipe.getPortions() + " - w." + recipe.getWorkLoadPortion());
 				i++;
@@ -600,12 +618,14 @@ public class Controller
 		}
 	}
 	
-	//TODO fare i metodi con parametri che vengono da sui
+	/**
+	 * Metodo che serve per aggiornare i piatti nella GUI
+	 */
 	public void updateDishStringList()
 	{
 		String[] dishes = new String[model.getDishesSet().size()];
 		int i = 0;
-		for (Dish d : model.getDishesSet())
+		for (Dish d : model.getDishesSet()) //trasformo i dish in stringa
 		{
 			dishes[i] = (d.getName() + " - [" + d.getStartPeriod().getStringDate() + " || " + d.getEndPeriod().getStringDate() + "] - " + "(" + d.getRecipe().getId() + ")");
 			i++;
@@ -622,10 +642,13 @@ public class Controller
 		sui.setDishList(compactedArray.toString().trim());
 	}
 	
+	/**
+	 * Metodo che serve per aggiornare i drinks nella GUI
+	 */
 	public void updateDrinkList()
 	{
 		StringBuilder out = new StringBuilder();
-		for (Map.Entry<String, Double> drink : model.getDrinksMap().entrySet())
+		for (Map.Entry<String, Double> drink : model.getDrinksMap().entrySet()) //trasformo la map di drinks in stringa
 		{
 			out.append(drink.getKey()).append(":").append(drink.getValue().toString()).append("\n");
 		}
@@ -633,10 +656,13 @@ public class Controller
 		sui.cfgResDrinksOut.setText(out.toString().trim());
 	}
 	
+	/**
+	 * Metodo che serve per aggiornare gli extra foods nella GUI
+	 */
 	public void updateFoodList()
 	{
 		StringBuilder out = new StringBuilder();
-		for (Map.Entry<String, Double> food : model.getExtraFoodsMap().entrySet())
+		for (Map.Entry<String, Double> food : model.getExtraFoodsMap().entrySet()) //trasformo la map di extra foods in stringa
 		{
 			out.append(food.getKey()).append(":").append(food.getValue().toString()).append("\n");
 		}
@@ -648,7 +674,7 @@ public class Controller
 	{
 		String[] out = makeMenuList();
 		DefaultComboBoxModel<String> model = new DefaultComboBoxModel<>(out);
-		sui.empNewBookMenuBox.setModel(model);
+		sui.empNewBookMenuBox.setModel(model); //todo commentare sto metodo che non ho capito cosa fa
 		sui.cfgResDatiMenuBox.setModel(model);
 	}
 	
@@ -682,7 +708,11 @@ public class Controller
 		return out;
 	}
 	
-	
+	/**
+	 * Metodo che prende una string e la trasforma in data
+	 * @param input stringa da convertire
+	 * @return data costruita
+	 */
 	public DateOur inputToDate(String input)
 	{
 		String[] bookDates;
@@ -694,8 +724,8 @@ public class Controller
 		catch (Exception e)
 		{
 			sui.errorSetter("invalidDate");
+			return null;
 		}
-		return null;
 	}
 	
 	public HashMap<Dish, Integer> inputToOrder(String in, DateOur date, int number)
@@ -1280,58 +1310,73 @@ public class Controller
 		sui.cfgResMenuCartaOut.setText(menus.toString());
 	}
 	
+	/**
+	 * Metodo che salva un nuovo utente tramite i dati della GUI
+	 */
 	public void saveUser()
 	{
 		String name = sui.passSaveUserText.getText().trim();
 		String password = Arrays.toString(sui.passSavePasswordField.getPassword()).trim();
-        boolean manager = sui.passManCheck.isSelected(), employee = sui.passEmpCheck.isSelected(), storageWorker = sui.passWareCheck.isSelected();
-        if(manager || employee || storageWorker)
-        {
-            if (!name.isBlank() && !password.isBlank()) {
-                boolean doppler = false;
-                if (model.getUsers().size() == 0) {
-                    for (User user : model.getUsers()) {
-                        if (user.getName().equals(name)) {
-                            sui.errorSetter("invalidUsername");
-                            doppler = true;
-                            break;
-                        }
-                    }
-                }
-                if (!doppler) {
-                    if (password.equals(Arrays.toString(sui.passSavePassword2Field.getPassword()).trim())) {
-                        User user = new User(name, password, manager, employee, storageWorker);
-                        user.hashAndSaltPassword();
-                        model.getUsers().add(user);
-                        Writer.writePeople(model.getUsers());
-                        sui.passSaveUserText.setText(Model.CLEAR);
-                        sui.passSavePasswordField.setText(Model.CLEAR);
-                        sui.passSavePassword2Field.setText(Model.CLEAR);
-                    } else
-                        sui.errorSetter("passwordFailed");
-                }
-            } else
-                sui.errorSetter("NumberFormatException");
-        } else
-            sui.errorSetter("notEnoughRoles");
+		boolean manager = sui.passManCheck.isSelected(), employee = sui.passEmpCheck.isSelected(), storageWorker = sui.passWareCheck.isSelected();
+		if (manager || employee || storageWorker) //deve avere almeno un ruolo, altrimenti non può accedere a nulla
+		{
+			if (!name.isBlank() && !password.isBlank()) //controllo la loro validità
+			{
+				boolean doppler = false;
+				if (model.getUsers().size() != 0) //se c`è almeno un altro utente
+				{
+					for (User user : model.getUsers())
+					{
+						if (user.getName().equals(name)) //controllo che non esista un altro utente con lo stesso nome
+						{
+							sui.errorSetter("invalidUsername");
+							doppler = true;
+							break;
+						}
+					}
+				}
+				if (!doppler)
+				{
+					if (password.equals(Arrays.toString(sui.passSavePassword2Field.getPassword()).trim())) //se le password coincidono
+					{
+						User user = new User(name, password, manager, employee, storageWorker); //salvo l'utente
+						user.hashAndSaltPassword(); //hasho la password
+						model.getUsers().add(user);
+						Writer.writePeople(model.getUsers()); //salvo la lista aggiornata
+						sui.passSaveUserText.setText(Model.CLEAR);
+						sui.passSavePasswordField.setText(Model.CLEAR);
+						sui.passSavePassword2Field.setText(Model.CLEAR);
+					}
+					else
+						sui.errorSetter("passwordFailed");
+				}
+			}
+			else
+				sui.errorSetter("NumberFormatException");
+		}
+		else
+			sui.errorSetter("notEnoughRoles");
 	}
 	
+	/**
+	 * Metodo che gestisce il login di un utente tramite utente e password
+	 */
 	public void login()
 	{
 		String name = sui.passLoginUserText.getText().trim();
 		String password = Arrays.toString(sui.passLoginPasswordField.getPassword()).trim();
-		if (!name.isEmpty() && !password.isEmpty())
+		if (!name.isBlank() && !password.isBlank()) //controllo che abbiano un valore
 		{
 			boolean found = false;
 			for (User user : model.getUsers())
 			{
-				if (user.getName().equals(name))
+				if (user.getName().equals(name)) //cerco l'utente tra l'elenco
 				{
 					found = true;
-					if (user.checkPassword(password))
+					if (user.checkPassword(password)) //se la password coincide
 					{
-						sui.login();
-						model.setTheUser(user);
+						sui.login(); //cambio stato alla GUI
+						model.setTheUser(user); //memorizzo l'utente corrente
 						sui.passLoginPasswordField.setText(Model.CLEAR);
 						sui.passLoginUserText.setText(Model.CLEAR);
 					}
@@ -1355,11 +1400,11 @@ public class Controller
 	public boolean checkPermission(String role)
 	{
 		return switch (role)
-		{
-			case "manager" -> model.getTheUser().isManager();
-			case "employee" -> model.getTheUser().isEmployee();
-			case "warehouse worker" -> model.getTheUser().isStorageWorker();
-			default -> false;
-		};
+				{
+					case "manager" -> model.getTheUser().isManager();
+					case "employee" -> model.getTheUser().isEmployee();
+					case "warehouse worker" -> model.getTheUser().isStorageWorker();
+					default -> false;
+				};
 	}
 }

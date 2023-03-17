@@ -388,7 +388,6 @@ public class SimpleUI extends JFrame {
         c.gridx = 1;
         c.gridy = 3;
         passSavePanel.add(passSavePassword2Field,c);
-        //todo buttons
         c.gridx = 0;
         c.gridy = 4;
         passSavePanel.add(passManCheck,c);
