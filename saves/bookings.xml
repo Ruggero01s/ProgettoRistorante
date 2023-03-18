@@ -1,23 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <bookings>
-	<booking date="01/06/2023">
-		<book name="PIZZZAA" number="4" workload="4">
-			<order dish="Pizza Hawai" quantity="4"></order></book>
-		<book name="qewq" number="3" workload="9">
-			<order dish="Polpett" quantity="3"></order>
-			<order dish="PastaCoTonno" quantity="3"></order></book>
-		<book name="Ciccio" number="12" workload="36">
-			<order dish="Polpett" quantity="12"></order>
-			<order dish="PastaCoTonno" quantity="12"></order></book>
-		<book name="dasd" number="1" workload="3">
-			<order dish="Polpett" quantity="1"></order>
-			<order dish="PastaCoTonno" quantity="1"></order></book></booking>
-	<booking date="02/06/2023">
-		<book name="qwertt" number="2" workload="5">
-			<order dish="Peperonata" quantity="3"></order>
-			</book>
-		<book name="Pollos" number="12" workload="36">
-			<order dish="Polpett" quantity="12"></order>
-			<order dish="PastaCoTonno" quantity="12"></order></book>
-	</booking>
+	<booking date="05/06/2025">
+		<book name="Tullio" number="4" workload="16">
+			<order dish="Pizza Hawai" quantity="4"></order>
+			<order dish="Polpettine" quantity="4"></order>
+			<order dish="Pasta Tonnata" quantity="4"></order></book></booking>
+	<booking date="12/08/2023">
+		<book name="test" number="2" workload="6">
+			<order dish="Polpettine" quantity="2"></order>
+			<order dish="Pasta Tonnata" quantity="2"></order></book></booking>
 </bookings>

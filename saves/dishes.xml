@@ -1,3 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <dishes>
+	<dish name="Pizza Hawai" startDate="01/01/1444" endDate="31/12/1444" seasonal="false" permanent="true">
+		<recipe id="Pizza"></recipe></dish>
+	<dish name="Polpettine" startDate="01/01/1444" endDate="31/12/1444" seasonal="false" permanent="true">
+		<recipe id="polpette"></recipe></dish>
+	<dish name="Pasta Tonnata" startDate="01/01/1444" endDate="31/12/1444" seasonal="false" permanent="true">
+		<recipe id="pastaTonno"></recipe></dish>
 </dishes>

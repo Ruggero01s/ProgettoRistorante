@@ -1,3 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <menus>
+	<menu name="Italia" startDate="01/01/1444" endDate="31/12/1444" seasonal="false" permanent="true">
+		<dish name="Pasta Tonnata"></dish>
+		<dish name="Polpettine"></dish></menu>
 </menus>

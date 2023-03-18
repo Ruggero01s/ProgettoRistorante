@@ -1234,7 +1234,7 @@ public class SimpleUI extends JFrame {
             case "invalidQuantity" -> JOptionPane.showMessageDialog(getContentPane(), "Quantità non valida",
                     "Err", JOptionPane.ERROR_MESSAGE);
             case "notToday" ->
-                    JOptionPane.showMessageDialog(getContentPane(), "Non è possibile prenotare per la giornata odierna",
+                    JOptionPane.showMessageDialog(getContentPane(), "Non è possibile prenotare per questa data",
                             "Err", JOptionPane.ERROR_MESSAGE);
             case "workloadTooHigh" -> JOptionPane.showMessageDialog(getContentPane(), "Workload troppo alto",
                     "Err", JOptionPane.ERROR_MESSAGE);

@@ -41,7 +41,7 @@ public class Controller
 		updateFoodList();
 		updateMenuOut();
 		updateMenuBoxes();
-		menu();
+		menuCartaToday();
 		updateConfig();
 	}
 	
@@ -111,7 +111,7 @@ public class Controller
 				model.getDishesSet().clear();
 				Writer.writeDishes(model.getDishesSet());
 				updateDishStringList();
-				menu(); //todo spero sia giusto
+				menuCartaToday(); //todo spero sia giusto
 			case "thematicMenus.xml":
 				model.getThematicMenusSet().clear();
 				Writer.writeThematicMenu(model.getThematicMenusSet());
@@ -397,13 +397,13 @@ public class Controller
 						found = true;
 						break;
 					}
-					else
+					else //nel caso un menu esiste già con lo stesso nome (add torna false se non riesce ad aggiungerlo alla lista)
 						sui.errorSetter("existingName");
 				}
 			}
 			if (!found)
 				sui.errorSetter("noRecipe");
-			menu(); //aggiorno il menu
+			menuCartaToday(); //aggiorno il menu
 		}
 		catch (RuntimeException e)
 		{
@@ -447,7 +447,7 @@ public class Controller
 				inputStartDate = "01/01/1444";
 				inputEndDate = "31/12/1444";
 			}
-			boolean found = false;
+			boolean found = false, dishNotFound=false;
 			for (String s : inputList)
 			{
 				found = false;
@@ -467,8 +467,10 @@ public class Controller
 						}
 					}
 				}
+				if (!found) // se non trova il piatto
+					dishNotFound=true;
 			}
-			if (!found) //todo cosa succede se il secondo dish non è valido
+			if (dishNotFound) //se almeno un piatto prima non è stato trovato da errore //todo cosa succede se il secondo dish non è valido
 				sui.errorSetter("noDish");
 			else
 			{
@@ -669,15 +671,22 @@ public class Controller
 		sui.setFoodsList(out.toString().trim());
 		sui.cfgResFoodsOut.setText(out.toString().trim());
 	}
-	
+
+	/**
+	 * metodo per aggiornare le liste di menu nelle comboBox
+	 */
 	public void updateMenuBoxes()
 	{
 		String[] out = makeMenuList();
 		DefaultComboBoxModel<String> model = new DefaultComboBoxModel<>(out);
-		sui.empNewBookMenuBox.setModel(model); //todo commentare sto metodo che non ho capito cosa fa
+		sui.empNewBookMenuBox.setModel(model);
 		sui.cfgResDatiMenuBox.setModel(model);
 	}
-	
+
+	/**
+	 * crea una stringa con i dati di un certo menu con nome menuName
+	 * @param menuName
+	 */
 	public void writeMenuComp(String menuName)
 	{
 		StringBuilder out = new StringBuilder();
@@ -695,7 +704,10 @@ public class Controller
 		}
 		sui.cfgResDatiMenuOut.setText(out.toString());
 	}
-	
+
+	/**
+	 * @return una stringa con un nome per ogni menu per riga
+	 */
 	public String[] makeMenuList()
 	{
 		String[] out = new String[model.getThematicMenusSet().size()];
@@ -727,7 +739,15 @@ public class Controller
 			return null;
 		}
 	}
-	
+
+
+	/**
+	 * Metodo che prende dati dalla finestra di creazione ordine e ne estrae un ordine, analizza una stringa spezzandola in righe e cerca il nome del piatto/menu nei vari set esistenti
+	 * @param in Stringa in entrata
+	 * @param date Data per oggi, per controllare che il piatto trovato sia disponibile
+	 * @param number numero del piatto/menu ordinato
+	 * @return un HashMap che contiene per ogni Dish nell'ordine la quantità ordinata
+	 */
 	public HashMap<Dish, Integer> inputToOrder(String in, DateOur date, int number)
 	{
 		String[] lines = in.split("\n");
@@ -736,29 +756,29 @@ public class Controller
 		int count = 0;
 		try
 		{
-			for (String line : lines)
+			for (String line : lines)  //per ogni linea
 			{
 				found = false;
 				String[] parts = line.split(":");
 				String name = parts[0];
 				Integer num = Integer.parseInt(parts[1]);
-				if (num <= 0) //errore
+				if (num <= 0) //errore se il num associato è <=0
 				{
 					order.clear();
 					sui.errorSetter("minZero");
 					return order;
 				}
-				for (ThematicMenu menu : model.getThematicMenusSet())
+				for (ThematicMenu menu : model.getThematicMenusSet()) //cerca se il nome scritto è tra i menu tematici
 				{
 					if (name.equals(menu.getName()))
 					{
-						if (menu.isValid(date))
+						if (menu.isValid(date)) //controllo della data di disponibilità
 						{
 							found = true;
 							count += num;
-							for (Dish dish : model.getDishesSet())
+							for (Dish dish : menu.getDishes()) // "spacchetta" il menu nei piatti che lo compongono e li aggiunge all'ordine
 							{
-								if (order.containsKey(dish))
+								if (order.containsKey(dish)) //sommando il numero se già presenti
 									order.put(dish, order.get(dish) + num);
 								else
 									order.put(dish, num);
@@ -773,7 +793,7 @@ public class Controller
 						}
 					}
 				}
-				if (!found)
+				if (!found) //se il nome non è tra i menu cerca i piatti singoli e fa lo stesso procedimento
 				{
 					for (Dish dish : model.getDishesSet())
 					{
@@ -798,21 +818,21 @@ public class Controller
 						}
 					}
 				}
-				if (!found)
+				if (!found) //se ancora non ha trovato una corrispondenza da errore
 				{
 					order.clear();
 					sui.errorSetter("notFound");
 					return order;
 				}
 			}
-			if (count < number)
+			if (count < number) //controlla che ci sia almeno un piatto per persona
 			{
 				order.clear();
 				sui.errorSetter("orderForTooLittle");
 			}
 			return order;
 		}
-		catch (NumberFormatException e)
+		catch (NumberFormatException e) //catch l'errore del parseInt iniziale
 		{
 			sui.errorSetter("noQuantity");
 			return new HashMap<>();
@@ -1284,7 +1304,7 @@ public class Controller
 		sui.wareListMagText.setText("Magazzino aggiornato al " + getTodayString());
 		sui.wareReturnListOut.setText("");
 		model.setRegistro(model.getRegistroAfterMeal());
-		menu();
+		menuCartaToday();
 		oldBooking();
 		generateGroceryList();
 		generateAfterMeal();
@@ -1299,7 +1319,7 @@ public class Controller
 		}
 	}
 	
-	private void menu()
+	private void menuCartaToday()
 	{
 		StringBuilder menus = new StringBuilder();
 		for (Dish dish : model.getDishesSet())
