@@ -3,9 +3,14 @@ import java.util.*;
 
 public class Controller
 {
-	Model model = new Model();
-	SimpleUI sui;
-	Reader reader = new Reader(this);
+	private Model model = new Model();
+	private SimpleUI sui;
+	private Reader reader = new Reader(this);
+	
+	public Model getModel()
+	{
+		return model;
+	}
 	
 	/**
 	 * metodo di inizializzazione
@@ -154,14 +159,14 @@ public class Controller
 			int percent = Integer.parseInt(inputPercent);
 			
 			if (!checkDate(todayString)) //check per correttezza della data
-				sui.errorSetter("invalidDate");
+				sui.errorSetter(SimpleUI.INVALID_DATE);
 			else
 			{
 				DateOur today = inputToDate(todayString);
 				if (capacity <= 0 || workload <= 0) //check parametri numerici
-					sui.errorSetter("minZero");
+					sui.errorSetter(SimpleUI.MIN_ZERO);
 				else if (percent > 10)
-					sui.errorSetter("surplusTooGreat");
+					sui.errorSetter(SimpleUI.SURPLUS_TOO_GREAT);
 				else
 				{
 					//salvo tutti i dati ed aggiorno la GUI
@@ -177,7 +182,7 @@ public class Controller
 		}
 		catch (NumberFormatException e)
 		{
-			sui.errorSetter("NumberFormatException");
+			sui.errorSetter(SimpleUI.INVALID_FORMAT);
 		}
 	}
 	
@@ -202,7 +207,7 @@ public class Controller
 			double quantity = Double.parseDouble(inputSplit[1]);
 			
 			if (quantity <= 0) //quantità non valida
-				sui.errorSetter("minZero");
+				sui.errorSetter(SimpleUI.MIN_ZERO);
 			else
 			{
 				model.getDrinksMap().put(inputSplit[0], quantity);
@@ -212,7 +217,7 @@ public class Controller
 		}
 		catch (RuntimeException e)
 		{
-			sui.errorSetter("NumberFormatException");
+			sui.errorSetter(SimpleUI.INVALID_FORMAT);
 		}
 	}
 	
@@ -237,7 +242,7 @@ public class Controller
 			double quantity = Double.parseDouble(inputSplit[1]);
 			
 			if (quantity <= 0) //controllo che la quantità sia > 0
-				sui.errorSetter("minZero");
+				sui.errorSetter(SimpleUI.MIN_ZERO);
 			else
 			{
 				model.getExtraFoodsMap().put(inputSplit[0], quantity);
@@ -247,7 +252,7 @@ public class Controller
 		}
 		catch (RuntimeException e)
 		{
-			sui.errorSetter("NumberFormatException");
+			sui.errorSetter(SimpleUI.INVALID_FORMAT);
 		}
 	}
 	
@@ -303,10 +308,10 @@ public class Controller
 			int portions = Integer.parseInt(inputPortions);
 			double workLoad = Double.parseDouble(inputWorkload);
 			if (workLoad >= model.getWorkPersonLoad())
-				sui.errorSetter("workloadTooHigh");
+				sui.errorSetter(SimpleUI.WORKLOAD_TOO_HIGHT);
 			
 			if (portions <= 0 || workLoad <= 0 || err)
-				sui.errorSetter("minZero");
+				sui.errorSetter(SimpleUI.MIN_ZERO);
 			else
 			{
 				if (model.getRecipesSet().add(new Recipe(inputName, ingredientQuantitySet, portions, workLoad)))
@@ -318,12 +323,12 @@ public class Controller
 					updateRecipeStringList();
 				}
 				else
-					sui.errorSetter("existingName");
+					sui.errorSetter(SimpleUI.EXISTING_NAME);
 			}
 		}
 		catch (NumberFormatException e)
 		{
-			sui.errorSetter("NumberFormatException");
+			sui.errorSetter(SimpleUI.INVALID_FORMAT);
 		}
 	}
 	
@@ -374,7 +379,7 @@ public class Controller
 			{
 				if (!checkDate(inputStartDate) || !checkDate(inputEndDate))
 				{
-					sui.errorSetter("invalidDate");
+					sui.errorSetter(SimpleUI.INVALID_DATE);
 					return;
 				}
 			}
@@ -398,16 +403,16 @@ public class Controller
 						break;
 					}
 					else //nel caso un menu esiste già con lo stesso nome (add torna false se non riesce ad aggiungerlo alla lista)
-						sui.errorSetter("existingName");
+						sui.errorSetter(SimpleUI.EXISTING_NAME);
 				}
 			}
 			if (!found)
-				sui.errorSetter("noRecipe");
+				sui.errorSetter(SimpleUI.NO_RECIPE);
 			menuCartaToday(); //aggiorno il menu
 		}
 		catch (RuntimeException e)
 		{
-			sui.errorSetter("NumberFormatException");
+			sui.errorSetter(SimpleUI.INVALID_FORMAT);
 		}
 	}
 	
@@ -438,7 +443,7 @@ public class Controller
 			{
 				if (!checkDate(inputStartDate) || !checkDate(inputEndDate))
 				{
-					sui.errorSetter("invalidDate");
+					sui.errorSetter(SimpleUI.INVALID_DATE);
 					return;
 				}
 			}
@@ -447,7 +452,7 @@ public class Controller
 				inputStartDate = "01/01/1444";
 				inputEndDate = "31/12/1444";
 			}
-			boolean found = false, dishNotFound=false;
+			boolean found, dishNotFound=false;
 			for (String s : inputList)
 			{
 				found = false;
@@ -470,8 +475,8 @@ public class Controller
 				if (!found) // se non trova il piatto
 					dishNotFound=true;
 			}
-			if (dishNotFound) //se almeno un piatto prima non è stato trovato da errore //todo cosa succede se il secondo dish non è valido
-				sui.errorSetter("noDish");
+			if (dishNotFound) //se almeno un piatto prima non è stato trovato da errore
+				sui.errorSetter(SimpleUI.NO_DISH);
 			else
 			{
 				ThematicMenu temp = new ThematicMenu(inputName, inputStartDate, inputEndDate, dishesForMenu, seasonal, permanent); //creo il menu
@@ -494,18 +499,18 @@ public class Controller
 							updateMenuBoxes();
 						}
 						else
-							sui.errorSetter("existingName");
+							sui.errorSetter(SimpleUI.EXISTING_NAME);
 					}
 					else
-						sui.errorSetter("sameNameAsDish");
+						sui.errorSetter(SimpleUI.NAME_SAME_AS_DISH);
 				}
 				else
-					sui.errorSetter("thiccMenu");
+					sui.errorSetter(SimpleUI.THICC_MENU);
 			}
 		}
 		catch (RuntimeException e)
 		{
-			sui.errorSetter("NumberFormatException");
+			sui.errorSetter(SimpleUI.INVALID_FORMAT);
 		}
 	}
 	
@@ -581,7 +586,7 @@ public class Controller
 			if (r.getId().equals(id))
 				return r;
 		}
-		sui.errorSetter("errore"); //errore generico
+		sui.errorSetter(9999); //errore generico
 		return null; //non dovrebbe succedere
 	}
 	
@@ -685,7 +690,7 @@ public class Controller
 
 	/**
 	 * crea una stringa con i dati di un certo menu con nome menuName
-	 * @param menuName
+	 * @param menuName menu da trasformare in stringa
 	 */
 	public void writeMenuComp(String menuName)
 	{
@@ -735,11 +740,10 @@ public class Controller
 		}
 		catch (Exception e)
 		{
-			sui.errorSetter("invalidDate");
+			sui.errorSetter(SimpleUI.INVALID_DATE);
 			return null;
 		}
 	}
-
 
 	/**
 	 * Metodo che prende dati dalla finestra di creazione ordine e ne estrae un ordine, analizza una stringa spezzandola in righe e cerca il nome del piatto/menu nei vari set esistenti
@@ -765,7 +769,7 @@ public class Controller
 				if (num <= 0) //errore se il num associato è <=0
 				{
 					order.clear();
-					sui.errorSetter("minZero");
+					sui.errorSetter(SimpleUI.MIN_ZERO);
 					return order;
 				}
 				for (ThematicMenu menu : model.getThematicMenusSet()) //cerca se il nome scritto è tra i menu tematici
@@ -788,7 +792,7 @@ public class Controller
 						else
 						{
 							order.clear();
-							sui.errorSetter("outOfDate");
+							sui.errorSetter(SimpleUI.OUT_OF_DATE);
 							return order;
 						}
 					}
@@ -812,7 +816,7 @@ public class Controller
 							else
 							{
 								order.clear();
-								sui.errorSetter("invalidDate");
+								sui.errorSetter(SimpleUI.INVALID_DATE);
 								return order;
 							}
 						}
@@ -821,29 +825,33 @@ public class Controller
 				if (!found) //se ancora non ha trovato una corrispondenza da errore
 				{
 					order.clear();
-					sui.errorSetter("notFound");
+					sui.errorSetter(SimpleUI.NOT_FOUND);
 					return order;
 				}
 			}
 			if (count < number) //controlla che ci sia almeno un piatto per persona
 			{
 				order.clear();
-				sui.errorSetter("orderForTooLittle");
+				sui.errorSetter(SimpleUI.ORDER_FOR_TOO_LITTLE);
 			}
 			return order;
 		}
 		catch (NumberFormatException e) //catch l'errore del parseInt iniziale
 		{
-			sui.errorSetter("noQuantity");
+			sui.errorSetter(SimpleUI.NO_QUANTITY);
 			return new HashMap<>();
 		}
 	}
 	
+	/**
+	 * Metodo che mostra in GUI tutte le prenotazioni di un giorno
+	 * @param data giorno da controllare
+	 */
 	public void seeBookings(DateOur data)
 	{
 		if (model.getBookingMap().containsKey(data))
 		{
-			ArrayList<Booking> dayBookings = new ArrayList<>(model.getBookingMap().get(data));
+			ArrayList<Booking> dayBookings = new ArrayList<>(model.getBookingMap().get(data)); //prenotazioni della data
 			StringBuilder name = new StringBuilder();
 			StringBuilder number = new StringBuilder();
 			StringBuilder work = new StringBuilder();
@@ -857,33 +865,38 @@ public class Controller
 				capacity += b.getNumber();
 				workload += b.getWorkload();
 			}
+			//elenco di stringhe da stampare in GUI
 			sui.empSeeBookNameAreaOut.setText(name.toString().trim());
 			sui.empSeeBookNumAreaOut.setText(number.toString().trim());
 			sui.empSeeBookWorkloadAreaOut.setText(work.toString().trim());
+			//capacity e workload rimanenti per quel giorno
 			sui.empSeeBookCapacityTotalOut.setText(Integer.toString(model.getCapacity() - capacity));
 			sui.empSeeBookWorkloadTotalOut.setText(Double.toString(model.getWorkResturantLoad() - workload));
 		}
 		else
-			sui.errorSetter("noBookings");
+			sui.errorSetter(SimpleUI.NO_BOOKINGS); //non ci sono prenotazioni per quel giorno
 	}
 	
+	/**
+	 * Metodo che crea una prenotazione dai dati in GUI
+	 */
 	public void saveBooking()
 	{
 		try
 		{
 			String name = sui.empNewBookNameInput.getText();
 			DateOur date = inputToDate(sui.empNewBookDateInput.getText());
-			if (date != null && date.getDate().after(model.getToday().getDate()))
+			if (date != null && date.getDate().after(model.getToday().getDate())) //controllo che la data abbia un senso
 			{
 				int number = Integer.parseInt(sui.empNewBookNumInput.getText()), workload = 0;
 				HashMap<Dish, Integer> order = inputToOrder(sui.empNewBookOrderInput.getText(), date, number);
-				if (!order.isEmpty())
+				if (!order.isEmpty()) //todo mettiamo un errore se sta cosa è falsa?
 				{
-					if (number > 0)
+					if (number > 0)//il numero deve essere maggiore di 0
 					{
 						for (Map.Entry<Dish, Integer> dish : order.entrySet())
-							workload += dish.getKey().getRecipe().getWorkLoadPortion() * dish.getValue();
-						if (manageBooking(name, date, number, workload, order))
+							workload += dish.getKey().getRecipe().getWorkLoadPortion() * dish.getValue(); //calcolo il workload di questo giorno
+						if (manageBooking(name, date, number, workload, order)) //se la prenotazione viene salvata resetto tutto
 						{
 							sui.empNewBookNameInput.setText(Model.CLEAR);
 							sui.empNewBookDateInput.setText(Model.CLEAR);
@@ -892,14 +905,14 @@ public class Controller
 						}
 					}
 					else
-						sui.errorSetter("minZero");
+						sui.errorSetter(SimpleUI.MIN_ZERO);
 				}
 			}
-			else sui.errorSetter("notToday");
+			else sui.errorSetter(SimpleUI.NOT_TODAY);
 		}
 		catch (NumberFormatException e)
 		{
-			sui.errorSetter("NumberFormatException");
+			sui.errorSetter(SimpleUI.INVALID_FORMAT);
 		}
 	}
 	
@@ -946,7 +959,7 @@ public class Controller
 		else
 		{
 			// If there is no capacity or workload available, set an error message and return false
-			sui.errorSetter("fullRestaurant");
+			sui.errorSetter(SimpleUI.FULL_RESTURANT);
 			return false;
 		}
 	}
@@ -968,11 +981,17 @@ public class Controller
 		return out;
 	}
 	
+	/**
+	 * Metodo che chiama il writer per le prenotazioni
+	 */
 	public void writeBookings()
 	{
 		Writer.writeBookings(model.getBookingMap());
 	}
 	
+	/**
+	 * Metodo che chiama il writer per il magazzino
+	 */
 	public void writeRegister()
 	{
 		Writer.writeRegister(model.getRegistro());
@@ -1010,9 +1029,8 @@ public class Controller
 						}
 					}
 					else
-					{
 						drinks.add(i);
-					}
+					
 				}
 				for (Map.Entry<String, Double> entry : model.getExtraFoodsMap().entrySet())
 				{
@@ -1029,9 +1047,8 @@ public class Controller
 						}
 					}
 					else
-					{
 						foods.add(i);
-					}
+					
 				}
 				for (Map.Entry<Dish, Integer> entry : b.getOrder().entrySet())
 				{
@@ -1135,6 +1152,10 @@ public class Controller
 		return set;
 	}
 	
+	/**
+	 * Metodo che prende in ingresso un set d'ingredienti e lo aggiunge al magazzino
+	 * @param set ingredienti da aggiungere
+	 */
 	private void addToRegister(Set<Ingredient> set)
 	{
 		for (Ingredient ingredient : set)
@@ -1143,7 +1164,7 @@ public class Controller
 			{
 				for (Ingredient reg : model.getRegistro())
 				{
-					if (reg.equals(ingredient))
+					if (reg.equals(ingredient)) //in caso l'ingrediente ci sia già nel magazzino sommo quello che devo aggiungere a auello che c'era già
 					{
 						model.getRegistro().add(new Ingredient(ingredient.getName(), ingredient.getUnit(), (ingredient.getQuantity()) + reg.getQuantity()));
 						break;
@@ -1151,7 +1172,7 @@ public class Controller
 				}
 			}
 			else
-				model.getRegistro().add(ingredient);
+				model.getRegistro().add(ingredient); //se non c'è già nel magazzino lo aggiungo e basta
 		}
 	}
 	
@@ -1168,6 +1189,11 @@ public class Controller
 		return out;
 	}
 	
+	/**
+	 * Metodo che converte set d'ingredienti in stringhe
+	 * @param set set da convertire
+	 * @return stringa del set
+	 */
 	public String setToString(Set<Ingredient> set)
 	{
 		StringBuilder out = new StringBuilder();
@@ -1178,37 +1204,38 @@ public class Controller
 		return out.toString().trim();
 	}
 	
+	/**
+	 * Metodo che dalla GUI crea una lista di ingredienti da modificare nel magazzino
+	 */
 	public void warehouseChanges()
 	{
-		
 		String text = sui.wareReturnListIn.getText().trim();
-		if (text.isEmpty())
-			sui.errorSetter("NumberFormatException");
+		if (text.isBlank()) //controllo che il testo non sia valido
+			sui.errorSetter(SimpleUI.INVALID_FORMAT);
 		
 		Set<Ingredient> ingredients = new HashSet<>();
 		
 		for (String s : text.split("\n"))
 		{
-			if (!s.contains(":"))
-				sui.errorSetter("NumberFormatException");
+			if (!s.contains(":")) //controllo il formato della riga
+				sui.errorSetter(SimpleUI.INVALID_FORMAT);
 			
 			String[] t = s.split(":");
 			
-			if (t.length < 3 || t[0].isEmpty() || t[2].isEmpty())
-				sui.errorSetter("NumberFormatException");
+			if (t.length < 3 || t[0].isBlank() || t[2].isBlank()) //controllo il formato della stringa splittata
+				sui.errorSetter(SimpleUI.INVALID_FORMAT);
 			
 			String name = t[0], unit = t[2];
 			double quantity = Double.parseDouble(t[1]);
-			quantity = checkUnit(unit, quantity);
+			quantity = checkUnit(unit, quantity); //converto la quantità e controllo la validità dell'unità di misura
 			
-			if (unit.toLowerCase().contains("g"))
+			if (unit.toLowerCase().contains("g")) //ho convertito tutto in grammi e litri
 				unit = "g";
 			else
 				unit = "L";
 			
-			
-			if (!ingredients.add(new Ingredient(name, unit, quantity)))
-				sui.errorSetter("NumberFormatException");
+			if (!ingredients.add(new Ingredient(name, unit, quantity))) //aggiungo l'ingrediente alla lista
+				sui.errorSetter(SimpleUI.INVALID_FORMAT);
 		}
 		try
 		{
@@ -1217,35 +1244,40 @@ public class Controller
 		}
 		catch (RuntimeException e)
 		{
-			sui.errorSetter(e.getMessage());
+			sui.errorSetter(Integer.parseInt(e.getMessage()));
 		}
 	}
 	
-	
+	/**
+	 *Metodo che modifica il magazzino dopo il pasto
+	 * @param ingredients ingredienti da togliere e/o da aggiungere
+	 * @throws RuntimeException usata per gestire i problemi di formato
+	 */
 	private void updateAfterMeal(Set<Ingredient> ingredients) throws RuntimeException
 	{
 		Set<Ingredient> register = new HashSet<>(model.getRegistroAfterMeal());
 		for (Ingredient deltaIngredient : ingredients)
 		{
-			if (!model.getRegistro().contains(deltaIngredient))
-				throw new RuntimeException("noIngredient");
+			if (!model.getRegistro().contains(deltaIngredient)) //se provo ad aggiungere un ingrediente che prima non c'era ho un errore
+				throw new RuntimeException(Integer.toString(SimpleUI.NO_INGREDIENT));
 			for (Ingredient regIngr : model.getRegistro())
 			{
 				if (regIngr.equals(deltaIngredient))
 				{
-					if (register.contains(deltaIngredient))
+					if (register.contains(deltaIngredient))  //modifico il registro post pasto
 					{
 						for (Ingredient ingredient : register)
 						{
 							if (ingredient.equals(deltaIngredient))
 							{
 								double newIngr = ingredient.getQuantity() + deltaIngredient.getQuantity();
+								
 								if (newIngr < 0)
 									register.remove(ingredient);
 								else
 								{
 									if (newIngr > regIngr.getQuantity())
-										throw new RuntimeException("invalidQuantity");
+										throw new RuntimeException(Integer.toString(SimpleUI.INVALID_QUANTITY)); //se la quantità che torna dalla cucina è maggiore di quella che è uscita c'è un errore
 									ingredient.setQuantity(newIngr);
 									register.add(ingredient);
 								}
@@ -1258,7 +1290,7 @@ public class Controller
 						if (deltaIngredient.getQuantity() >= 0 && deltaIngredient.getQuantity() <= regIngr.getQuantity())
 							register.add(deltaIngredient);
 						else
-							throw new RuntimeException("invalidQuantity");
+							throw new RuntimeException(Integer.toString(SimpleUI.INVALID_QUANTITY));
 					}
 				}
 			}
@@ -1267,32 +1299,39 @@ public class Controller
 		sui.wareReturnListOut.setText(setToString(model.getRegistroAfterMeal()));
 	}
 	
-	public void generateAfterMeal()
+	/**
+	 * Calcolo il magazzino alla fine di un pasto
+	 */
+	private void generateAfterMeal()
 	{
 		Set<Ingredient> registroNow = new HashSet<>(model.getRegistro());
 		
-		if (!model.getBookingMap().containsKey(model.getToday()))
-		{
+		if (!model.getBookingMap().containsKey(model.getToday())) //se oggi non c'erano prenotazioni il magazzino non è cambiato
 			sui.wareReturnListOut.setText(setToString(model.getRegistro()));
-			return;
+		else
+		{
+			ArrayList<Booking> book = new ArrayList<>(model.getBookingMap().get(model.getToday()));
+			for (Booking b : book)
+				for (Map.Entry<Dish, Integer> entry : b.getOrder().entrySet())
+					registroNow.removeAll(entry.getKey().getRecipe().getIngredients()); //tolgo dal magazzino tutti gli ingredienti usati per i piatti di oggi
+			
+			//rimuovo dal magazzino i drink e gli extra foods
+			for (Map.Entry<String, Double> drink : model.getDrinksMap().entrySet())
+				registroNow.removeIf(ingredient -> ingredient.getName().equals(drink.getKey()));
+			for (Map.Entry<String, Double> food : model.getExtraFoodsMap().entrySet())
+				registroNow.removeIf(ingredient -> ingredient.getName().equals(food.getKey()));
+			
+			model.setRegistroAfterMeal(registroNow);
 		}
-		
-		ArrayList<Booking> book = new ArrayList<>(model.getBookingMap().get(model.getToday()));
-		for (Booking b : book)
-			for (Map.Entry<Dish, Integer> entry : b.getOrder().entrySet())
-				registroNow.removeAll(entry.getKey().getRecipe().getIngredients());
-		
-		for (Map.Entry<String, Double> drink : model.getDrinksMap().entrySet())
-			registroNow.removeIf(ingredient -> ingredient.getName().equals(drink.getKey()));
-		for (Map.Entry<String, Double> food : model.getExtraFoodsMap().entrySet())
-			registroNow.removeIf(ingredient -> ingredient.getName().equals(food.getKey()));
-		
-		model.setRegistroAfterMeal(registroNow);
 	}
 	
+	/**
+	 * Metodo che si occupa delle operazioni necessarie per il cambio di giorno
+	 */
 	public void nextDay()
 	{
-		model.getToday().getDate().add(Calendar.DATE, 1);
+		model.getToday().getDate().add(Calendar.DATE, 1); //cambio la data
+		//update GUI
 		updateDishStringList();
 		updateMenuOut();
 		updateMenuBoxes();
@@ -1303,30 +1342,39 @@ public class Controller
 		sui.wareListText.setText("Lista aggiornata al " + getTodayString());
 		sui.wareListMagText.setText("Magazzino aggiornato al " + getTodayString());
 		sui.wareReturnListOut.setText("");
-		model.setRegistro(model.getRegistroAfterMeal());
 		menuCartaToday();
-		oldBooking();
+		
+		oldBooking(); //cancello le vecchie prenotazioni
+		//aggiorno e calcolo magazzino e lista della spesa
+		model.setRegistro(model.getRegistroAfterMeal());
 		generateGroceryList();
 		generateAfterMeal();
 	}
 	
+	/**
+	 * Metodo che rimuove tutte le prenotazioni scadute
+	 */
 	private void oldBooking()
 	{
 		for (Map.Entry<DateOur, ArrayList<Booking>> entry : model.getBookingMap().entrySet())
 		{
-			if (entry.getKey().getDate().before(model.getToday()))
+			if (entry.getKey().getDate().before(model.getToday())) //rimuovo le prenotazioni che hanno una data precedente ad oggi
 				model.getBookingMap().remove(entry.getKey());
 		}
 	}
 	
+	/**
+	 * Metodo che mostra in GUI
+	 * tutti i piatti validi oggi
+	 */
 	private void menuCartaToday()
 	{
 		StringBuilder menus = new StringBuilder();
-		for (Dish dish : model.getDishesSet())
+		for (Dish dish : model.getDishesSet()) //genero la lista di piatti
 			if (dish.isValid(model.getToday()))
 				menus.append(dish.getName()).append("\n");
 		if (menus.length() == 0)
-			menus = new StringBuilder("Non ci sono piatti disponibili per la data ordierna");
+			menus = new StringBuilder("Non ci sono piatti disponibili per la data ordierna"); //se non ci sono piatti validi
 		sui.cfgResMenuCartaOut.setText(menus.toString());
 	}
 	
@@ -1349,7 +1397,7 @@ public class Controller
 					{
 						if (user.getName().equals(name)) //controllo che non esista un altro utente con lo stesso nome
 						{
-							sui.errorSetter("invalidUsername");
+							sui.errorSetter(SimpleUI.INVALID_USERNAME);
 							doppler = true;
 							break;
 						}
@@ -1368,14 +1416,14 @@ public class Controller
 						sui.passSavePassword2Field.setText(Model.CLEAR);
 					}
 					else
-						sui.errorSetter("passwordFailed");
+						sui.errorSetter(SimpleUI.INVALID_PASSWORD);
 				}
 			}
 			else
-				sui.errorSetter("NumberFormatException");
+				sui.errorSetter(SimpleUI.INVALID_FORMAT);
 		}
 		else
-			sui.errorSetter("notEnoughRoles");
+			sui.errorSetter(SimpleUI.NOT_ENOUGHT_ROLES);
 	}
 	
 	/**
@@ -1401,15 +1449,15 @@ public class Controller
 						sui.passLoginUserText.setText(Model.CLEAR);
 					}
 					else
-						sui.errorSetter("passwordFailed");
+						sui.errorSetter(SimpleUI.INVALID_PASSWORD);
 					break;
 				}
 			}
 			if (!found)
-				sui.errorSetter("invalidUsername");
+				sui.errorSetter(SimpleUI.INVALID_USERNAME);
 		}
 		else
-			sui.errorSetter("NumberFormatException");
+			sui.errorSetter(SimpleUI.INVALID_FORMAT);
 	}
 	
 	/**

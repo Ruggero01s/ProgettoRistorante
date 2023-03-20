@@ -440,7 +440,7 @@ public class SimpleUI extends JFrame {
                 updateUI();
             }
             else
-                errorSetter("invalidPermission");
+                errorSetter(NO_PERMISSION);
         });
         employeeButton.addActionListener(e -> {
             if(ctrl.checkPermission("employee"))
@@ -449,7 +449,7 @@ public class SimpleUI extends JFrame {
                 updateUI();
             }
             else
-                errorSetter("invalidPermission");
+                errorSetter(NO_PERMISSION);
         });
         warehouseWorkerButton.addActionListener(e -> {
             if(ctrl.checkPermission("warehouse worker"))
@@ -458,7 +458,7 @@ public class SimpleUI extends JFrame {
                 updateUI();
             }
             else
-                errorSetter("invalidPermission");
+                errorSetter(NO_PERMISSION);
         });
         buttonBack14.addActionListener(backToLogin);
     }
@@ -999,7 +999,7 @@ public class SimpleUI extends JFrame {
             if (Controller.checkDate(s)) {
                 ctrl.seeBookings(ctrl.inputToDate(s));
             } else {
-                errorSetter("invalidDate");
+                errorSetter(INVALID_DATE);
             }
         });
         c.gridx = 0;
@@ -1146,7 +1146,7 @@ public class SimpleUI extends JFrame {
         wareReturnListPanel.add(wareReturnListOutText, c);
         c.gridx = 0;
         c.gridy = 1;
-        wareReturnListOut.setText(ctrl.setToString(ctrl.model.getRegistroAfterMeal()));
+        wareReturnListOut.setText(ctrl.setToString(ctrl.getModel().getRegistroAfterMeal()));
         wareReturnListPanel.add(wareReturnListOutScroll, c);
         c.gridx = 0;
         c.gridy = 2;
@@ -1193,64 +1193,60 @@ public class SimpleUI extends JFrame {
         updateUI();
     }
 
-    public void errorSetter(String code) {
+    //costanti per la gestione degli errori
+    public static final int MIN_ZERO = 0;
+    public static final int INVALID_FORMAT = 1;
+    public static final int NO_RECIPE = 2;
+    public static final int NO_DISH = 3;
+    public static final int INSUFFICENT_DISH = 4;
+    public static final int INVALID_DATE = 5;
+    public static final int FULL_RESTURANT = 6;
+    public static final int THICC_MENU = 7;
+    public static final int NAME_SAME_AS_DISH = 8;
+    public static final int NOT_FOUND = 9;
+    public static final int NO_BOOKINGS = 10;
+    public static final int NO_QUANTITY = 11;
+    public static final int OUT_OF_DATE = 12;
+    public static final int EXISTING_NAME = 13;
+    public static final int SURPLUS_TOO_GREAT = 14;
+    public static final int NO_INGREDIENT = 15;
+    public static final int INVALID_QUANTITY = 16;
+    public static final int NOT_TODAY = 17;
+    public static final int WORKLOAD_TOO_HIGHT = 18;
+    public static final int ORDER_FOR_TOO_LITTLE = 19;
+    public static final int INVALID_PASSWORD = 20;
+    public static final int INVALID_USERNAME = 21;
+    public static final int NOT_ENOUGHT_ROLES = 22;
+    public static final int NO_PERMISSION = 23;
+    public void errorSetter(int code)
+    {
         switch (code)
         {
-            case "minZero" -> JOptionPane.showMessageDialog(getContentPane(), "Numero inserito < 0", //todo costanti con gli errori
-                    "Err", JOptionPane.ERROR_MESSAGE);
-            case "NumberFormatException" -> JOptionPane.showMessageDialog(getContentPane(), "Formato incorretto",
-                    "Err", JOptionPane.ERROR_MESSAGE);
-            case "noRecipe" -> JOptionPane.showMessageDialog(getContentPane(), "Inserisci prima una ricetta!",
-                    "Err", JOptionPane.ERROR_MESSAGE);
-            case "noDish" -> JOptionPane.showMessageDialog(getContentPane(), "Piatto non trovato",
-                    "Err", JOptionPane.ERROR_MESSAGE);
-            case "0Dish" -> JOptionPane.showMessageDialog(getContentPane(), "Inserisci almeno un piatto!",
-                    "Err", JOptionPane.ERROR_MESSAGE);
-            case "invalidDate" -> JOptionPane.showMessageDialog(getContentPane(), "Data non valide",
-                    "Err", JOptionPane.ERROR_MESSAGE);
-            case "fullRestaurant" -> JOptionPane.showMessageDialog(getContentPane(), "Ristorante pieno o troppo carico",
-                    "Err", JOptionPane.ERROR_MESSAGE);
-            case "thiccMenu" ->
-                    JOptionPane.showMessageDialog(getContentPane(), "Il menù è troppo impegnativo, riduci il suo carico",
-                            "Err", JOptionPane.ERROR_MESSAGE);
-            case "nameSameAsDish" ->
-                    JOptionPane.showMessageDialog(getContentPane(), "Il menù è troppo impegnativo, riduci il suo carico",//todo cambiare questo messaggio
-                            "Err", JOptionPane.ERROR_MESSAGE);
-            case "notFound" -> JOptionPane.showMessageDialog(getContentPane(), "Piatto o menù non trovato",
-                    "Err", JOptionPane.ERROR_MESSAGE);
-            case "noBookings" -> JOptionPane.showMessageDialog(getContentPane(), "Nessuna prenotazione trovata",
-                    "Err", JOptionPane.ERROR_MESSAGE);
-            case "noQuantity" -> JOptionPane.showMessageDialog(getContentPane(), "Quantità di un elemento non valida",
-                    "Err", JOptionPane.ERROR_MESSAGE);
-            case "outOfDate" ->
-                    JOptionPane.showMessageDialog(getContentPane(), "Menù o piatto non disponibile in questa data",
-                            "Err", JOptionPane.ERROR_MESSAGE);
-            case "existingName" -> JOptionPane.showMessageDialog(getContentPane(), "Nome già in uso",
-                    "Err", JOptionPane.ERROR_MESSAGE);
-            case "surplusTooGreat" -> JOptionPane.showMessageDialog(getContentPane(), "Surplus troppo grande, max 10%",
-                    "Err", JOptionPane.ERROR_MESSAGE);
-            case "noIngredient" -> JOptionPane.showMessageDialog(getContentPane(), "Ingrediente non trovato",
-                    "Err", JOptionPane.ERROR_MESSAGE);
-            case "invalidQuantity" -> JOptionPane.showMessageDialog(getContentPane(), "Quantità non valida",
-                    "Err", JOptionPane.ERROR_MESSAGE);
-            case "notToday" ->
-                    JOptionPane.showMessageDialog(getContentPane(), "Non è possibile prenotare per questa data",
-                            "Err", JOptionPane.ERROR_MESSAGE);
-            case "workloadTooHigh" -> JOptionPane.showMessageDialog(getContentPane(), "Workload troppo alto",
-                    "Err", JOptionPane.ERROR_MESSAGE);
-            case "orderForTooLittle" ->
-                    JOptionPane.showMessageDialog(getContentPane(), "Deve esserci almeno un piatto o menù per persona",
-                            "Err", JOptionPane.ERROR_MESSAGE);
-            case "passwordFailed" -> JOptionPane.showMessageDialog(getContentPane(), "Password non corretta",
-                    "Err", JOptionPane.ERROR_MESSAGE);
-            case "invalidUsername" -> JOptionPane.showMessageDialog(getContentPane(), "Username non corretto",
-                    "Err", JOptionPane.ERROR_MESSAGE);
-            case "notEnoughRoles" -> JOptionPane.showMessageDialog(getContentPane(), "Seleziona almeno un ruolo",
-                    "Err", JOptionPane.ERROR_MESSAGE);
-            case "invalidPermission" -> JOptionPane.showMessageDialog(getContentPane(), "Non hai i permessi per entrare in questa finestra",
-                    "Err", JOptionPane.ERROR_MESSAGE);
-            default -> JOptionPane.showMessageDialog(getContentPane(), "Errore",
-                    "Err", JOptionPane.ERROR_MESSAGE);
+            case 0 -> JOptionPane.showMessageDialog(getContentPane(), "Numero inserito < 0", "Err", JOptionPane.ERROR_MESSAGE);
+            case 1 -> JOptionPane.showMessageDialog(getContentPane(), "Formato incorretto", "Err", JOptionPane.ERROR_MESSAGE);
+            case 2 -> JOptionPane.showMessageDialog(getContentPane(), "Inserisci prima una ricetta!", "Err", JOptionPane.ERROR_MESSAGE);
+            case 3 -> JOptionPane.showMessageDialog(getContentPane(), "Piatto non trovato", "Err", JOptionPane.ERROR_MESSAGE);
+            case 4 -> JOptionPane.showMessageDialog(getContentPane(), "Inserisci almeno un piatto!", "Err", JOptionPane.ERROR_MESSAGE);
+            case 5 -> JOptionPane.showMessageDialog(getContentPane(), "Data non valide","Err", JOptionPane.ERROR_MESSAGE);
+            case 6 -> JOptionPane.showMessageDialog(getContentPane(), "Ristorante pieno o troppo carico", "Err", JOptionPane.ERROR_MESSAGE);
+            case 7 -> JOptionPane.showMessageDialog(getContentPane(), "Il menù è troppo impegnativo, riduci il suo carico", "Err", JOptionPane.ERROR_MESSAGE);
+            case 8 -> JOptionPane.showMessageDialog(getContentPane(), "Il menù è troppo impegnativo, riduci il suo carico", "Err", JOptionPane.ERROR_MESSAGE); //TODO CAMBIARE STO MESSAGGIO
+            case 9 -> JOptionPane.showMessageDialog(getContentPane(), "Piatto o menù non trovato", "Err", JOptionPane.ERROR_MESSAGE);
+            case 10 -> JOptionPane.showMessageDialog(getContentPane(), "Nessuna prenotazione trovata", "Err", JOptionPane.ERROR_MESSAGE);
+            case 11 -> JOptionPane.showMessageDialog(getContentPane(), "Quantità di un elemento non valida", "Err", JOptionPane.ERROR_MESSAGE);
+            case 12 -> JOptionPane.showMessageDialog(getContentPane(), "Menù o piatto non disponibile in questa data", "Err", JOptionPane.ERROR_MESSAGE);
+            case 13 -> JOptionPane.showMessageDialog(getContentPane(), "Nome già in uso", "Err", JOptionPane.ERROR_MESSAGE);
+            case 14 -> JOptionPane.showMessageDialog(getContentPane(), "Surplus troppo grande, max 10%", "Err", JOptionPane.ERROR_MESSAGE);
+            case 15 -> JOptionPane.showMessageDialog(getContentPane(), "Ingrediente non trovato", "Err", JOptionPane.ERROR_MESSAGE);
+            case 16 -> JOptionPane.showMessageDialog(getContentPane(), "Quantità non valida", "Err", JOptionPane.ERROR_MESSAGE);
+            case 17 -> JOptionPane.showMessageDialog(getContentPane(), "Non è possibile prenotare per questa data", "Err", JOptionPane.ERROR_MESSAGE);
+            case 18 -> JOptionPane.showMessageDialog(getContentPane(), "Workload troppo alto", "Err", JOptionPane.ERROR_MESSAGE);
+            case 19 -> JOptionPane.showMessageDialog(getContentPane(), "Deve esserci almeno un piatto o menù per persona", "Err", JOptionPane.ERROR_MESSAGE);
+            case 20 -> JOptionPane.showMessageDialog(getContentPane(), "Password non corretta", "Err", JOptionPane.ERROR_MESSAGE);
+            case 21 -> JOptionPane.showMessageDialog(getContentPane(), "Username non corretto", "Err", JOptionPane.ERROR_MESSAGE);
+            case 22 -> JOptionPane.showMessageDialog(getContentPane(), "Seleziona almeno un ruolo", "Err", JOptionPane.ERROR_MESSAGE);
+            case 23 -> JOptionPane.showMessageDialog(getContentPane(), "Non hai i permessi per entrare in questa finestra", "Err", JOptionPane.ERROR_MESSAGE);
+            default -> JOptionPane.showMessageDialog(getContentPane(), "Errore", "Err", JOptionPane.ERROR_MESSAGE);
         }
         getContentPane().repaint();
     }
