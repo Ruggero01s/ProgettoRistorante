@@ -54,4 +54,6 @@ public class Ingredient
 		Ingredient ingredient = (Ingredient) obj;
 		return this.name.equals(ingredient.getName());
 	}
+
+	//todo fare to string di tutte ste classi infami
 }

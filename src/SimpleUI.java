@@ -1230,7 +1230,7 @@ public class SimpleUI extends JFrame {
             case 5 -> JOptionPane.showMessageDialog(getContentPane(), "Data non valide","Err", JOptionPane.ERROR_MESSAGE);
             case 6 -> JOptionPane.showMessageDialog(getContentPane(), "Ristorante pieno o troppo carico", "Err", JOptionPane.ERROR_MESSAGE);
             case 7 -> JOptionPane.showMessageDialog(getContentPane(), "Il menù è troppo impegnativo, riduci il suo carico", "Err", JOptionPane.ERROR_MESSAGE);
-            case 8 -> JOptionPane.showMessageDialog(getContentPane(), "Il menù è troppo impegnativo, riduci il suo carico", "Err", JOptionPane.ERROR_MESSAGE); //TODO CAMBIARE STO MESSAGGIO
+            case 8 -> JOptionPane.showMessageDialog(getContentPane(), "Non è possibile avere un omonimia tra piatti e menu", "Err", JOptionPane.ERROR_MESSAGE); //TODO CAMBIARE STO MESSAGGIO
             case 9 -> JOptionPane.showMessageDialog(getContentPane(), "Piatto o menù non trovato", "Err", JOptionPane.ERROR_MESSAGE);
             case 10 -> JOptionPane.showMessageDialog(getContentPane(), "Nessuna prenotazione trovata", "Err", JOptionPane.ERROR_MESSAGE);
             case 11 -> JOptionPane.showMessageDialog(getContentPane(), "Quantità di un elemento non valida", "Err", JOptionPane.ERROR_MESSAGE);
