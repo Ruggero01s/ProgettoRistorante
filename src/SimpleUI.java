@@ -2,6 +2,7 @@ import javax.swing.*;
 import javax.swing.border.Border;
 import java.awt.*;
 import java.awt.event.*;
+import java.util.Arrays;
 import java.util.Objects;
 
 public class SimpleUI extends JFrame {
@@ -407,10 +408,17 @@ public class SimpleUI extends JFrame {
         passTabbedPane.addTab("Login",passLoginPanel);
         passTabbedPane.addTab("Sign Up", passSavePanel);
         passSaveButton.addActionListener(e -> {
-            ctrl.saveUser();
+            if(ctrl.saveUser(passSaveUserText.getText().trim(),Arrays.toString(passSavePasswordField.getPassword()).trim()))
+            {
+
+            }
         });
         passLoginButton.addActionListener(e ->{
-            ctrl.login();
+            if(ctrl.login(passLoginUserText.getText().trim(), Arrays.toString(passLoginPasswordField.getPassword()).trim()))
+            {
+                passLoginPasswordField.setText(Model.CLEAR);
+                passLoginUserText.setText(Model.CLEAR);
+            }
         });
     }
     private void logInit() {

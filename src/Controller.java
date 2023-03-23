@@ -900,53 +900,51 @@ public class Controller
 	}
 	
 	/**
-	 * Adds a new booking to the restaurant's booking system for the specified date, with the provided information.
-	 * @param name     The name of the person making the booking.
-	 * @param date     The date of the booking (must be of type DateOur).
-	 * @param number   The number of guests in the booking.
-	 * @param workload The expected workload for the restaurant staff for the booking.
-	 * @param order    A HashMap of the dishes and the quantities of each that the guests will order.
-	 * @return true if the booking was successfully added, false otherwise (for example, if the restaurant is already at capacity or the workload is too high).
+	 * Aggiunge una prenotazione alle prenotazioni del ristorante
+	 * @param name     nome della prenotazione
+	 * @param date     data della prenotazione
+	 * @param number   numero di persone
+	 * @param workload workload della prenotazione
+	 * @param order    hashmap di tutti i piatti ordinati
+	 * @return true se la prenotazione è stata salvata, false altrimenti
 	 */
 	public boolean manageBooking(String name, DateOur date, int number, int workload, HashMap<Dish, Integer> order)
 	{
-		// Create a new ArrayList to hold the bookings for the specified date
 		ArrayList<Booking> day = new ArrayList<>();
-		// Set the initial capacity and workload based on the inputs
 		int capacity = number;
 		int work = workload;
-		
-		// Retrieve the bookings for the specified date, if they exist
-		// If there is capacity and workload available, create a new Booking object and add it to the ArrayList for the date
-		// Update the booking map with the ArrayList for the specified date
-		// If there is no capacity or workload available, set an error message and return false
+
 		if (model.getBookingMap().containsKey(date))
 		{
+			//se ci sono altre prenotazioni per quel giorno
+			//calcolo la capacità ed il workload occupati
 			day = new ArrayList<>(model.getBookingMap().get(date));
-			// If there are existing bookings for the date, calculate the total capacity and workload based on all bookings for the date
 			for (Booking b : day)
 			{
 				capacity += b.getNumber();
 				work += b.getWorkload();
 			}
 		}
-		// Check if the restaurant has capacity and workload available to add the new booking
+		//controllo se c`è posto nel ristorante
 		if (capacity <= model.getCapacity() && work <= model.getWorkResturantLoad())
 		{
-			// If there is capacity and workload available, create a new Booking object and add it to the ArrayList for the date
 			day.add(new Booking(name, number, workload, order));
-			// Add the ArrayList to the booking map with the specified date
 			model.getBookingMap().put(date, day);
 			return true;
 		}
 		else
 		{
-			// If there is no capacity or workload available, set an error message and return false
 			sui.errorSetter(SimpleUI.FULL_RESTURANT);
 			return false;
 		}
 	}
-	
+
+	/**
+	 * Metodo che trasforma una mappa di string ed integer in una
+	 * mappa di dish ed integer
+	 * @param map mappa di string ed integer
+	 * @return mappa di dish ed integer
+	 */
 	public HashMap<Dish, Integer> dishToMap(HashMap<String, Integer> map)
 	{
 		HashMap<Dish, Integer> out = new HashMap<>();
@@ -956,7 +954,7 @@ public class Controller
 			{
 				if (dish.getName().equals(s.getKey()))
 				{
-					out.put(dish, s.getValue());
+					out.put(dish, s.getValue()); //quando la stringa coincide con un piatto aggiorno la mappa
 					break;
 				}
 			}
@@ -979,7 +977,11 @@ public class Controller
 	{
 		Writer.writeRegister(model.getRegistro());
 	}
-	
+
+	/**
+	 * Metodo che genera la lista della spesa in base ai piatti da servire oggi
+	 * ed in base al magazzino attuale
+	 */
 	private void generateGroceryList()  //todo sta cosa va snellita
 	{
 		Set<Ingredient> grocerySet = new HashSet<>();
@@ -997,7 +999,7 @@ public class Controller
 			Set<Ingredient> drinks = new HashSet<>();
 			for (Booking b : book)
 			{
-				for (Map.Entry<String, Double> entry : model.getDrinksMap().entrySet())
+				for (Map.Entry<String, Double> entry : model.getDrinksMap().entrySet()) //aggiungo i drink alla lista della spesa
 				{
 					Ingredient i = new Ingredient(entry.getKey(), "L", Math.ceil(entry.getValue() * b.getNumber()));
 					if (drinks.contains(i))
@@ -1006,16 +1008,15 @@ public class Controller
 						{
 							if (drink.equals(i))
 							{
-								drink.setQuantity(drink.getQuantity() + i.getQuantity());
+								drink.setQuantity(drink.getQuantity() + i.getQuantity()); //aggiungo i drinks in caso esistano già nel set
 								break;
 							}
 						}
 					}
 					else
-						drinks.add(i);
-					
+						drinks.add(i); //aggiungo i drinks in caso non ci siano già
 				}
-				for (Map.Entry<String, Double> entry : model.getExtraFoodsMap().entrySet())
+				for (Map.Entry<String, Double> entry : model.getExtraFoodsMap().entrySet()) //aggiungo i foods alla lista della spesa
 				{
 					Ingredient i = new Ingredient(entry.getKey(), "Hg", Math.ceil(entry.getValue() * b.getNumber()));
 					if (foods.contains(i))
@@ -1024,16 +1025,15 @@ public class Controller
 						{
 							if (food.equals(i))
 							{
-								food.setQuantity(food.getQuantity() + i.getQuantity());
+								food.setQuantity(food.getQuantity() + i.getQuantity()); //aggiungo i drinks in caso esistano già nel set
 								break;
 							}
 						}
 					}
 					else
-						foods.add(i);
-					
+						foods.add(i); //aggiungo i foods in caso non ci siano già
 				}
-				for (Map.Entry<Dish, Integer> entry : b.getOrder().entrySet())
+				for (Map.Entry<Dish, Integer> entry : b.getOrder().entrySet()) //creo una mappa con tutti i piatti ordinati per oggi
 				{
 					Dish dish = entry.getKey();
 					if (allDish.containsKey(dish))
@@ -1042,36 +1042,35 @@ public class Controller
 						allDish.put(dish, entry.getValue());
 				}
 			}
-			
+
+			//addo alla lista della spesa i foods e drinks calcolati prima
 			grocerySet.addAll(foods);
 			grocerySet.addAll(drinks);
 			
 			for (Map.Entry<Dish, Integer> entry : allDish.entrySet())
 			{
-				recipe = entry.getKey().getRecipe();
+				recipe = entry.getKey().getRecipe(); //scorro le ricette di ogni piatto
 				
 				for (Ingredient ingredient : recipe.getIngredients())
 				{
-					multi = entry.getValue() / recipe.getPortions();
-					int resto = entry.getValue() % recipe.getPortions();
+					multi = entry.getValue() / recipe.getPortions(); // quante ricette devo cucinare per soddisfare la richiesta
+					int resto = entry.getValue() % recipe.getPortions(); //quantità di cibo per arrotondare alla ricetta successiva
 					
-					if (resto != 0)
+					if (resto != 0) //se ci sono avanzi
 					{
 						multi++;
-						surplus = ingredient.getQuantity() / recipe.getPortions() * resto;
+						surplus = ingredient.getQuantity() / recipe.getPortions() * resto; //salvo il cibo avanzato
 					}
 					
-					quantity = ingredient.getQuantity() * multi;
+					quantity = ingredient.getQuantity() * multi; //quantità di cibo da comprare
 					
-					if (grocerySet.contains(ingredient))
+					if (grocerySet.contains(ingredient)) //se nella lista della spesa c'è già questo ingrediente
 					{
 						double delta = quantity;
-						quantity += ingredient.getQuantity();
+						quantity += ingredient.getQuantity(); //todo testare e cambiare e commentare
 						delta = quantity - delta;
 						if (delta < surplusMap.get(ingredient.getName()))
-						{
 							surplusMap.put(ingredient.getName(), (surplusMap.get(ingredient.getName()) - delta));
-						}
 						else
 						{
 							grocerySet.add(new Ingredient(ingredient.getName(), ingredient.getUnit(), quantity));
@@ -1080,7 +1079,7 @@ public class Controller
 					}
 					else
 					{
-						grocerySet.add(new Ingredient(ingredient.getName(), ingredient.getUnit(), quantity));
+						grocerySet.add(new Ingredient(ingredient.getName(), ingredient.getUnit(), quantity)); //aggiungo ingrediente ed avanzi
 						surplusMap.put(ingredient.getName(), surplus);
 					}
 				}
@@ -1091,16 +1090,17 @@ public class Controller
 				i.setQuantity(i.getQuantity() + i.getQuantity() * model.getIncrement() / 100.0);
 			}
 			
-			grocerySet = new HashSet<>(compareWithRegister(grocerySet));
+			grocerySet = new HashSet<>(compareWithRegister(grocerySet)); //comparo la lista della spesa con ciò che ho in magazzino
 			
 			
 			Set<Ingredient> drink = new HashSet<>();
 			Set<Ingredient> food = new HashSet<>();
 			
 			
-			drink = new HashSet<>(compareWithRegister(drink));
-			food = new HashSet<>(compareWithRegister(food));
-			
+			drink = new HashSet<>(compareWithRegister(drink)); //controllo la lista dei drinks con il magazzino
+			food = new HashSet<>(compareWithRegister(food)); //controllo la lista dei foods con il magazzino
+
+			//aggiorno il magazzino
 			addToRegister(grocerySet);
 			addToRegister(drink);
 			addToRegister(food);
@@ -1110,23 +1110,28 @@ public class Controller
 		}
 		else
 		{
-			sui.wareListOut.setText("Non essendoci prenotazioni per oggi la lista della spesa è vuota");
+			sui.wareListOut.setText("Non essendoci prenotazioni per oggi la lista della spesa è vuota"); //in caso non ci siano prenotazioni per oggi la lista della spesa è vuoto
 		}
 		sui.wareListMagOut.setText(setToString(model.getRegistro()));
 	}
-	
+
+	/**
+	 * Metodo che compara ed aggiorna la lista della spesa in base al magazzino
+	 * @param set lista della spesa
+	 * @return lista della spesa aggiornata
+	 */
 	private Set<Ingredient> compareWithRegister(Set<Ingredient> set)
 	{
 		for (Ingredient reg : model.getRegistro())
 		{
-			for (Ingredient ingredient : set) //mannaggia al set che non ha un .get
+			for (Ingredient ingredient : set)
 			{
 				if (reg.equals(ingredient))
 				{
 					double q = ingredient.getQuantity() - reg.getQuantity();
-					if (q <= 0)
+					if (q <= 0) //se in magazzino avevo una quantità più grande di quella che dovevo comprare non la compro
 						set.remove(ingredient);
-					else
+					else //se in magazzino avevo già degli avanzi diminuisco la quantità da comprare
 						ingredient.setQuantity(q);
 					break;
 				}
@@ -1158,10 +1163,17 @@ public class Controller
 				model.getRegistro().add(ingredient); //se non c'è già nel magazzino lo aggiungo e basta
 		}
 	}
-	
+
+	/**
+	 * Metodo che trasforma i set della lista della spesa in stringa
+	 * @param ingredients lista della spesa generale
+	 * @param drinks lista dei drinks
+	 * @param foods lista dei foods
+	 * @return stringa di output
+	 */
 	private String groceriesToString(Set<Ingredient> ingredients, Set<Ingredient> drinks, Set<Ingredient> foods)
 	{
-		if (ingredients.isEmpty() && drinks.isEmpty() && foods.isEmpty())
+		if (ingredients.isEmpty() && drinks.isEmpty() && foods.isEmpty()) // in caso sia tutto vuoto
 			return "La lista della spesa è vuota perché tutti gli ingredienti necessari sono già in magazzino";
 		
 		String out;
@@ -1364,7 +1376,7 @@ public class Controller
 	/**
 	 * Metodo che salva un nuovo utente tramite i dati della GUI
 	 */
-	public void saveUser()
+	public void saveUser(String name, String password, String confPassword, boolean manager, boolean employee, boolean storageWorker)
 	{
 		String name = sui.passSaveUserText.getText().trim();
 		String password = Arrays.toString(sui.passSavePasswordField.getPassword()).trim();
@@ -1408,14 +1420,15 @@ public class Controller
 		else
 			sui.errorSetter(SimpleUI.NOT_ENOUGHT_ROLES);
 	}
-	
+
 	/**
 	 * Metodo che gestisce il login di un utente tramite utente e password
+	 * @param name nome utente
+	 * @param password password inserita
+	 * @return true se il login è andato a buon fine, false altrimenti
 	 */
-	public void login()
+	public boolean login(String name, String password)
 	{
-		String name = sui.passLoginUserText.getText().trim();
-		String password = Arrays.toString(sui.passLoginPasswordField.getPassword()).trim();
 		if (!name.isBlank() && !password.isBlank()) //controllo che abbiano un valore
 		{
 			boolean found = false;
@@ -1428,8 +1441,7 @@ public class Controller
 					{
 						sui.login(); //cambio stato alla GUI
 						model.setTheUser(user); //memorizzo l'utente corrente
-						sui.passLoginPasswordField.setText(Model.CLEAR);
-						sui.passLoginUserText.setText(Model.CLEAR);
+						return true;
 					}
 					else
 						sui.errorSetter(SimpleUI.INVALID_PASSWORD);
@@ -1441,6 +1453,7 @@ public class Controller
 		}
 		else
 			sui.errorSetter(SimpleUI.INVALID_FORMAT);
+		return false;
 	}
 	
 	/**
