@@ -85,4 +85,9 @@ public class Dish
                 return date.between(this.startPeriod, this.endPeriod);
         }
     }
+    
+    public String convertToString() //todo decidere formati to string
+    {
+        return this.name+" - ["+this.startPeriod.getStringDate()+" || "+this.endPeriod.getStringDate()+" ] - ("+this.recipe.getId()+")";
+    }
 }

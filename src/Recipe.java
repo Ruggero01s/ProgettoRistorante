@@ -1,5 +1,4 @@
-import java.util.HashSet;
-import java.util.Set;
+import java.util.*;
 
 public class  Recipe
 {
@@ -71,9 +70,14 @@ public class  Recipe
     
     public String convertToSting()
     {
-        String out = this.id+" - ";
-        out+="p. "+this.portions+" - ";
-        
-        return out;
+        StringBuilder out= new StringBuilder(this.id + " - [");
+    
+        for (Ingredient ingredient : ingredients) //todo iterare in ordine il set
+        {
+            out.append(ingredient.convertToString()).append(", ");
+        }
+        out.append("] - " + "p.").append(this.portions).append(" - ").append("w.").append(this.workLoadPortion);
+      
+        return out.toString();
     }
 }

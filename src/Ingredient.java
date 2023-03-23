@@ -55,5 +55,9 @@ public class Ingredient
 		return this.name.equals(ingredient.getName());
 	}
 
+	public String convertToString()
+	{
+		return this.name+":"+this.quantity+":"+this.unit;
+	}
 	//todo fare to string di tutte ste classi infami
 }
