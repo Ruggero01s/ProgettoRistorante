@@ -5,6 +5,8 @@ import java.awt.event.*;
 import java.util.Objects;
 
 public class SimpleUI extends JFrame {
+
+
     // Enum for the different states of the frame
     private enum State {
         PASSWORD,
@@ -625,7 +627,10 @@ public class SimpleUI extends JFrame {
         cfgBasePanel.add(buttonBack1, c);
         c.gridx = 1;
         c.gridy = 5;
-        cfgBaseSendButton.addActionListener(e -> ctrl.saveConfig());
+        cfgBaseSendButton.addActionListener(e -> ctrl.saveConfig(cfgBaseInputCap.getText(),
+                cfgBaseInputIndWork.getText(),
+                cfgBaseInputSurplus.getText(),
+                cfgBaseInputDate.getText().trim()));
         cfgBasePanel.add(cfgBaseSendButton, c);
         c.gridx = 2;
         c.gridy = 5;
@@ -642,7 +647,7 @@ public class SimpleUI extends JFrame {
         cfgDrinksFoodsPanel.add(cfgDrinksInput, c);
         c.gridx = 2;
         c.gridy = 0;
-        cfgDrinksSendButton.addActionListener(e -> ctrl.saveDrinks());
+        cfgDrinksSendButton.addActionListener(e -> ctrl.saveDrinks(cfgDrinksInput.getText()));
         cfgDrinksFoodsPanel.add(cfgDrinksSendButton, c);
         c.gridx = 0;
         c.gridy = 1;
@@ -652,7 +657,7 @@ public class SimpleUI extends JFrame {
         cfgDrinksFoodsPanel.add(cfgFoodsInput, c);
         c.gridx = 2;
         c.gridy = 1;
-        cfgFoodSendButton.addActionListener(e -> ctrl.saveFoods());
+        cfgFoodSendButton.addActionListener(e -> ctrl.saveFoods(cfgFoodsInput.getText()));
         cfgDrinksFoodsPanel.add(cfgFoodSendButton, c);
         c.gridx = 0;
         c.gridy = 2;
@@ -712,8 +717,10 @@ public class SimpleUI extends JFrame {
         c.gridx = 3;
         c.gridy = 6;
         cfgRecipesPanel.add(cfgRecipeSendButton, c);
-        cfgRecipeSendButton.addActionListener(e -> ctrl.saveRecipe());
-
+        cfgRecipeSendButton.addActionListener(e -> ctrl.saveRecipe(cfgRecipeNameInput.getText(),
+                                                     cfgRecipeIngredientsInput.getText(),
+                                                     cfgRecipePortionsInput.getText(),
+                                                     cfgRecipeWorkLoadInput.getText()));
         //Dishes panel
         c.gridx = 0;
         c.gridy = 0;
@@ -1186,6 +1193,46 @@ public class SimpleUI extends JFrame {
         getContentPane().revalidate();
         getContentPane().repaint();
     }
+
+    public void updateConfig(String[] configState) {
+        cfgResBaseOut.setText(configState[0]);
+        cfgBaseInputCap.setText(configState[1]);
+        cfgBaseInputIndWork.setText(configState[2]);
+        cfgBaseInputDate.setText(configState[3]);
+        cfgBaseInputSurplus.setText(configState[4]);
+    }
+
+    public void updateDrinks(String drinks) {
+        setDrinkList(drinks);
+        cfgResDrinksOut.setText(drinks);
+    }
+
+    public void updateFoods(String foods) {
+        setDrinkList(foods);
+        cfgResDrinksOut.setText(foods);
+    }
+
+    public void updateRecipes(String[] recipes) {
+        if(recipes.length==0)
+        {
+            String[] noRecipe = {"Non ci sono ricette inserite"};
+            DefaultComboBoxModel<String> model = new DefaultComboBoxModel<>(noRecipe);
+            cfgDishComboBox.setModel(model);
+            cfgResRecipesOut.setText(noRecipe[0]);
+            setRecipeList("");
+        }
+        else{
+            DefaultComboBoxModel<String> model = new DefaultComboBoxModel<>(recipes);
+            cfgDishComboBox.setModel(model);
+
+            StringBuilder compactedArray = new StringBuilder();
+            for (String s : recipes) {
+                compactedArray.append(s).append("\n");
+            }
+            cfgResRecipesOut.setText(compactedArray.toString().trim());
+            setRecipeList(compactedArray.toString().trim());
+        }
+    }
     
     public void login()
     {
@@ -1218,6 +1265,8 @@ public class SimpleUI extends JFrame {
     public static final int INVALID_USERNAME = 21;
     public static final int NOT_ENOUGHT_ROLES = 22;
     public static final int NO_PERMISSION = 23;
+    public static final int EMPTY_INPUT = 24;
+
     public void errorSetter(int code)
     {
         switch (code)
@@ -1246,6 +1295,7 @@ public class SimpleUI extends JFrame {
             case 21 -> JOptionPane.showMessageDialog(getContentPane(), "Username non corretto", "Err", JOptionPane.ERROR_MESSAGE);
             case 22 -> JOptionPane.showMessageDialog(getContentPane(), "Seleziona almeno un ruolo", "Err", JOptionPane.ERROR_MESSAGE);
             case 23 -> JOptionPane.showMessageDialog(getContentPane(), "Non hai i permessi per entrare in questa finestra", "Err", JOptionPane.ERROR_MESSAGE);
+            case 24 -> JOptionPane.showMessageDialog(getContentPane(), "L'input è vuoto", "Err", JOptionPane.ERROR_MESSAGE);
             default -> JOptionPane.showMessageDialog(getContentPane(), "Errore", "Err", JOptionPane.ERROR_MESSAGE);
         }
         getContentPane().repaint();

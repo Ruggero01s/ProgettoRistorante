@@ -55,13 +55,16 @@ public class Controller
 	 */
 	private void updateConfig()
 	{
-		sui.cfgResBaseOut.setText("Capacità: " + model.getCapacity() + "\n" + "IndividualWorkload: " +
+		String[] configState = new String[5];
+		configState[0] = "Capacità: " + model.getCapacity() + "\n" + "IndividualWorkload: " +
 				model.getWorkPersonLoad() + "\n" + "Restaurant Worlkload: " + model.getWorkResturantLoad() + "\n"
-				+ "Data odierna: " + model.getToday().getStringDate() + "Surplus %: " + model.getIncrement());
-		sui.cfgBaseInputCap.setText(Integer.toString(model.getCapacity()));
-		sui.cfgBaseInputIndWork.setText(Integer.toString(model.getWorkPersonLoad()));
-		sui.cfgBaseInputDate.setText(model.getToday().getStringDate());
-		sui.cfgBaseInputSurplus.setText(Integer.toString(model.getIncrement()));
+				+ "Data odierna: " + model.getToday().getStringDate() + "Surplus %: " + model.getIncrement();
+		configState[1] = Integer.toString(model.getCapacity());
+		configState[2] = Integer.toString(model.getWorkPersonLoad());
+		configState[3] = model.getToday().getStringDate();
+		configState[4] = Integer.toString(model.getIncrement());
+
+		sui.updateConfig(configState);
 	}
 	
 	/**
@@ -146,27 +149,28 @@ public class Controller
 	/**
 	 * Metodo che legge e salva i config dalla GUI
 	 */
-	public void saveConfig()
+	public void saveConfig(String inputCapacity, String inputWorkload,String inputPercent,String todayString)
 	{
 		try
 		{
-			String inputCapacity = sui.cfgBaseInputCap.getText();
-			String inputWorkload = sui.cfgBaseInputIndWork.getText();
-			String inputPercent = sui.cfgBaseInputSurplus.getText();
-			String todayString = sui.cfgBaseInputDate.getText().trim();
 			int capacity = Integer.parseInt(inputCapacity); //converto i parametri numerici
 			int workload = Integer.parseInt(inputWorkload);
 			int percent = Integer.parseInt(inputPercent);
 			
 			if (!checkDate(todayString)) //check per correttezza della data
+			{
 				sui.errorSetter(SimpleUI.INVALID_DATE);
+			}
 			else
 			{
 				DateOur today = inputToDate(todayString);
 				if (capacity <= 0 || workload <= 0) //check parametri numerici
+				{
 					sui.errorSetter(SimpleUI.MIN_ZERO);
-				else if (percent > 10)
+				}
+				else if (percent > 10) {
 					sui.errorSetter(SimpleUI.SURPLUS_TOO_GREAT);
+				}
 				else
 				{
 					//salvo tutti i dati ed aggiorno la GUI
@@ -174,9 +178,7 @@ public class Controller
 					model.setWorkPersonLoad(workload);
 					model.setToday(today);
 					model.setIncrement(percent);
-					sui.cfgResBaseOut.setText("Capacità: " + model.getCapacity() + "\n" + "IndividualWorkload: " +
-							model.getWorkPersonLoad() + "\n" + "Restaurant Worlkload: " + model.getWorkResturantLoad() +
-							"\n" + "Data odierna: " + model.getToday().getStringDate() + "Surplus %: " + model.getIncrement());
+					updateConfig();
 				}
 			}
 		}
@@ -189,11 +191,10 @@ public class Controller
 	/**
 	 * Metodo che legge e salva i drinks
 	 */
-	public void saveDrinks()
+	public void saveDrinks(String input)
 	{
 		try
 		{
-			String input = sui.cfgDrinksInput.getText();
 			if (!input.contains(":")) //controllo il formato della stringa
 				throw new RuntimeException("");
 			
@@ -211,7 +212,6 @@ public class Controller
 			else
 			{
 				model.getDrinksMap().put(inputSplit[0], quantity);
-				sui.cfgDrinksInput.setText("");
 				updateDrinkList();
 			}
 		}
@@ -224,12 +224,10 @@ public class Controller
 	/**
 	 * Metodo che legge e salva i foods aggiuntivi
 	 */
-	public void saveFoods()
+	public void saveFoods(String input)
 	{
 		try
 		{
-			String input = sui.cfgDrinksInput.getText();
-			
 			if (!input.contains(":")) //controllo il formato della stringa
 				throw new RuntimeException("");
 			
@@ -246,7 +244,6 @@ public class Controller
 			else
 			{
 				model.getExtraFoodsMap().put(inputSplit[0], quantity);
-				sui.cfgFoodsInput.setText("");
 				updateFoodList();
 			}
 		}
@@ -259,15 +256,10 @@ public class Controller
 	/**
 	 * Metodo che legge e salva le ricette
 	 */
-	public void saveRecipe()
+	public void saveRecipe(String inputName, String inputIngredients, String inputPortions,	String inputWorkload)
 	{
 		try
 		{
-			String inputName = sui.cfgRecipeNameInput.getText();
-			String inputIngredients = sui.cfgRecipeIngredientsInput.getText();
-			String inputPortions = sui.cfgRecipePortionsInput.getText();
-			String inputWorkload = sui.cfgRecipeWorkLoadInput.getText();
-			
 			Set<Ingredient> ingredientQuantitySet = new HashSet<>();
 			String[] lines = inputIngredients.split("\n");
 			
@@ -510,7 +502,7 @@ public class Controller
 		}
 		catch (RuntimeException e)
 		{
-			sui.errorSetter(SimpleUI.INVALID_FORMAT);
+			sui.errorSetter(SimpleUI.INSUFFICENT_DISH);
 		}
 	}
 	
@@ -595,33 +587,20 @@ public class Controller
 	 */
 	public void updateRecipeStringList()
 	{
+		String[] recipes = new String[model.getRecipesSet().size()]; //todo controllare se recipeSet esiste anche se vuoto
 		if (model.getRecipesSet().isEmpty() || (model.getRecipesSet() == null)) //se le ricette sono vuote
 		{
-			String[] noRecipe = {"Non ci sono ricette inserite"};
-			DefaultComboBoxModel<String> model = new DefaultComboBoxModel<>(noRecipe);
-			sui.cfgDishComboBox.setModel(model);
-			sui.cfgResRecipesOut.setText(noRecipe[0]);
-			sui.setRecipeList(noRecipe[0]);
+			sui.updateRecipes(recipes);
 		}
 		else //se c'è almeno una ricetta
 		{
-			String[] recipes = new String[model.getRecipesSet().size()];
 			int i = 0;
 			for (Recipe recipe : model.getRecipesSet()) //trasformo le ricette in stringa
 			{
 				recipes[i] = (recipe.getId() + " - " + "[" + recipe.getIngredientsList() + "] - p." + recipe.getPortions() + " - w." + recipe.getWorkLoadPortion());
 				i++;
 			}
-			DefaultComboBoxModel<String> model = new DefaultComboBoxModel<>(recipes);
-			sui.cfgDishComboBox.setModel(model);
-			
-			StringBuilder compactedArray = new StringBuilder();
-			for (String s : recipes)
-			{
-				compactedArray.append(s).append("\n");
-			}
-			sui.cfgResRecipesOut.setText(compactedArray.toString().trim());
-			sui.setRecipeList(compactedArray.toString().trim());
+			sui.updateRecipes(recipes);
 		}
 	}
 	
@@ -659,8 +638,7 @@ public class Controller
 		{
 			out.append(drink.getKey()).append(":").append(drink.getValue().toString()).append("\n");
 		}
-		sui.setDrinkList(out.toString().trim());
-		sui.cfgResDrinksOut.setText(out.toString().trim());
+		sui.updateDrinks(out.toString().trim());
 	}
 	
 	/**
@@ -673,8 +651,7 @@ public class Controller
 		{
 			out.append(food.getKey()).append(":").append(food.getValue().toString()).append("\n");
 		}
-		sui.setFoodsList(out.toString().trim());
-		sui.cfgResFoodsOut.setText(out.toString().trim());
+		sui.updateFoods(out.toString().trim());
 	}
 
 	/**
@@ -754,6 +731,7 @@ public class Controller
 	 */
 	public HashMap<Dish, Integer> inputToOrder(String in, DateOur date, int number)
 	{
+		if(in.isBlank()) throw new RuntimeException();
 		String[] lines = in.split("\n");
 		HashMap<Dish, Integer> order = new HashMap<>();
 		boolean found;
@@ -839,6 +817,11 @@ public class Controller
 		catch (NumberFormatException e) //catch l'errore del parseInt iniziale
 		{
 			sui.errorSetter(SimpleUI.NO_QUANTITY);
+			return new HashMap<>();
+		}
+		catch (RuntimeException e) //catch l'errore del parseInt iniziale
+		{
+			sui.errorSetter(SimpleUI.EMPTY_INPUT);
 			return new HashMap<>();
 		}
 	}
