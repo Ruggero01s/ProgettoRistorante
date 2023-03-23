@@ -15,4 +15,6 @@ public interface GUI
 		void updateWareReturnList (String out);
 		void updateWare(String groceryList, String register);
 		void login();
+		void updateBooking (String name, String number, String work, String capacity, String workload);
+		void selectedMenu(String toString);
 }

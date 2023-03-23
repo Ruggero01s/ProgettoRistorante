@@ -55,7 +55,6 @@ public class  Recipe
         return result;
     }
     
-    
     /**
      * toString della lista degli ingredienti
      * @return string contenente tutti gli ingredienti
@@ -68,5 +67,13 @@ public class  Recipe
             out.append(i.getName()).append(":").append(i.getQuantity()).append(", ");
         }
         return out.toString();
+    }
+    
+    public String convertToSting()
+    {
+        String out = this.id+" - ";
+        out+="p. "+this.portions+" - ";
+        
+        return out;
     }
 }

@@ -454,7 +454,7 @@ public class SimpleUI extends JFrame implements ErrorSetter, GUI
                 updateUI();
             }
             else
-                errorSetter(NO_PERMISSION);
+                errorSetter(Controller.NO_PERMISSION);
         });
         employeeButton.addActionListener(e -> {
             if(ctrl.checkPermission("employee"))
@@ -463,7 +463,7 @@ public class SimpleUI extends JFrame implements ErrorSetter, GUI
                 updateUI();
             }
             else
-                errorSetter(NO_PERMISSION);
+                errorSetter(Controller.NO_PERMISSION);
         });
         warehouseWorkerButton.addActionListener(e -> {
             if(ctrl.checkPermission("warehouse worker"))
@@ -472,7 +472,7 @@ public class SimpleUI extends JFrame implements ErrorSetter, GUI
                 updateUI();
             }
             else
-                errorSetter(NO_PERMISSION);
+                errorSetter(Controller.NO_PERMISSION);
         });
         buttonBack14.addActionListener(backToLogin);
     }
@@ -796,7 +796,7 @@ public class SimpleUI extends JFrame implements ErrorSetter, GUI
         c.gridy = 6;
         cfgDishesPanel.add(cfgDishSendButton, c);
         cfgDishSendButton.addActionListener(e -> ctrl.saveDish(cfgDishNameInput.getText(),
-                Objects.requireNonNull(cfgDishComboBox.getSelectedItem()).toString().split("-")[0].trim(), //todo sto coso è strano
+                Objects.requireNonNull(cfgDishComboBox.getSelectedItem()).toString().split("-")[0].trim(),
                 cfgDishSDateInput.getText(),
                 cfgDishEDateInput.getText(),
                 cfgDishPermanentRadio.isSelected(),
@@ -1028,7 +1028,7 @@ public class SimpleUI extends JFrame implements ErrorSetter, GUI
             if (Controller.checkDate(s)) {
                 ctrl.seeBookings(ctrl.inputToDate(s));
             } else {
-                errorSetter(INVALID_DATE);
+                errorSetter(Controller.INVALID_DATE);
             }
         });
         c.gridx = 0;
@@ -1080,7 +1080,16 @@ public class SimpleUI extends JFrame implements ErrorSetter, GUI
         c.gridx = 2;
         c.gridy = 6;
         empNewBookingPanel.add(empNewBookSend, c);
-        empNewBookSend.addActionListener(e -> ctrl.saveBooking());
+        empNewBookSend.addActionListener(e ->
+        {
+            if(ctrl.saveBooking(empNewBookNameInput.getText().trim(),empNewBookDateInput.getText().trim(),Integer.parseInt(empNewBookNumInput.getText().trim()),empNewBookOrderInput.getText().trim()))
+            {
+                empNewBookNameInput.setText("");
+                empNewBookDateInput.setText("");
+                empNewBookNumInput.setText("");
+                empNewBookOrderInput.setText("");
+            }
+        });
 
         c.gridx = 0;
         c.gridy = 6;
@@ -1347,33 +1356,34 @@ public class SimpleUI extends JFrame implements ErrorSetter, GUI
         wareListMagOut.setText(register);
     }
     
-    //costanti per la gestione degli errori
-    public static final int MIN_ZERO = 0;
-    public static final int INVALID_FORMAT = 1;
-    public static final int NO_RECIPE = 2;
-    public static final int NO_DISH = 3;
-    public static final int INSUFFICENT_DISH = 4;
-    public static final int INVALID_DATE = 5;
-    public static final int FULL_RESTURANT = 6;
-    public static final int THICC_MENU = 7;
-    public static final int NAME_SAME_AS_DISH = 8;
-    public static final int NOT_FOUND = 9;
-    public static final int NO_BOOKINGS = 10;
-    public static final int NO_QUANTITY = 11;
-    public static final int OUT_OF_DATE = 12;
-    public static final int EXISTING_NAME = 13;
-    public static final int SURPLUS_TOO_GREAT = 14;
-    public static final int NO_INGREDIENT = 15;
-    public static final int INVALID_QUANTITY = 16;
-    public static final int NOT_TODAY = 17;
-    public static final int WORKLOAD_TOO_HIGHT = 18;
-    public static final int ORDER_FOR_TOO_LITTLE = 19;
-    public static final int INVALID_PASSWORD = 20;
-    public static final int INVALID_USERNAME = 21;
-    public static final int NOT_ENOUGHT_ROLES = 22;
-    public static final int NO_PERMISSION = 23;
-    public static final int EMPTY_INPUT = 24;
-
+    /**
+     * Stampa un elenco di prenotazioni
+     * @param name elenco di nomi
+     * @param number elenco di coperti
+     * @param work elenco di workload
+     * @param capacity capacità rimasta in quel giorno
+     * @param workload workload rimasto per quel giorno
+     */
+    public void updateBooking (String name, String number, String work, String capacity, String workload)
+    {
+        //elenco di stringhe da stampare in GUI
+        empSeeBookNameAreaOut.setText(name);
+        empSeeBookNumAreaOut.setText(number);
+        empSeeBookWorkloadAreaOut.setText(work);
+        //capacity e workload rimanenti per quel giorno
+        empSeeBookCapacityTotalOut.setText(capacity);
+        empSeeBookWorkloadTotalOut.setText(workload);
+    }
+    
+    /**
+     * Metodo che stampa i piatti di un menu
+     * @param menu elenco di piatti
+     */
+    public void selectedMenu(String menu)
+    {
+        cfgResDatiMenuOut.setText(menu);
+    }
+    
     public void errorSetter(int code)
     {
         switch (code)
@@ -1386,7 +1396,7 @@ public class SimpleUI extends JFrame implements ErrorSetter, GUI
             case 5 -> JOptionPane.showMessageDialog(getContentPane(), "Data non valide","Err", JOptionPane.ERROR_MESSAGE);
             case 6 -> JOptionPane.showMessageDialog(getContentPane(), "Ristorante pieno o troppo carico", "Err", JOptionPane.ERROR_MESSAGE);
             case 7 -> JOptionPane.showMessageDialog(getContentPane(), "Il menù è troppo impegnativo, riduci il suo carico", "Err", JOptionPane.ERROR_MESSAGE);
-            case 8 -> JOptionPane.showMessageDialog(getContentPane(), "Non è possibile avere un omonimia tra piatti e menu", "Err", JOptionPane.ERROR_MESSAGE); //TODO CAMBIARE STO MESSAGGIO
+            case 8 -> JOptionPane.showMessageDialog(getContentPane(), "Non è possibile avere un omonimia tra piatti e menu", "Err", JOptionPane.ERROR_MESSAGE);
             case 9 -> JOptionPane.showMessageDialog(getContentPane(), "Piatto o menù non trovato", "Err", JOptionPane.ERROR_MESSAGE);
             case 10 -> JOptionPane.showMessageDialog(getContentPane(), "Nessuna prenotazione trovata", "Err", JOptionPane.ERROR_MESSAGE);
             case 11 -> JOptionPane.showMessageDialog(getContentPane(), "Quantità di un elemento non valida", "Err", JOptionPane.ERROR_MESSAGE);

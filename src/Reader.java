@@ -7,11 +7,11 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Set;
 
-public class Reader
+public class Reader implements Read
 {
 	private static final String ERRORE = "\nErrore in Input: ";
 	
-	Controller ctrl;
+	Controller ctrl; //todo immagino che sta cosa vada tolta però non sono sicuro
 	
 	public Reader(Controller ctrl)
 	{
