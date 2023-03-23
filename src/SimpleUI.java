@@ -796,11 +796,11 @@ public class SimpleUI extends JFrame implements ErrorSetter, GUI
         c.gridy = 6;
         cfgDishesPanel.add(cfgDishSendButton, c);
         cfgDishSendButton.addActionListener(e -> ctrl.saveDish(cfgDishNameInput.getText(),
-                Objects.requireNonNull(cfgDishComboBox.getSelectedItem()).toString().split("-")[0].trim(),
+                Objects.requireNonNull(cfgDishComboBox.getSelectedItem()).toString().split("-")[0].trim(), //todo sto coso è strano
                 cfgDishSDateInput.getText(),
-                cfgDishEDateInput.getText()),
+                cfgDishEDateInput.getText(),
                 cfgDishPermanentRadio.isSelected(),
-                cfgDishSeasonalRadio.isSelected());
+                cfgDishSeasonalRadio.isSelected()));
 
         //Menu panel
         c.gridx = 0;
@@ -874,7 +874,12 @@ public class SimpleUI extends JFrame implements ErrorSetter, GUI
         c.gridx = 2;
         c.gridy = 6;
         cfgMenuPanel.add(cfgMenuSendButton, c);
-        cfgMenuSendButton.addActionListener(e -> ctrl.saveMenu());
+        cfgMenuSendButton.addActionListener(e -> ctrl.saveMenu(cfgMenuNameInput.getText(),
+                cfgMenuDishesInput.getText(),
+                cfgMenuSDateInput.getText(),
+                cfgMenuEDateInput.getText(),
+                cfgMenuPermanentRadio.isSelected(),
+                cfgMenuSeasonalRadio.isSelected()));
 
         //Resconto tab
         titlePadding.gridx = 0;
@@ -1232,7 +1237,7 @@ public class SimpleUI extends JFrame implements ErrorSetter, GUI
 
     public void updateFoods(String foods) {
         setDrinkList(foods);
-        cfgResDrinksOut.setText(foods);
+        cfgResFoodsOut.setText(foods);
     }
 
     public void updateRecipes(String[] recipes) {
@@ -1240,16 +1245,17 @@ public class SimpleUI extends JFrame implements ErrorSetter, GUI
         cfgRecipeIngredientsInput.setText(Model.CLEAR);
         cfgRecipePortionsInput.setText(Model.CLEAR);
         cfgRecipeWorkLoadInput.setText(Model.CLEAR);
+        DefaultComboBoxModel<String> model;
         if(recipes.length==0)
         {
             String[] noRecipe = {"Non ci sono ricette inserite"};
-            DefaultComboBoxModel<String> model = new DefaultComboBoxModel<>(noRecipe);
+            model = new DefaultComboBoxModel<>(noRecipe);
             cfgDishComboBox.setModel(model);
             cfgResRecipesOut.setText(noRecipe[0]);
             setRecipeList(Model.CLEAR);
         }
         else{
-            DefaultComboBoxModel<String> model = new DefaultComboBoxModel<>(recipes);
+            model = new DefaultComboBoxModel<>(recipes);
             cfgDishComboBox.setModel(model);
 
             StringBuilder compactedArray = new StringBuilder();
@@ -1259,6 +1265,43 @@ public class SimpleUI extends JFrame implements ErrorSetter, GUI
             cfgResRecipesOut.setText(compactedArray.toString().trim());
             setRecipeList(compactedArray.toString().trim());
         }
+    }
+    
+    
+    public void updateDishes(String[] dishes) {
+        DefaultComboBoxModel<String> model = new DefaultComboBoxModel<>(dishes);
+        cfgMenuComboBox.setModel(model);
+    
+        StringBuilder compactedArray = new StringBuilder();
+        for (String s : dishes)
+        {
+            compactedArray.append(s).append("\n");
+        }
+        cfgResDishesOut.setText(compactedArray.toString().trim());
+        setDishList(compactedArray.toString().trim());
+        cfgDishNameInput.setText(Model.CLEAR);
+        cfgDishSDateInput.setText(Model.CLEAR);
+        cfgDishEDateInput.setText(Model.CLEAR);
+    }
+    
+    public void updateMenuCarta(String menuCarta) {
+        cfgResMenuCartaOut.setText(menuCarta);
+    }
+    
+    public void updateMenus(String menus) {
+        cfgResMenuOut.setText(menus);
+        setMenuList(menus);
+        
+        cfgMenuNameInput.setText(Model.CLEAR);
+        cfgMenuDishesInput.setText(Model.CLEAR);
+        cfgMenuSDateInput.setText(Model.CLEAR);
+        cfgMenuEDateInput.setText(Model.CLEAR);
+    }
+    
+    public void updateMenuBoxes(String[] menus) {
+        DefaultComboBoxModel<String> model = new DefaultComboBoxModel<>(menus);
+        empNewBookMenuBox.setModel(model);
+        cfgResDatiMenuBox.setModel(model);
     }
     
     /**

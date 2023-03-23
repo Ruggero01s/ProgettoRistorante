@@ -1,9 +1,10 @@
 import java.util.*;
 
-public class Controller
+public class Controller //todo sostituire sui.errorsetter con erSet.... //todo le costanti spostare da sui a controller
 {
 	private Model model = new Model();
-	private SimpleUI sui;
+	private GUI gui;
+	private ErrorSetter erSet;
 	private Reader reader = new Reader(this);
 	
 	public Model getModel()
@@ -16,7 +17,8 @@ public class Controller
 	 */
 	public void init()
 	{
-		sui = new SimpleUI(this);
+		gui = new SimpleUI(this);
+		erSet = (ErrorSetter) gui; //todo vedere se estrarre errorSetter da SUI
 		loadModel();
 		gui.init(model.getToday().getStringDate());
 		generateGroceryList();
@@ -64,15 +66,6 @@ public class Controller
 		configState[4] = Integer.toString(model.getIncrement());
 
 		gui.updateConfig(List.of(configState));
-	}
-	
-	/**
-	 * converte la data di oggi in una stringa
-	 * @return data di oggi convertita a stringa
-	 */
-	public String getTodayString()
-	{
-		return model.getToday().getStringDate();
 	}
 	
 	/**
@@ -343,21 +336,12 @@ public class Controller
 	/**
 	 * Leggo e salvo i piatti
 	 */
-	public void saveDish(String inputName, String inputRecipe, String inputStartDate, String inputEndDate, boolean perm)
+	public void saveDish(String inputName, String inputRecipe, String inputStartDate, String inputEndDate, boolean perm, boolean seasonal)
 	{
 		try
 		{
-			String inputName = sui.cfgDishNameInput.getText();
-			
 			if (inputName.isBlank()) //controllo validità del nome
 				throw new RuntimeException("");
-			
-			String inputRecipe = Objects.requireNonNull(sui.cfgDishComboBox.getSelectedItem()).toString().split("-")[0].trim();
-			
-			String inputStartDate = sui.cfgDishSDateInput.getText();
-			String inputEndDate = sui.cfgDishEDateInput.getText();
-			boolean perm = sui.cfgDishPermanentRadio.isSelected();
-			boolean seasonal = sui.cfgDishSeasonalRadio.isSelected();
 			
 			if (!perm) // se non è permanente controllo le date
 			{
@@ -380,9 +364,6 @@ public class Controller
 					if (model.getDishesSet().add(new Dish(inputName, r, inputStartDate, inputEndDate, seasonal, perm))) //associo il piatto alla ricetta
 					{
 						updateDishStringList();
-						sui.cfgDishNameInput.setText(Model.CLEAR);
-						sui.cfgDishSDateInput.setText(Model.CLEAR);
-						sui.cfgDishEDateInput.setText(Model.CLEAR);
 						found = true;
 						break;
 					}
@@ -403,23 +384,14 @@ public class Controller
 	/**
 	 * Leggo e salvo i menu tematici
 	 */
-	public void saveMenu()
+	public void saveMenu(String inputName, String inputs, String inputStartDate, String inputEndDate, boolean permanent, boolean seasonal)
 	{
 		try
 		{
-			String inputName = sui.cfgMenuNameInput.getText();
-			String inputs = sui.cfgMenuDishesInput.getText();
-			
 			if (inputName.isBlank()) //controllo validità del nome
 				throw new RuntimeException("");
 			
 			String[] inputList = inputs.split("\n");
-			
-			String inputStartDate = sui.cfgMenuSDateInput.getText();
-			String inputEndDate = sui.cfgMenuEDateInput.getText();
-			
-			boolean permanent = sui.cfgMenuPermanentRadio.isSelected();
-			boolean seasonal = sui.cfgMenuSeasonalRadio.isSelected();
 			
 			ArrayList<Dish> dishesForMenu = new ArrayList<>();
 			
@@ -427,7 +399,7 @@ public class Controller
 			{
 				if (!checkDate(inputStartDate) || !checkDate(inputEndDate))
 				{
-					sui.errorSetter(SimpleUI.INVALID_DATE);
+					erSet.errorSetter(SimpleUI.INVALID_DATE);
 					return;
 				}
 			}
@@ -448,10 +420,6 @@ public class Controller
 						{
 							dishesForMenu.add(d); //aggiungo i piatti al menu
 							found = true;
-							sui.cfgMenuNameInput.setText(Model.CLEAR);
-							sui.cfgMenuDishesInput.setText(Model.CLEAR);
-							sui.cfgMenuSDateInput.setText(Model.CLEAR);
-							sui.cfgMenuEDateInput.setText(Model.CLEAR);
 							break;
 						}
 					}
@@ -460,16 +428,16 @@ public class Controller
 					dishNotFound=true;
 			}
 			if (dishNotFound) //se almeno un piatto prima non è stato trovato da errore
-				sui.errorSetter(SimpleUI.NO_DISH);
+				erSet.errorSetter(SimpleUI.NO_DISH);
 			else
 			{
 				ThematicMenu temp = new ThematicMenu(inputName, inputStartDate, inputEndDate, dishesForMenu, seasonal, permanent); //creo il menu
 				if (temp.getWorkThematicMenuLoad() <= ((double) model.getWorkPersonLoad() * 4 / 3)) //controllo se il workLoad è giusto
 				{
 					boolean valid = true;
-					for (String s : sui.dishString)
+					for (Dish dish: model.getDishesSet())
 					{
-						if (s.equals(temp.getName())) //controllo che non esistano un piatto ed un meno con lo stesso nome
+						if (dish.getName().equals(temp.getName())) //controllo che non esistano un piatto ed un menu con lo stesso nome
 						{
 							valid = false;
 							break;
@@ -483,18 +451,18 @@ public class Controller
 							updateMenuBoxes();
 						}
 						else
-							sui.errorSetter(SimpleUI.EXISTING_NAME);
+							erSet.errorSetter(SimpleUI.EXISTING_NAME);
 					}
 					else
-						sui.errorSetter(SimpleUI.NAME_SAME_AS_DISH);
+						erSet.errorSetter(SimpleUI.NAME_SAME_AS_DISH);
 				}
 				else
-					sui.errorSetter(SimpleUI.THICC_MENU);
+					erSet.errorSetter(SimpleUI.THICC_MENU);
 			}
 		}
 		catch (RuntimeException e)
 		{
-			sui.errorSetter(SimpleUI.INSUFFICENT_DISH);
+			erSet.errorSetter(SimpleUI.INSUFFICENT_DISH);
 		}
 	}
 	
@@ -554,8 +522,7 @@ public class Controller
 		{
 			out.append(m.getName()).append(" - [").append(m.getStartPeriod().getStringDate()).append(" || ").append(m.getStartPeriod().getStringDate()).append("] - w.").append(m.getWorkThematicMenuLoad()).append(" \n");
 		}
-		sui.cfgResMenuOut.setText(out.toString().trim());
-		sui.setMenuList(out.toString().trim());
+		gui.updateMenus(out.toString().trim());
 	}
 	
 	/**
@@ -570,7 +537,7 @@ public class Controller
 			if (r.getId().equals(id))
 				return r;
 		}
-		sui.errorSetter(9999); //errore generico
+		erSet.errorSetter(-1); //errore generico
 		return null; //non dovrebbe succedere
 	}
 	
@@ -608,16 +575,7 @@ public class Controller
 			dishes[i] = (d.getName() + " - [" + d.getStartPeriod().getStringDate() + " || " + d.getEndPeriod().getStringDate() + "] - " + "(" + d.getRecipe().getId() + ")");
 			i++;
 		}
-		DefaultComboBoxModel<String> model = new DefaultComboBoxModel<>(dishes);
-		sui.cfgMenuComboBox.setModel(model);
-		
-		StringBuilder compactedArray = new StringBuilder();
-		for (String s : dishes)
-		{
-			compactedArray.append(s).append("\n");
-		}
-		sui.cfgResDishesOut.setText(compactedArray.toString().trim());
-		sui.setDishList(compactedArray.toString().trim());
+		gui.updateDishes(dishes);
 	}
 	
 	/**
@@ -651,10 +609,7 @@ public class Controller
 	 */
 	public void updateMenuBoxes()
 	{
-		String[] out = makeMenuList();
-		DefaultComboBoxModel<String> model = new DefaultComboBoxModel<>(out);
-		sui.empNewBookMenuBox.setModel(model);
-		sui.cfgResDatiMenuBox.setModel(model);
+		gui.updateMenuBoxes(makeMenuList());
 	}
 
 	/**
@@ -709,7 +664,7 @@ public class Controller
 		}
 		catch (Exception e)
 		{
-			sui.errorSetter(SimpleUI.INVALID_DATE);
+			erSet.errorSetter(SimpleUI.INVALID_DATE);
 			return null;
 		}
 	}
@@ -739,7 +694,7 @@ public class Controller
 				if (num <= 0) //errore se il num associato è <=0
 				{
 					order.clear();
-					sui.errorSetter(SimpleUI.MIN_ZERO);
+					erSet.errorSetter(SimpleUI.MIN_ZERO);
 					return order;
 				}
 				for (ThematicMenu menu : model.getThematicMenusSet()) //cerca se il nome scritto è tra i menu tematici
@@ -762,7 +717,7 @@ public class Controller
 						else
 						{
 							order.clear();
-							sui.errorSetter(SimpleUI.OUT_OF_DATE);
+							erSet.errorSetter(SimpleUI.OUT_OF_DATE);
 							return order;
 						}
 					}
@@ -1360,13 +1315,13 @@ public class Controller
 	 */
 	private void menuCartaToday()
 	{
-		StringBuilder menus = new StringBuilder();
+		StringBuilder menuCarta = new StringBuilder();
 		for (Dish dish : model.getDishesSet()) //genero la lista di piatti
 			if (dish.isValid(model.getToday()))
-				menus.append(dish.getName()).append("\n");
-		if (menus.length() == 0)
-			menus = new StringBuilder("Non ci sono piatti disponibili per la data ordierna"); //se non ci sono piatti validi
-		sui.cfgResMenuCartaOut.setText(menus.toString());
+				menuCarta.append(dish.getName()).append("\n");
+		if (menuCarta.length() == 0)
+			menuCarta = new StringBuilder("Non ci sono piatti disponibili per la data ordierna"); //se non ci sono piatti validi
+		gui.updateMenuCarta(menuCarta.toString());
 	}
 	
 	/**
