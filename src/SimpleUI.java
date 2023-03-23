@@ -3,9 +3,11 @@ import javax.swing.border.Border;
 import java.awt.*;
 import java.awt.event.*;
 import java.util.Arrays;
+import java.util.List;
 import java.util.Objects;
 
-public class SimpleUI extends JFrame {
+public class SimpleUI extends JFrame implements ErrorSetter, GUI
+{
 
 
     // Enum for the different states of the frame
@@ -331,7 +333,7 @@ public class SimpleUI extends JFrame {
         updateUI();
     };
 
-    public void init() {
+    public void init(String today) {
         c.insets = new Insets(5, 5, 5, 5); // Top, left, bottom, right padding
         titlePadding.insets = new Insets(0, 5, 20, 5);
         endPadding.insets = new Insets(20, 5, 0, 5);
@@ -342,7 +344,7 @@ public class SimpleUI extends JFrame {
         logInit();
         cfgInit();
         empInit();
-        wareInit();
+        wareInit(today);
         // Set the initial state
         state = State.PASSWORD;
         updateUI();
@@ -408,9 +410,11 @@ public class SimpleUI extends JFrame {
         passTabbedPane.addTab("Login",passLoginPanel);
         passTabbedPane.addTab("Sign Up", passSavePanel);
         passSaveButton.addActionListener(e -> {
-            if(ctrl.saveUser(passSaveUserText.getText().trim(),Arrays.toString(passSavePasswordField.getPassword()).trim()))
+            if(ctrl.saveUser(passSaveUserText.getText().trim(),Arrays.toString(passSavePasswordField.getPassword()).trim(),Arrays.toString(passSavePassword2Field.getPassword()).trim(),passManCheck.isSelected(),passEmpCheck.isSelected(),passWareCheck.isSelected()))
             {
-
+                passSaveUserText.setText(Model.CLEAR);
+                passSavePasswordField.setText(Model.CLEAR);
+                passSavePassword2Field.setText(Model.CLEAR);
             }
         });
         passLoginButton.addActionListener(e ->{
@@ -1117,9 +1121,9 @@ public class SimpleUI extends JFrame {
         empTabbedPane.add("New Bookings", empNewBookingPanel);
     }
 
-    private void wareInit() {
-        wareListText.setText("Lista aggiornata al " + ctrl.getTodayString());
-        wareListMagText.setText("Magazzino aggiornato al " + ctrl.getTodayString());
+    private void wareInit(String today) {
+        wareListText.setText("Lista aggiornata al " + today);
+        wareListMagText.setText("Magazzino aggiornato al " + today);
 
         wareListScroll.setPreferredSize(new Dimension(400, 100));
         wareListScroll.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS);
@@ -1179,7 +1183,13 @@ public class SimpleUI extends JFrame {
         wareReturnListPanel.add(buttonBack13, c);
         c.gridx = 1;
         c.gridy = 4;
-        wareReturnListSend.addActionListener(e->ctrl.warehouseChanges());
+        wareReturnListSend.addActionListener(e->
+        {
+            if (ctrl.warehouseChanges(wareReturnListIn.getText().trim()))
+            {
+                wareReturnListIn.setText("");
+            }
+        });
         wareReturnListPanel.add(wareReturnListSend, c);
 
 
@@ -1207,12 +1217,12 @@ public class SimpleUI extends JFrame {
         getContentPane().repaint();
     }
 
-    public void updateConfig(String[] configState) {
-        cfgResBaseOut.setText(configState[0]);
-        cfgBaseInputCap.setText(configState[1]);
-        cfgBaseInputIndWork.setText(configState[2]);
-        cfgBaseInputDate.setText(configState[3]);
-        cfgBaseInputSurplus.setText(configState[4]);
+    public void updateConfig(List<String> configState) {
+        cfgResBaseOut.setText(configState.get(0));
+        cfgBaseInputCap.setText(configState.get(1));
+        cfgBaseInputIndWork.setText(configState.get(2));
+        cfgBaseInputDate.setText(configState.get(3));
+        cfgBaseInputSurplus.setText(configState.get(4));
     }
 
     public void updateDrinks(String drinks) {
@@ -1251,12 +1261,49 @@ public class SimpleUI extends JFrame {
         }
     }
     
+    /**
+     * Cambio lo satto della GUI dopo il login
+     */
     public void login()
     {
         state=State.LOGIN;
         updateUI();
     }
-
+    
+    /**
+     * Metodo che aggiorna i dati nel cambio di giorno
+     * @param data dati per il config
+     * @param today data di oggi
+     */
+    public void nextDay(List <String> data,String today)
+    {
+        updateConfig(data);
+        cfgBaseInputDate.setText(today);
+        wareListText.setText("Lista aggiornata al " + today);
+        wareListMagText.setText("Magazzino aggiornato al " + today);
+        wareReturnListOut.setText("");
+    }
+    
+    /**
+     * Metodo che aggiorna il magazzino
+     * @param out magazzino sotto forma di stringa
+     */
+    public void updateWareReturnList (String out)
+    {
+        wareReturnListOut.setText(out);
+    }
+    
+    /**
+     * Metodo che aggiorna il magazzino e la lista della spesa
+     * @param groceryList lista della spesa sotto forma di testo
+     * @param register magazzino sotto forma di testo
+     */
+    public void updateWare(String groceryList, String register)
+    {
+        wareListOut.setText(groceryList);
+        wareListMagOut.setText(register);
+    }
+    
     //costanti per la gestione degli errori
     public static final int MIN_ZERO = 0;
     public static final int INVALID_FORMAT = 1;
