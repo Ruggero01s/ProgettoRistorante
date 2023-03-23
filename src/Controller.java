@@ -308,10 +308,6 @@ public class Controller
 			{
 				if (model.getRecipesSet().add(new Recipe(inputName, ingredientQuantitySet, portions, workLoad)))
 				{
-					sui.cfgRecipeNameInput.setText(Model.CLEAR);
-					sui.cfgRecipeIngredientsInput.setText(Model.CLEAR);
-					sui.cfgRecipePortionsInput.setText(Model.CLEAR);
-					sui.cfgRecipeWorkLoadInput.setText(Model.CLEAR);
 					updateRecipeStringList();
 				}
 				else
@@ -351,7 +347,7 @@ public class Controller
 	/**
 	 * Leggo e salvo i piatti
 	 */
-	public void saveDish()
+	public void saveDish(String inputName, String inputRecipe, String inputStartDate, String inputEndDate)
 	{
 		try
 		{

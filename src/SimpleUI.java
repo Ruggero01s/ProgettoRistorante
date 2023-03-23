@@ -1221,13 +1221,17 @@ public class SimpleUI extends JFrame {
     }
 
     public void updateRecipes(String[] recipes) {
+        cfgRecipeNameInput.setText(Model.CLEAR);
+        cfgRecipeIngredientsInput.setText(Model.CLEAR);
+        cfgRecipePortionsInput.setText(Model.CLEAR);
+        cfgRecipeWorkLoadInput.setText(Model.CLEAR);
         if(recipes.length==0)
         {
             String[] noRecipe = {"Non ci sono ricette inserite"};
             DefaultComboBoxModel<String> model = new DefaultComboBoxModel<>(noRecipe);
             cfgDishComboBox.setModel(model);
             cfgResRecipesOut.setText(noRecipe[0]);
-            setRecipeList("");
+            setRecipeList(Model.CLEAR);
         }
         else{
             DefaultComboBoxModel<String> model = new DefaultComboBoxModel<>(recipes);
