@@ -791,7 +791,12 @@ public class SimpleUI extends JFrame {
         c.gridx = 2;
         c.gridy = 6;
         cfgDishesPanel.add(cfgDishSendButton, c);
-        cfgDishSendButton.addActionListener(e -> ctrl.saveDish());
+        cfgDishSendButton.addActionListener(e -> ctrl.saveDish(cfgDishNameInput.getText(),
+                Objects.requireNonNull(cfgDishComboBox.getSelectedItem()).toString().split("-")[0].trim(),
+                cfgDishSDateInput.getText(),
+                cfgDishEDateInput.getText()),
+                cfgDishPermanentRadio.isSelected(),
+                cfgDishSeasonalRadio.isSelected());
 
         //Menu panel
         c.gridx = 0;

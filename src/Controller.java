@@ -347,7 +347,7 @@ public class Controller
 	/**
 	 * Leggo e salvo i piatti
 	 */
-	public void saveDish(String inputName, String inputRecipe, String inputStartDate, String inputEndDate)
+	public void saveDish(String inputName, String inputRecipe, String inputStartDate, String inputEndDate, boolean perm)
 	{
 		try
 		{
