@@ -1,4 +1,4 @@
 <?xml version="1.0" encoding="utf-8"?>
 <config>
-	<baseConfig capacity="50" workPersonLoad="10" today="01/03/2025" increment="10"></baseConfig>
+	<baseConfig capacity="50" workPersonLoad="10" today="02/03/2025" increment="10"></baseConfig>
 </config>

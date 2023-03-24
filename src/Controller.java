@@ -1064,12 +1064,12 @@ public class Controller implements SearchRecipe, SearchDish, Login, SaveData, Da
 						double delta = quantity;
 						quantity += ingredient.getQuantity(); //todo testare e cambiare e commentare
 						delta = quantity - delta;
-						if (delta < surplusMap.get(ingredient.getName()))
+						if (surplusMap.containsKey(ingredient.getName()) && (delta <= surplusMap.get(ingredient.getName()))) //todo porcodio
 							surplusMap.put(ingredient.getName(), (surplusMap.get(ingredient.getName()) - delta));
 						else
 						{
 							grocerySet.add(new Ingredient(ingredient.getName(), ingredient.getUnit(), quantity));
-							surplusMap.put(ingredient.getName(), surplusMap.get(ingredient.getName()) + surplus);
+							surplusMap.put(ingredient.getName(), surplus);
 						}
 					}
 					else

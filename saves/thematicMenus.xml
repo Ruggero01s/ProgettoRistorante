@@ -5,5 +5,6 @@
 		<dish name="Pasta Tonnata"></dish></menu>
 	<menu name="Italia" startDate="01/01/1444" endDate="31/12/1444" seasonal="false" permanent="true">
 		<dish name="Polpettine"></dish>
+		<dish name="Cotoletta alla Milanese"></dish>
 		<dish name="Pasta Tonnata"></dish></menu>
 </menus>
