@@ -86,6 +86,10 @@ public class Dish implements ConvertToString
         }
     }
     
+    /**
+     * Converto i piatti in stringhe
+     * @return Stringa di output
+     */
     public String convertToString()
     {
         return this.name+" - ["+this.startPeriod.getStringDate()+" || "+this.endPeriod.getStringDate()+" ] - ("+this.recipe.getId()+")";

@@ -54,7 +54,11 @@ public class Ingredient implements ConvertToString
 		Ingredient ingredient = (Ingredient) obj;
 		return this.name.equals(ingredient.getName());
 	}
-
+	
+	/**
+	 * Converto gli ingredienti in stringhe
+	 * @return Stringa di output
+	 */
 	public String convertToString()
 	{
 		return this.name+":"+this.quantity+":"+this.unit;

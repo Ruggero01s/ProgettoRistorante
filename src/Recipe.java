@@ -55,19 +55,9 @@ public class  Recipe implements ConvertToString
     }
     
     /**
-     * toString della lista degli ingredienti
-     * @return string contenente tutti gli ingredienti
+     * Converto le ricette in stringhe
+     * @return Stringa di output
      */
-    public String getIngredientsList()
-    {
-        StringBuilder out= new StringBuilder();
-        for (Ingredient i: ingredients)
-        {
-            out.append(i.getName()).append(":").append(i.getQuantity()).append(", ");
-        }
-        return out.toString();
-    }
-    
     public String convertToString()
     {
         StringBuilder out= new StringBuilder(this.id + " - [");

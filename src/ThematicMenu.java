@@ -105,7 +105,11 @@ public class ThematicMenu implements ConvertToString
 				return date.between(this.startPeriod, this.endPeriod);
 		}
 	}
-
+	
+	/**
+	 * Converto i menu in stringhe
+	 * @return Stringa di output
+	 */
 	public String convertToString()
 	{
 		StringBuilder out = new StringBuilder(this.name + " - [" + this.startPeriod.getStringDate() + " || " + this.endPeriod.getStringDate() + "] - (");
