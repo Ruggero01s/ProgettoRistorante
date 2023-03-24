@@ -4,6 +4,9 @@
 		<ingredient name="a" quantity="1.0" unity="g"></ingredient></recipe>
 	<recipe id="b" portions="1" workLoadPortion="1.0">
 		<ingredient name="a" quantity="1.0" unity="g"></ingredient></recipe>
+	<recipe id="Cotoletta inpannata" portions="2" workLoadPortion="3.0">
+		<ingredient name="Petto di Pollo" quantity="300.0" unity="g"></ingredient>
+		<ingredient name="Pane" quantity="200.0" unity="g"></ingredient></recipe>
 	<recipe id="c" portions="1" workLoadPortion="1.0">
 		<ingredient name="a" quantity="1.0" unity="g"></ingredient></recipe>
 	<recipe id="d" portions="1" workLoadPortion="1.0">

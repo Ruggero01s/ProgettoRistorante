@@ -72,7 +72,8 @@ public class SimpleUI extends JFrame implements ErrorSetter, GUI
     private JPanel passSavePanel = new JPanel(new GridBagLayout());
     private JLabel passLoginTitle= new JLabel("Inserisci username e password per accedere");
     private JLabel passLoginUserLabel = new JLabel("Inserisci username: ");
-    private JButton passExitButton = new JButton("Close");
+    private JButton passExitButton = new JButton("Esci");
+    private JButton passWriteButton = new JButton("Salva tutto");
     JTextArea passLoginUserText = new JTextArea();
     private JLabel passLoginPasswordLabel = new JLabel("Inserisci password: ");
     JPasswordField passLoginPasswordField = new JPasswordField();
@@ -82,14 +83,14 @@ public class SimpleUI extends JFrame implements ErrorSetter, GUI
     JTextArea passSaveUserText = new JTextArea();
     private JLabel passSavePasswordLabel = new JLabel("Inserisci password: ");
     JPasswordField passSavePasswordField = new JPasswordField();
-    private JLabel passSavePassword2Label = new JLabel("conferma password: ");
+    private JLabel passSavePassword2Label = new JLabel("Conferma password: ");
     JPasswordField passSavePassword2Field = new JPasswordField();
 
     JCheckBox passManCheck = new JCheckBox("Manager");
     JCheckBox passEmpCheck = new JCheckBox("Employee");
     JCheckBox passWareCheck = new JCheckBox("Warehouse Worker");
 
-    private JButton passSaveButton = new JButton("Save");
+    private JButton passSaveButton = new JButton("Salva");
     
     
     //------------------------------------------------------------------------------------------
@@ -140,7 +141,7 @@ public class SimpleUI extends JFrame implements ErrorSetter, GUI
     JTextArea cfgRecipeNameInput = new JTextArea();
     JLabel cfgRecipeTextPortions = new JLabel("Inserisci porzioni: ");
     JTextArea cfgRecipePortionsInput = new JTextArea();
-    JLabel cfgRecipeTextIngredients = new JLabel("Inserisci ingredienti (ingredienti:quantità (g)): ");
+    JLabel cfgRecipeTextIngredients = new JLabel("Inserisci ingredienti (ingredienti:quantità:unità): ");
     JTextArea cfgRecipeIngredientsInput = new JTextArea();
     JLabel cfgRecipeTextWorkLoad = new JLabel("Inserisci workload/person: ");
     JTextArea cfgRecipeWorkLoadInput = new JTextArea();
@@ -237,7 +238,7 @@ public class SimpleUI extends JFrame implements ErrorSetter, GUI
     //------------------------------------------------------------------------------------------
     //CONFIG_WRITING AND CLEAR
     JButton cfgClearButton = new JButton("Clear All");
-    JButton cfgWriteButton = new JButton("Salva ed esci");
+    JButton cfgWriteButton = new JButton("Salva");
     //============================================================================================
 //============================================================================================
 //============================================================================================
@@ -375,6 +376,15 @@ public class SimpleUI extends JFrame implements ErrorSetter, GUI
         c.gridx = 1;
         c.gridy = 4;
         passLoginPanel.add(passExitButton,c);
+        c.gridx = 0;
+        c.gridy = 4;
+        passLoginPanel.add(passWriteButton,c);
+        passWriteButton.addActionListener(e -> {
+            dataManager.writeManager();
+            dataManager.writeBookings();
+            dataManager.writeRegister();
+        });
+
         passExitButton.addActionListener(e -> System.exit(1));
         
         c.gridx = 0;
@@ -595,6 +605,7 @@ public class SimpleUI extends JFrame implements ErrorSetter, GUI
 
         cfgWriteButton.addActionListener(e -> dataManager.writeManager());
         cfgClearButton.addActionListener(e -> dataManager.clearInfo());
+        cfgClearButton.setBackground(Color.RED);
 
         //listener back button
         buttonBack1.addActionListener(back);
@@ -1021,8 +1032,8 @@ public class SimpleUI extends JFrame implements ErrorSetter, GUI
                 errorSetter(Controller.INVALID_DATE);
             }
         });
-        c.gridx = 0;
-        c.gridy = 7;
+        c.gridx = 2;
+        c.gridy = 6;
         empSeeBookingsPanel.add(empSeeBookWrite, c);
         empSeeBookWrite.addActionListener(e -> dataManager.writeBookings());
 
@@ -1037,7 +1048,7 @@ public class SimpleUI extends JFrame implements ErrorSetter, GUI
         );
         c.gridx = 2;
         c.gridy = 7;
-        empSeeBookingsPanel.add(empSeeBookClear, c);
+        empSeeBookingsPanel.add(empSeeBookClearAll, c);
         empSeeBookClearAll.addActionListener(e -> dataManager.clearBookings());
         // NewBooking prenotazioni
         titlePadding.gridx = 0;
@@ -1243,7 +1254,7 @@ public class SimpleUI extends JFrame implements ErrorSetter, GUI
     }
 
     public void updateFoods(String foods) {
-        setDrinkList(foods);
+        setFoodsList(foods);
         cfgResFoodsOut.setText(foods);
     }
 
@@ -1322,12 +1333,10 @@ public class SimpleUI extends JFrame implements ErrorSetter, GUI
     
     /**
      * Metodo che aggiorna i dati nel cambio di giorno
-     * @param data dati per il config
      * @param today data di oggi
      */
-    public void nextDay(List <String> data,String today)
+    public void nextDay(String today)
     {
-        updateConfig(data);
         cfgBaseInputDate.setText(today);
         wareListText.setText("Lista aggiornata al " + today);
         wareListMagText.setText("Magazzino aggiornato al " + today);

@@ -90,16 +90,16 @@ public class Controller implements SearchRecipe, SearchDish, Login, SaveData, Da
 	 */
 	private void updateConfig()
 	{
-		String[] configState = new String[5];
-		configState[0] = "Capacità: " + model.getCapacity() + "\nIndividualWorkload: " +
+		List<String> configState = new ArrayList<>();
+		configState.add("Capacità: " + model.getCapacity() + "\nIndividualWorkload: " +
 				model.getWorkPersonLoad() + "\nRestaurant Worlkload: " + model.getWorkResturantLoad() + "\nData odierna: " +
-				model.getToday().getStringDate() + "\nSurplus %: " + model.getIncrement();
-		configState[1] = Integer.toString(model.getCapacity());
-		configState[2] = Integer.toString(model.getWorkPersonLoad());
-		configState[3] = model.getToday().getStringDate();
-		configState[4] = Integer.toString(model.getIncrement());
+				model.getToday().getStringDate() + "\nSurplus %: " + model.getIncrement());
+		configState.add(Integer.toString(model.getCapacity()));
+		configState.add(Integer.toString(model.getWorkPersonLoad()));
+		configState.add(model.getToday().getStringDate());
+		configState.add(Integer.toString(model.getIncrement()));
 		
-		gui.updateConfig(List.of(configState));
+		gui.updateConfig(configState);
 	}
 	
 	/**
@@ -1311,12 +1311,9 @@ public class Controller implements SearchRecipe, SearchDish, Login, SaveData, Da
 		updateMenuOut();
 		updateMenuBoxes();
 		List<String> data = new ArrayList<>();
-		data.add(String.valueOf(model.getCapacity()));
-		data.add(String.valueOf(model.getWorkPersonLoad()));
-		data.add(String.valueOf(model.getWorkResturantLoad()));
-		data.add(model.getToday().getStringDate());
-		data.add(String.valueOf(model.getIncrement()));
-		gui.nextDay(data, model.getToday().getStringDate());
+
+		gui.nextDay(model.getToday().getStringDate());
+		updateConfig();
 		menuCartaToday();
 		
 		oldBooking(); //cancello le vecchie prenotazioni
