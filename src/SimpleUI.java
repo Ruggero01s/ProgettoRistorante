@@ -210,7 +210,7 @@ public class SimpleUI extends JFrame implements ErrorSetter, GUI
 
     //------------------------------------------------------------------------------------------
     //CONFIG_RESOCONTO
-    JLabel cfgResText = new JLabel("Reseconto:");
+    JLabel cfgResText = new JLabel("Resoconto:");
     JLabel cfgResBaseText = new JLabel("Dati ristorante:");
     JLabel cfgResDrinksText = new JLabel("Dati bevande:");
     JLabel cfgResFoodsText = new JLabel("Dati cibi extra:");
@@ -250,6 +250,7 @@ public class SimpleUI extends JFrame implements ErrorSetter, GUI
     //-------------------------------------------------------------------------------------------
     //EMPLOY SEE BOOKINGS
     JLabel empSeeBookText = new JLabel("Prenotazioni:");
+    JTextArea empSeeBookBookedDates = new JTextArea();
     JLabel empSeeBookDateText = new JLabel("Data da cercare:");
     JTextArea empSeeBookDateInput = new JTextArea();
     JLabel empSeeBookNameText = new JLabel("Nome:");
@@ -979,50 +980,54 @@ public class SimpleUI extends JFrame implements ErrorSetter, GUI
 
     private void empInit() {
         //SeeBooking
+
         titlePadding.gridx = 0;
         titlePadding.gridy = 0;
         empSeeBookingsPanel.add(empSeeBookText, titlePadding);
         c.gridx = 0;
         c.gridy = 1;
+        empSeeBookingsPanel.add(empSeeBookBookedDates, c);
+        c.gridx = 0;
+        c.gridy = 2;
         empSeeBookingsPanel.add(empSeeBookDateText, c);
         c.gridx = 1;
-        c.gridy = 1;
+        c.gridy = 2;
         empSeeBookingsPanel.add(empSeeBookDateInput, c);
         c.gridx = 0;
-        c.gridy = 2;
+        c.gridy = 3;
         empSeeBookingsPanel.add(empSeeBookNameText, c);
         c.gridx = 1;
-        c.gridy = 2;
+        c.gridy = 3;
         empSeeBookingsPanel.add(empSeeBookNumText, c);
         c.gridx = 2;
-        c.gridy = 2;
+        c.gridy = 3;
         empSeeBookingsPanel.add(empSeeBookWorkloadText, c);
         c.gridx = 0;
-        c.gridy = 3;
+        c.gridy = 4;
         empSeeBookingsPanel.add(empSeeBookNameAreaOut, c);
         c.gridx = 1;
-        c.gridy = 3;
+        c.gridy = 4;
         empSeeBookingsPanel.add(empSeeBookNumAreaOut, c);
         c.gridx = 2;
-        c.gridy = 3;
+        c.gridy = 4;
         empSeeBookingsPanel.add(empSeeBookWorkloadAreaOut, c);
         c.gridx = 0;
-        c.gridy = 4;
+        c.gridy = 5;
         empSeeBookingsPanel.add(empSeeBookCapacityTotalText, c);
         c.gridx = 1;
-        c.gridy = 4;
+        c.gridy = 5;
         empSeeBookingsPanel.add(empSeeBookCapacityTotalOut, c);
         c.gridx = 0;
-        c.gridy = 5;
+        c.gridy = 6;
         empSeeBookingsPanel.add(empSeeBookWorkloadTotalText, c);
         c.gridx = 1;
-        c.gridy = 5;
+        c.gridy = 6;
         empSeeBookingsPanel.add(empSeeBookWorkloadTotalOut, c);
         c.gridx = 0;
-        c.gridy = 6;
+        c.gridy = 7;
         empSeeBookingsPanel.add(buttonBack8, c);
         c.gridx = 1;
-        c.gridy = 6;
+        c.gridy = 7;
         empSeeBookingsPanel.add(empSeeBookSend, c);
         empSeeBookSend.addActionListener(e -> {
             String s = empSeeBookDateInput.getText().trim();
@@ -1033,12 +1038,12 @@ public class SimpleUI extends JFrame implements ErrorSetter, GUI
             }
         });
         c.gridx = 2;
-        c.gridy = 6;
+        c.gridy = 7;
         empSeeBookingsPanel.add(empSeeBookWrite, c);
         empSeeBookWrite.addActionListener(e -> dataManager.writeBookings());
 
         c.gridx = 1;
-        c.gridy = 7;
+        c.gridy = 8;
         empSeeBookingsPanel.add(empSeeBookClear, c);
         empSeeBookClear.addActionListener(e ->
                 {
@@ -1047,7 +1052,7 @@ public class SimpleUI extends JFrame implements ErrorSetter, GUI
                 }
         );
         c.gridx = 2;
-        c.gridy = 7;
+        c.gridy = 8;
         empSeeBookingsPanel.add(empSeeBookClearAll, c);
         empSeeBookClearAll.addActionListener(e -> dataManager.clearBookings());
         // NewBooking prenotazioni
@@ -1106,6 +1111,7 @@ public class SimpleUI extends JFrame implements ErrorSetter, GUI
 
 
         empSeeBookDateInput.setLineWrap(true);
+        empSeeBookBookedDates.setLineWrap(true);
         empSeeBookNameAreaOut.setLineWrap(true);
         empSeeBookNumAreaOut.setLineWrap(true);
         empSeeBookWorkloadAreaOut.setLineWrap(true);
@@ -1116,7 +1122,7 @@ public class SimpleUI extends JFrame implements ErrorSetter, GUI
         empNewBookDateInput.setLineWrap(true);
         empNewBookNumInput.setLineWrap(true);
 
-
+        empSeeBookBookedDates.setBorder(border);
         empSeeBookWorkloadTotalOut.setBorder(border);
         empSeeBookCapacityTotalOut.setBorder(border);
         empSeeBookDateInput.setBorder(border);
@@ -1128,6 +1134,7 @@ public class SimpleUI extends JFrame implements ErrorSetter, GUI
         empNewBookDateInput.setBorder(border);
         empNewBookNumInput.setBorder(border);
 
+        empSeeBookBookedDates.setEditable(false);
         empSeeBookWorkloadTotalOut.setEditable(false);
         empSeeBookCapacityTotalOut.setEditable(false);
         empSeeBookNameAreaOut.setEditable(false);
@@ -1381,7 +1388,12 @@ public class SimpleUI extends JFrame implements ErrorSetter, GUI
         empSeeBookCapacityTotalOut.setText(capacity);
         empSeeBookWorkloadTotalOut.setText(workload);
     }
-    
+
+    public void updateBookedDates(String dates)
+    {
+        empSeeBookBookedDates.setText(dates);
+    }
+
     /**
      * Metodo che stampa i piatti di un menu
      * @param menu elenco di piatti
@@ -1420,6 +1432,7 @@ public class SimpleUI extends JFrame implements ErrorSetter, GUI
             case 22 -> JOptionPane.showMessageDialog(getContentPane(), "Seleziona almeno un ruolo", "Err", JOptionPane.ERROR_MESSAGE);
             case 23 -> JOptionPane.showMessageDialog(getContentPane(), "Non hai i permessi per entrare in questa finestra", "Err", JOptionPane.ERROR_MESSAGE);
             case 24 -> JOptionPane.showMessageDialog(getContentPane(), "L'input è vuoto", "Err", JOptionPane.ERROR_MESSAGE);
+            case 25 -> JOptionPane.showMessageDialog(getContentPane(), "Unità di misura errata", "Err", JOptionPane.ERROR_MESSAGE);
             default -> JOptionPane.showMessageDialog(getContentPane(), "Errore", "Err", JOptionPane.ERROR_MESSAGE);
         }
         getContentPane().repaint();

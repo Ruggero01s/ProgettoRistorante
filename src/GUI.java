@@ -16,5 +16,6 @@ public interface GUI
 		void updateWare(String groceryList, String register);
 		void login();
 		void updateBooking (String name, String number, String work, String capacity, String workload);
+		void updateBookedDates(String dates);
 		void selectedMenu(String toString);
 }

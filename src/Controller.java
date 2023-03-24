@@ -35,6 +35,7 @@ public class Controller implements SearchRecipe, SearchDish, Login, SaveData, Da
 	public static final int NOT_ENOUGHT_ROLES = 22;
 	public static final int NO_PERMISSION = 23;
 	public static final int EMPTY_INPUT = 24;
+	public static final int WRONG_UNIT = 25;
 	
 	
 	public Model getModel()
@@ -82,7 +83,9 @@ public class Controller implements SearchRecipe, SearchDish, Login, SaveData, Da
 		updateMenuOut();
 		updateMenuBoxes();
 		menuCartaToday();
+		updateBookedDates();
 		updateConfig();
+		oldBooking();
 	}
 	
 	/**
@@ -212,6 +215,7 @@ public class Controller implements SearchRecipe, SearchDish, Login, SaveData, Da
 					model.setToday(today);
 					model.setIncrement(percent);
 					updateConfig();
+					generateGroceryList();
 				}
 			}
 		}
@@ -930,6 +934,7 @@ public class Controller implements SearchRecipe, SearchDish, Login, SaveData, Da
 		{
 			day.add(new Booking(name, number, workload, order));
 			model.getBookingMap().put(date, day);
+			updateBookedDates();
 			return true;
 		}
 		else
@@ -937,6 +942,17 @@ public class Controller implements SearchRecipe, SearchDish, Login, SaveData, Da
 			erSet.errorSetter(FULL_RESTURANT);
 			return false;
 		}
+	}
+
+	public void updateBookedDates()
+	{
+		Set<DateOur> daysList = model.getBookingMap().keySet();
+		StringBuilder out= new StringBuilder();
+		for (DateOur date: daysList ) {
+			String s = date.getStringDate();
+			out.append(s).append("\n");
+		}
+		gui.updateBookedDates(out.toString().trim());
 	}
 	
 	
@@ -1185,19 +1201,29 @@ public class Controller implements SearchRecipe, SearchDish, Login, SaveData, Da
 	public boolean warehouseChanges(String text)
 	{
 		if (text.isBlank()) //controllo che il testo non sia valido
+		{
 			erSet.errorSetter(INVALID_FORMAT);
+			return false;
+		}
+
 		
 		Set<Ingredient> ingredients = new HashSet<>();
 		
 		for (String s : text.split("\n"))
 		{
 			if (!s.contains(":")) //controllo il formato della riga
+			{
 				erSet.errorSetter(INVALID_FORMAT);
+				return false;
+			}
 			
 			String[] t = s.split(":");
 			
 			if (t.length < 3 || t[0].isBlank() || t[2].isBlank()) //controllo il formato della stringa splittata
+			{
 				erSet.errorSetter(INVALID_FORMAT);
+				return false;
+			}
 			
 			String name = t[0], unit = t[2];
 			double quantity = Double.parseDouble(t[1]);
@@ -1209,7 +1235,10 @@ public class Controller implements SearchRecipe, SearchDish, Login, SaveData, Da
 				unit = "L";
 			
 			if (!ingredients.add(new Ingredient(name, unit, quantity))) //aggiungo l'ingrediente alla lista
+			{
 				erSet.errorSetter(INVALID_FORMAT);
+				return false;
+			}
 		}
 		try
 		{
@@ -1245,6 +1274,8 @@ public class Controller implements SearchRecipe, SearchDish, Login, SaveData, Da
 						{
 							if (ingredient.equals(deltaIngredient))
 							{
+								if (!ingredient.getUnit().equals(deltaIngredient.getUnit()))
+									throw new RuntimeException(Integer.toString(WRONG_UNIT));
 								double newIngr = ingredient.getQuantity() + deltaIngredient.getQuantity();
 								
 								if (newIngr < 0)
@@ -1310,8 +1341,6 @@ public class Controller implements SearchRecipe, SearchDish, Login, SaveData, Da
 		updateDishStringList();
 		updateMenuOut();
 		updateMenuBoxes();
-		List<String> data = new ArrayList<>();
-
 		gui.nextDay(model.getToday().getStringDate());
 		updateConfig();
 		menuCartaToday();
@@ -1330,9 +1359,10 @@ public class Controller implements SearchRecipe, SearchDish, Login, SaveData, Da
 	{
 		for (Map.Entry<DateOur, List<Booking>> entry : model.getBookingMap().entrySet())
 		{
-			if (entry.getKey().getDate().before(model.getToday())) //rimuovo le prenotazioni che hanno una data precedente ad oggi
+			if (entry.getKey().getDate().before(model.getToday().getDate())) //rimuovo le prenotazioni che hanno una data precedente ad oggi
 				model.getBookingMap().remove(entry.getKey());
 		}
+		updateBookedDates();
 	}
 	
 	/**
