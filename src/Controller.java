@@ -1122,8 +1122,8 @@ public class Controller implements SearchRecipe, SearchDish, Login, SaveData, Da
 	
 	private void generateAfterMeal(Set<Ingredient> consumed)
 	{
-		Set<Ingredient> temp =   new HashSet<>(model.getRegistro());
-		Set<Ingredient> registroNow = new HashSet<>(Set.copyOf(temp));//todo tutto
+		Set<Ingredient> temp =   new HashSet<>();
+		Set<Ingredient> registroNow = new HashSet<>(model.getRegistro());//todo tutto
 		for (Ingredient regNow: registroNow)
 		{
 			for (Ingredient delta: consumed)
@@ -1132,14 +1132,11 @@ public class Controller implements SearchRecipe, SearchDish, Login, SaveData, Da
 				{
 					double quantity = regNow.getQuantity()-delta.getQuantity();
 					if(quantity>0)
-						regNow.setQuantity(quantity);
-					else
-						regNow.setQuantity(-1);
+						temp.add(new Ingredient(delta.getName(), delta.getUnit(), quantity));
 				}
 			}
 		}
-		registroNow.removeIf(ingredient -> ingredient.getQuantity() <=0);
-		model.setRegistroAfterMeal(registroNow);
+		model.setRegistroAfterMeal(temp);
 	}
 	
 	/**
