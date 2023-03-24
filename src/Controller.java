@@ -419,7 +419,7 @@ public class Controller implements SearchRecipe, SearchDish
 			
 			String[] inputList = inputs.split("\n");
 			
-			ArrayList<Dish> dishesForMenu = new ArrayList<>();
+			Set<Dish> dishesForMenu = new HashSet<>();
 			
 			if (!permanent) //se non è permanente controllo la validità delle date
 			{
@@ -520,7 +520,7 @@ public class Controller implements SearchRecipe, SearchDish
 	/**
 	 * Metodo che riceve in ingresso una stringa
 	 * contenente piatti e la trasforma in un array list
-	 * @param list stringa di piatti
+	 * @param name stringa di piatti
 	 * @return Array list di piatti
 	 */
 	public Dish searchDish(String name)
@@ -597,6 +597,26 @@ public class Controller implements SearchRecipe, SearchDish
 		}
 		gui.updateDishes(dishes);
 	}
+
+	public String convertToString(Collection<ConvertToString> convertToStrings)
+	{
+		String out="";
+		for (ConvertToString convertToString:convertToStrings)
+			out+=convertToString.convertToString()+"\n";
+		return out;
+	}
+
+	public String [] convertToStringVector (Collection<ConvertToString> convertToStrings)
+	{
+		String[] out = new String[convertToStrings.size()];
+		int i=0;
+
+		for (ConvertToString convertToString:convertToStrings)
+			out[i++] = convertToString.convertToString();
+
+		return out;
+	}
+
 	
 	/**
 	 * Metodo che serve per aggiornare i drinks nella GUI
@@ -1316,7 +1336,7 @@ public class Controller implements SearchRecipe, SearchDish
 	 */
 	private void oldBooking()
 	{
-		for (Map.Entry<DateOur, ArrayList<Booking>> entry : model.getBookingMap().entrySet())
+		for (Map.Entry<DateOur, List<Booking>> entry : model.getBookingMap().entrySet())
 		{
 			if (entry.getKey().getDate().before(model.getToday())) //rimuovo le prenotazioni che hanno una data precedente ad oggi
 				model.getBookingMap().remove(entry.getKey());

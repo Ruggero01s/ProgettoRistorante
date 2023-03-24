@@ -1,4 +1,4 @@
-public class Dish
+public class Dish implements ConvertToString
 {
     private final String name; //nome del piatto
     private final DateOur startPeriod; //inizio periodo di validità del piatto
@@ -86,7 +86,7 @@ public class Dish
         }
     }
     
-    public String convertToString() //todo decidere formati to string
+    public String convertToString()
     {
         return this.name+" - ["+this.startPeriod.getStringDate()+" || "+this.endPeriod.getStringDate()+" ] - ("+this.recipe.getId()+")";
     }

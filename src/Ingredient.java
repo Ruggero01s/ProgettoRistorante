@@ -1,4 +1,4 @@
-public class Ingredient
+public class Ingredient implements ConvertToString
 {
 	private final String name; //nome dell'ingrediente
 	private final String unit; //unità di misura dell'ingrediente

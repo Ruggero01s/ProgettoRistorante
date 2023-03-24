@@ -1397,7 +1397,7 @@ public class SimpleUI extends JFrame implements ErrorSetter, GUI
             case 2 -> JOptionPane.showMessageDialog(getContentPane(), "Inserisci prima una ricetta!", "Err", JOptionPane.ERROR_MESSAGE);
             case 3 -> JOptionPane.showMessageDialog(getContentPane(), "Piatto non trovato", "Err", JOptionPane.ERROR_MESSAGE);
             case 4 -> JOptionPane.showMessageDialog(getContentPane(), "Inserisci almeno un piatto!", "Err", JOptionPane.ERROR_MESSAGE);
-            case 5 -> JOptionPane.showMessageDialog(getContentPane(), "Data non valide","Err", JOptionPane.ERROR_MESSAGE);
+            case 5 -> JOptionPane.showMessageDialog(getContentPane(), "Data non valida","Err", JOptionPane.ERROR_MESSAGE);
             case 6 -> JOptionPane.showMessageDialog(getContentPane(), "Ristorante pieno o troppo carico", "Err", JOptionPane.ERROR_MESSAGE);
             case 7 -> JOptionPane.showMessageDialog(getContentPane(), "Il menù è troppo impegnativo, riduci il suo carico", "Err", JOptionPane.ERROR_MESSAGE);
             case 8 -> JOptionPane.showMessageDialog(getContentPane(), "Non è possibile avere un omonimia tra piatti e menu", "Err", JOptionPane.ERROR_MESSAGE);

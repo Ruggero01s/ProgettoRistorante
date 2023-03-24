@@ -1,16 +1,16 @@
-import java.util.ArrayList;
+import java.util.Set;
 
-public class ThematicMenu
+public class ThematicMenu implements ConvertToString
 {
 	private final String name; //nome del menu tematico
 	private final DateOur startPeriod; //inizio periodo di validità
 	private final DateOur endPeriod; //fine periodo di validità
-	private  ArrayList <Dish> dishes; //elenco dei piatti contenuti nel menu
+	private Set <Dish> dishes; //elenco dei piatti contenuti nel menu
 	private final boolean seasonal; //true se stagionale
 	private final boolean permanent; //true se permanente
 	private double workThematicMenuLoad; //workLoad del menu
 	
-	public ThematicMenu(String name, String startPeriod, String endPeriod, ArrayList<Dish> dishes, boolean seasonal, boolean permanent)
+	public ThematicMenu(String name, String startPeriod, String endPeriod, Set<Dish> dishes, boolean seasonal, boolean permanent)
 	{
 		this.name = name;
 		String[] startPezzi = startPeriod.split("/");
@@ -38,7 +38,7 @@ public class ThematicMenu
 		return endPeriod;
 	}
 	
-	public ArrayList<Dish> getDishes()
+	public Set<Dish> getDishes()
 	{
 		return dishes;
 	}
@@ -104,5 +104,13 @@ public class ThematicMenu
 			else
 				return date.between(this.startPeriod, this.endPeriod);
 		}
+	}
+
+	public String convertToString()
+	{
+		StringBuilder out = new StringBuilder(this.name + " - [" + this.startPeriod.getStringDate() + " || " + this.endPeriod.getStringDate() + "] - (");
+		for (Dish dish:this.dishes)
+			out.append(dish.getName()).append(", ");
+		return out.append(")").toString();
 	}
 }

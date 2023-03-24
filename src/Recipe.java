@@ -1,6 +1,6 @@
 import java.util.*;
 
-public class  Recipe
+public class  Recipe implements ConvertToString
 {
     private final String id; //nome della ricetta
     private Set<Ingredient> ingredients; //elenco d'ingredienti
@@ -68,14 +68,13 @@ public class  Recipe
         return out.toString();
     }
     
-    public String convertToSting()
+    public String convertToString()
     {
         StringBuilder out= new StringBuilder(this.id + " - [");
     
-        for (Ingredient ingredient : ingredients) //todo iterare in ordine il set
-        {
+        for (Ingredient ingredient : ingredients)
             out.append(ingredient.convertToString()).append(", ");
-        }
+
         out.append("] - " + "p.").append(this.portions).append(" - ").append("w.").append(this.workLoadPortion);
       
         return out.toString();

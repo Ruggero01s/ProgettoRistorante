@@ -59,6 +59,8 @@ public class DateOur
 			this.date.set(Calendar.YEAR, end.getDate().get(Calendar.YEAR));
 			result2 = between(temp, end.getDate()); //controllo se la data di oggi è tra il 31/12 e la data end
 			this.date.set(Calendar.YEAR, t);
+			if(this.date.get(Calendar.DAY_OF_MONTH)==31 && this.date.get(Calendar.MONTH)== Calendar.DECEMBER)
+				return true;
 			return result || result2;
 		}
 		else if (start.getDate().get(Calendar.YEAR) == end.getDate().get(Calendar.YEAR)) //inizio e fine nello stesso anno
@@ -129,6 +131,5 @@ public class DateOur
 		//if (start.get(Calendar.DAY_OF_YEAR) == end.get(Calendar.DAY_OF_YEAR)) return true; //se anno d'inizio e fine sono uguali allora true
 		return this.date.before(end) && this.date.after(start);
 	}
-	
 	
 }
