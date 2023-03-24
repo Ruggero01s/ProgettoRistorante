@@ -157,9 +157,9 @@ public class Controller implements SearchRecipe, SearchDish, Login, SaveData, Da
 	 */
 	public boolean clearBookings(DateOur input)
 	{
-		Object obj= model.getBookingMap().remove(input);
+		Object obj = model.getBookingMap().remove(input);
 		writeBookings();
-		return !(obj==null);
+		return !(obj == null);
 	}
 	
 	/**
@@ -170,7 +170,7 @@ public class Controller implements SearchRecipe, SearchDish, Login, SaveData, Da
 		model.getBookingMap().keySet().removeIf(k -> !(k.equals(model.getToday())));
 		writeBookings();
 	}
-
+	
 	
 	/**
 	 * Salvataggio tramite writer di tutti i dati del manager
@@ -943,12 +943,13 @@ public class Controller implements SearchRecipe, SearchDish, Login, SaveData, Da
 			return false;
 		}
 	}
-
+	
 	public void updateBookedDates()
 	{
 		Set<DateOur> daysList = model.getBookingMap().keySet();
-		StringBuilder out= new StringBuilder();
-		for (DateOur date: daysList ) {
+		StringBuilder out = new StringBuilder();
+		for (DateOur date : daysList)
+		{
 			String s = date.getStringDate();
 			out.append(s).append("\n");
 		}
@@ -1038,9 +1039,6 @@ public class Controller implements SearchRecipe, SearchDish, Login, SaveData, Da
 				}
 			}
 			
-			//addo alla lista della spesa i foods e drinks calcolati prima
-			grocerySet.addAll(foods);
-			grocerySet.addAll(drinks);
 			
 			for (Map.Entry<Dish, Integer> entry : allDish.entrySet())
 			{
@@ -1062,8 +1060,16 @@ public class Controller implements SearchRecipe, SearchDish, Login, SaveData, Da
 					if (grocerySet.contains(ingredient)) //se nella lista della spesa c'è già questo ingrediente
 					{
 						double delta = quantity;
-						quantity += ingredient.getQuantity(); //todo testare e cambiare e commentare
-						delta = quantity - delta;
+						for (Ingredient ingredientInList:grocerySet)
+						{
+							if (ingredient.equals(ingredientInList))
+							{
+								quantity += ingredient.getQuantity(); //todo testare e cambiare e commentare
+								delta = quantity - delta;
+							}
+						}
+						
+						
 						if (surplusMap.containsKey(ingredient.getName()) && (delta <= surplusMap.get(ingredient.getName()))) //todo porcodio
 							surplusMap.put(ingredient.getName(), (surplusMap.get(ingredient.getName()) - delta));
 						else
@@ -1081,9 +1087,11 @@ public class Controller implements SearchRecipe, SearchDish, Login, SaveData, Da
 			}
 			
 			for (Ingredient i : grocerySet)//incremento del X% ogni ingrediente
-			{
 				i.setQuantity(i.getQuantity() + i.getQuantity() * model.getIncrement() / 100.0);
-			}
+			
+			//addo alla lista della spesa i foods e drinks calcolati prima
+			grocerySet.addAll(foods);
+			grocerySet.addAll(drinks);
 			
 			grocerySet = new HashSet<>(compareWithRegister(grocerySet)); //comparo la lista della spesa con ciò che ho in magazzino
 			
@@ -1205,7 +1213,7 @@ public class Controller implements SearchRecipe, SearchDish, Login, SaveData, Da
 			erSet.errorSetter(INVALID_FORMAT);
 			return false;
 		}
-
+		
 		
 		Set<Ingredient> ingredients = new HashSet<>();
 		
