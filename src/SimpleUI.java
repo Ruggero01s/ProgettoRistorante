@@ -18,7 +18,9 @@ public class SimpleUI extends JFrame implements ErrorSetter, GUI
         EMPLOYEE,
         WAREHOUSE_WORKER
     }
-
+    private SaveData saver;
+    private Login loginner;
+    private DataManagement dataManager;
     // Current state of the frame
     private State state;
 
@@ -70,6 +72,7 @@ public class SimpleUI extends JFrame implements ErrorSetter, GUI
     private JPanel passSavePanel = new JPanel(new GridBagLayout());
     private JLabel passLoginTitle= new JLabel("Inserisci username e password per accedere");
     private JLabel passLoginUserLabel = new JLabel("Inserisci username: ");
+    private JButton passExitButton = new JButton("Close");
     JTextArea passLoginUserText = new JTextArea();
     private JLabel passLoginPasswordLabel = new JLabel("Inserisci password: ");
     JPasswordField passLoginPasswordField = new JPasswordField();
@@ -87,6 +90,7 @@ public class SimpleUI extends JFrame implements ErrorSetter, GUI
     JCheckBox passWareCheck = new JCheckBox("Warehouse Worker");
 
     private JButton passSaveButton = new JButton("Save");
+    
     
     //------------------------------------------------------------------------------------------
     //CONFIG_BASE
@@ -232,12 +236,7 @@ public class SimpleUI extends JFrame implements ErrorSetter, GUI
     JScrollPane cfgResMenuCartaScroll = new JScrollPane(cfgResMenuCartaOut);
     //------------------------------------------------------------------------------------------
     //CONFIG_WRITING AND CLEAR
-    JButton cfgBaseClearButton = new JButton("Clear Cap&IndWork");
-    JButton cfgDrinksClearButton = new JButton("Clear Drinks");
-    JButton cfgFoodClearButton = new JButton("Clear ExtraFoods");
-    JButton cfgRecipeClearButton = new JButton("Clear Recipes");
-    JButton cfgDishClearButton = new JButton("Clear Dishes");
-    JButton cfgMenuClearButton = new JButton("Clear Menus");
+    JButton cfgClearButton = new JButton("Clear All");
     JButton cfgWriteButton = new JButton("Salva ed esci");
     //============================================================================================
 //============================================================================================
@@ -264,8 +263,10 @@ public class SimpleUI extends JFrame implements ErrorSetter, GUI
     JTextArea empSeeBookWorkloadTotalOut = new JTextArea();
     JButton empSeeBookSend = new JButton("Vedi prenotazioni");
     JButton empSeeBookWrite = new JButton("Salva prenotazioni");
-    JButton empSeeBookClear = new JButton("Svuota prenotazioni");
-
+    JButton empSeeBookClear = new JButton("Svuota prenotazioni di questa data");
+    JButton empSeeBookClearAll = new JButton("Svuota prenotazioni future");
+    
+    
     //-------------------------------------------------------------------------------------------
     //EMPLOY NEW BOOKING
     JLabel empNewBookText = new JLabel("Nuova prenotazione:");
@@ -312,8 +313,10 @@ public class SimpleUI extends JFrame implements ErrorSetter, GUI
     Border border = BorderFactory.createLineBorder(Color.GRAY, 1);
 
 
-    public SimpleUI(Controller ctrl) {
-        this.ctrl = ctrl;
+    public SimpleUI(SaveData saver, Login loginner, DataManagement dataManager) {
+        this.saver = saver;
+        this.loginner = loginner;
+        this.dataManager = dataManager;
         // Set up the UI components
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setSize(1000, 1000);
@@ -369,6 +372,10 @@ public class SimpleUI extends JFrame implements ErrorSetter, GUI
         c.gridx = 1;
         c.gridy = 3;
         passLoginPanel.add(passLoginButton, c);
+        c.gridx = 1;
+        c.gridy = 4;
+        passLoginPanel.add(passExitButton,c);
+        passExitButton.addActionListener(e -> System.exit(1));
         
         c.gridx = 0;
         c.gridy = 0;
@@ -405,7 +412,7 @@ public class SimpleUI extends JFrame implements ErrorSetter, GUI
         passSavePanel.add(passSaveButton,c);
 
 
-
+       
         passLoginUserText.setLineWrap(true);
         passSaveUserText.setLineWrap(true);
         passLoginUserText.setBorder(border);
@@ -413,7 +420,7 @@ public class SimpleUI extends JFrame implements ErrorSetter, GUI
         passTabbedPane.addTab("Login",passLoginPanel);
         passTabbedPane.addTab("Sign Up", passSavePanel);
         passSaveButton.addActionListener(e -> {
-            if(ctrl.saveUser(passSaveUserText.getText().trim(),Arrays.toString(passSavePasswordField.getPassword()).trim(),Arrays.toString(passSavePassword2Field.getPassword()).trim(),passManCheck.isSelected(),passEmpCheck.isSelected(),passWareCheck.isSelected()))
+            if(loginner.saveUser(passSaveUserText.getText().trim(),Arrays.toString(passSavePasswordField.getPassword()).trim(),Arrays.toString(passSavePassword2Field.getPassword()).trim(),passManCheck.isSelected(),passEmpCheck.isSelected(),passWareCheck.isSelected()))
             {
                 passSaveUserText.setText(Model.CLEAR);
                 passSavePasswordField.setText(Model.CLEAR);
@@ -421,7 +428,7 @@ public class SimpleUI extends JFrame implements ErrorSetter, GUI
             }
         });
         passLoginButton.addActionListener(e ->{
-            if(ctrl.login(passLoginUserText.getText().trim(), Arrays.toString(passLoginPasswordField.getPassword()).trim()))
+            if(loginner.login(passLoginUserText.getText().trim(), Arrays.toString(passLoginPasswordField.getPassword()).trim()))
             {
                 passLoginPasswordField.setText(Model.CLEAR);
                 passLoginUserText.setText(Model.CLEAR);
@@ -451,7 +458,7 @@ public class SimpleUI extends JFrame implements ErrorSetter, GUI
         loginPanel.add(buttonBack14, c);
 
         managerButton.addActionListener(e -> {
-            if(ctrl.checkPermission("manager"))
+            if(loginner.checkPermission("manager"))
             {
                 state = State.MANAGER;
                 updateUI();
@@ -460,7 +467,7 @@ public class SimpleUI extends JFrame implements ErrorSetter, GUI
                 errorSetter(Controller.NO_PERMISSION);
         });
         employeeButton.addActionListener(e -> {
-            if(ctrl.checkPermission("employee"))
+            if(loginner.checkPermission("employee"))
             {
                 state = State.EMPLOYEE;
                 updateUI();
@@ -469,7 +476,7 @@ public class SimpleUI extends JFrame implements ErrorSetter, GUI
                 errorSetter(Controller.NO_PERMISSION);
         });
         warehouseWorkerButton.addActionListener(e -> {
-            if(ctrl.checkPermission("warehouse worker"))
+            if(loginner.checkPermission("warehouse worker"))
             {
                 state = State.WAREHOUSE_WORKER;
                 updateUI();
@@ -637,7 +644,7 @@ public class SimpleUI extends JFrame implements ErrorSetter, GUI
         cfgBasePanel.add(buttonBack1, c);
         c.gridx = 1;
         c.gridy = 5;
-        cfgBaseSendButton.addActionListener(e -> ctrl.saveConfig(cfgBaseInputCap.getText(),
+        cfgBaseSendButton.addActionListener(e -> saver.saveConfig(cfgBaseInputCap.getText(),
                 cfgBaseInputIndWork.getText(),
                 cfgBaseInputSurplus.getText(),
                 cfgBaseInputDate.getText().trim()));
@@ -657,7 +664,7 @@ public class SimpleUI extends JFrame implements ErrorSetter, GUI
         cfgDrinksFoodsPanel.add(cfgDrinksInput, c);
         c.gridx = 2;
         c.gridy = 0;
-        cfgDrinksSendButton.addActionListener(e -> ctrl.saveDrinks(cfgDrinksInput.getText()));
+        cfgDrinksSendButton.addActionListener(e -> saver.saveDrinks(cfgDrinksInput.getText()));
         cfgDrinksFoodsPanel.add(cfgDrinksSendButton, c);
         c.gridx = 0;
         c.gridy = 1;
@@ -667,7 +674,7 @@ public class SimpleUI extends JFrame implements ErrorSetter, GUI
         cfgDrinksFoodsPanel.add(cfgFoodsInput, c);
         c.gridx = 2;
         c.gridy = 1;
-        cfgFoodSendButton.addActionListener(e -> ctrl.saveFoods(cfgFoodsInput.getText()));
+        cfgFoodSendButton.addActionListener(e -> saver.saveFoods(cfgFoodsInput.getText()));
         cfgDrinksFoodsPanel.add(cfgFoodSendButton, c);
         c.gridx = 0;
         c.gridy = 2;
@@ -727,7 +734,7 @@ public class SimpleUI extends JFrame implements ErrorSetter, GUI
         c.gridx = 3;
         c.gridy = 6;
         cfgRecipesPanel.add(cfgRecipeSendButton, c);
-        cfgRecipeSendButton.addActionListener(e -> ctrl.saveRecipe(cfgRecipeNameInput.getText(),
+        cfgRecipeSendButton.addActionListener(e -> saver.saveRecipe(cfgRecipeNameInput.getText(),
                                                      cfgRecipeIngredientsInput.getText(),
                                                      cfgRecipePortionsInput.getText(),
                                                      cfgRecipeWorkLoadInput.getText()));
@@ -793,7 +800,7 @@ public class SimpleUI extends JFrame implements ErrorSetter, GUI
         c.gridx = 2;
         c.gridy = 6;
         cfgDishesPanel.add(cfgDishSendButton, c);
-        cfgDishSendButton.addActionListener(e -> ctrl.saveDish(cfgDishNameInput.getText(),
+        cfgDishSendButton.addActionListener(e -> saver.saveDish(cfgDishNameInput.getText(),
                 Objects.requireNonNull(cfgDishComboBox.getSelectedItem()).toString().split("-")[0].trim(),
                 cfgDishSDateInput.getText(),
                 cfgDishEDateInput.getText(),
@@ -872,7 +879,7 @@ public class SimpleUI extends JFrame implements ErrorSetter, GUI
         c.gridx = 2;
         c.gridy = 6;
         cfgMenuPanel.add(cfgMenuSendButton, c);
-        cfgMenuSendButton.addActionListener(e -> ctrl.saveMenu(cfgMenuNameInput.getText(),
+        cfgMenuSendButton.addActionListener(e -> saver.saveMenu(cfgMenuNameInput.getText(),
                 cfgMenuDishesInput.getText(),
                 cfgMenuSDateInput.getText(),
                 cfgMenuEDateInput.getText(),
@@ -929,7 +936,7 @@ public class SimpleUI extends JFrame implements ErrorSetter, GUI
         c.gridy = 8;
         cfgResPanel.add(cfgResDatiMenuBox, c);
         cfgResDatiMenuBox.addActionListener(e ->
-                ctrl.writeMenuComp((String) cfgResDatiMenuBox.getSelectedItem()));
+                dataManager.writeMenuComp((String) cfgResDatiMenuBox.getSelectedItem()));
         c.gridx = 1;
         c.gridy = 8;
         cfgResPanel.add(cfgResDatiMenuScroll, c);
@@ -941,22 +948,7 @@ public class SimpleUI extends JFrame implements ErrorSetter, GUI
         // Write and Save
         c.gridx = 0;
         c.gridy = 0;
-        cfgWriteClearPanel.add(cfgBaseClearButton, c);
-        c.gridx = 0;
-        c.gridy = 1;
-        cfgWriteClearPanel.add(cfgDrinksClearButton, c);
-        c.gridx = 0;
-        c.gridy = 2;
-        cfgWriteClearPanel.add(cfgFoodClearButton, c);
-        c.gridx = 1;
-        c.gridy = 0;
-        cfgWriteClearPanel.add(cfgRecipeClearButton, c);
-        c.gridx = 1;
-        c.gridy = 1;
-        cfgWriteClearPanel.add(cfgDishClearButton, c);
-        c.gridx = 1;
-        c.gridy = 2;
-        cfgWriteClearPanel.add(cfgMenuClearButton, c);
+        cfgWriteClearPanel.add(cfgClearButton, c);
         endPadding.gridx = 1;
         endPadding.gridy = 3;
         cfgWriteClearPanel.add(cfgWriteButton, endPadding);
@@ -1024,7 +1016,7 @@ public class SimpleUI extends JFrame implements ErrorSetter, GUI
         empSeeBookSend.addActionListener(e -> {
             String s = empSeeBookDateInput.getText().trim();
             if (Controller.checkDate(s)) {
-                ctrl.seeBookings(ctrl.inputToDate(s));
+                dataManager.seeBookings(dataManager.inputToDate(s));
             } else {
                 errorSetter(Controller.INVALID_DATE);
             }
@@ -1032,7 +1024,7 @@ public class SimpleUI extends JFrame implements ErrorSetter, GUI
         c.gridx = 0;
         c.gridy = 7;
         empSeeBookingsPanel.add(empSeeBookWrite, c);
-        empSeeBookWrite.addActionListener(e -> ctrl.writeBookings());
+        empSeeBookWrite.addActionListener(e -> dataManager.writeBookings());
 
         c.gridx = 1;
         c.gridy = 7;

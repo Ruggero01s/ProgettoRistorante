@@ -38,7 +38,7 @@ public class DateOur
 			return false;
 		
 		boolean result = false;
-		boolean result2 = false;
+		boolean result2;
 		if (start.getDate().get(Calendar.YEAR) < end.getDate().get(Calendar.YEAR)) //la data d'inizio è l'anno prima di quella di fine
 		{
 			Calendar temp = Calendar.getInstance();

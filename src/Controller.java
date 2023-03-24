@@ -47,7 +47,7 @@ public class Controller implements SearchRecipe, SearchDish, Login, SaveData, Da
 	 */
 	public void init()
 	{
-		gui = new SimpleUI(this);
+		gui = new SimpleUI(this, this, this);
 		erSet = (ErrorSetter) gui;
 		loadModel();
 		gui.init(model.getToday().getStringDate());
@@ -610,10 +610,10 @@ public class Controller implements SearchRecipe, SearchDish, Login, SaveData, Da
 	
 	public String convertToString(Collection<ConvertToString> convertToStrings)
 	{
-		String out="";
-		for (ConvertToString convertToString:convertToStrings)
-			out+=convertToString.convertToString()+"\n";
-		return out;
+		StringBuilder out = new StringBuilder();
+		for (ConvertToString convertToString : convertToStrings)
+			out.append(convertToString.convertToString()).append("\n");
+		return out.toString();
 	}
 	
 	public String[] convertToStringVector(Collection<ConvertToString> convertToStrings)
@@ -932,28 +932,6 @@ public class Controller implements SearchRecipe, SearchDish, Login, SaveData, Da
 		}
 	}
 	
-	/**
-	 * Metodo che trasforma una mappa di string ed integer in una
-	 * mappa di dish ed integer
-	 * @param map mappa di string ed integer
-	 * @return mappa di dish ed integer
-	 */
-	public HashMap<Dish, Integer> dishToMap(HashMap<String, Integer> map)
-	{
-		HashMap<Dish, Integer> out = new HashMap<>();
-		for (Map.Entry<String, Integer> s : map.entrySet())
-		{
-			for (Dish dish : model.getDishesSet())
-			{
-				if (dish.getName().equals(s.getKey()))
-				{
-					out.put(dish, s.getValue()); //quando la stringa coincide con un piatto aggiorno la mappa
-					break;
-				}
-			}
-		}
-		return out;
-	}
 	
 	/**
 	 * Metodo che chiama il writer per le prenotazioni
