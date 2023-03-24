@@ -24,7 +24,7 @@ public class Writer implements Write
 	{
 	}
 	
-	public void writePeople(ArrayList<User> people)
+	public void writePeople(Set<User> people)
 	{
 		XMLOutputFactory xmlof;
 		XMLStreamWriter xmlw;
@@ -93,7 +93,7 @@ public class Writer implements Write
 		}
 	}
 	
-	public void writeDrinks(HashMap<String, Double> drinks)
+	public void writeDrinks(Map<String, Double> drinks)
 	{
 		XMLOutputFactory xmlof;
 		XMLStreamWriter xmlw ;
@@ -127,7 +127,7 @@ public class Writer implements Write
 		}
 	}
 	
-	public void writeExtraFoods(HashMap<String, Double> foods)
+	public void writeExtraFoods(Map<String, Double> foods)
 	{
 		XMLOutputFactory xmlof ;
 		XMLStreamWriter xmlw ;
@@ -289,7 +289,7 @@ public class Writer implements Write
 		}
 	}
 
-	public void writeBookings(HashMap <DateOur,ArrayList<Booking>> bookings)
+	public void writeBookings(Map <DateOur,List<Booking>> bookings)
 	{
 		XMLOutputFactory xmlof ;
 		XMLStreamWriter xmlw ;
@@ -300,7 +300,7 @@ public class Writer implements Write
 			xmlw.writeStartDocument("utf-8", "1.0");
 			xmlw.writeCharacters("\n");
 			xmlw.writeStartElement("bookings"); // scrittura del tag radice <bookings>
-			for (Map.Entry<DateOur,ArrayList<Booking>> booking : bookings.entrySet())
+			for (Map.Entry<DateOur,List<Booking>> booking : bookings.entrySet())
 			{
 				xmlw.writeCharacters("\n\t");
 				xmlw.writeStartElement("booking"); // <booking>

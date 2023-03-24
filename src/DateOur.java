@@ -32,12 +32,13 @@ public class DateOur
 	 * @param end Data di fine periodo
 	 * @return true se la data si trova tra start ed end, false altrimenti
 	 */
-	public boolean bet(DateOur start, DateOur end) //TODO testare un piatto stagionale al 31/12/yyyy
+	public boolean bet(DateOur start, DateOur end)
 	{
 		if(start.getDate().after(end.getDate())) //se le date sono al contrario torno false
 			return false;
 		
 		boolean result = false;
+		boolean result2 = false;
 		if (start.getDate().get(Calendar.YEAR) < end.getDate().get(Calendar.YEAR)) //la data d'inizio è l'anno prima di quella di fine
 		{
 			Calendar temp = Calendar.getInstance();
@@ -56,7 +57,7 @@ public class DateOur
 			this.date.set(Calendar.YEAR, start.getDate().get(Calendar.YEAR));
 			result = between(start.getDate(), temp); //controllo se la data di oggi è tra start ed il 31/12 dell'anno corrente
 			this.date.set(Calendar.YEAR, end.getDate().get(Calendar.YEAR));
-			boolean result2 = between(temp, end.getDate()); //controllo se la data di oggi è tra il 31/12 e la data end
+			result2 = between(temp, end.getDate()); //controllo se la data di oggi è tra il 31/12 e la data end
 			this.date.set(Calendar.YEAR, t);
 			return result || result2;
 		}

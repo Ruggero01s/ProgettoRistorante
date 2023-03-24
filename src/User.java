@@ -105,5 +105,29 @@ public class User
        
         return MessageDigest.isEqual(hashedData, hashedPepperedPassword); //paragono password e stringa
     }
+
+
+    /**
+     * override dell'equals
+     * @param obj oggetto da controllare
+     * @return true se i nomi sono uguali e sono entrambi dello stesso tipo, false altrimenti
+     */
+    public boolean equals(Object obj) {
+        if (obj == this)
+            return true;
+        if (!(obj instanceof User))
+            return false;
+
+        User user = (User) obj;
+
+        return this.name.equals(user.getName());
+    }
+
+    @Override
+    public int hashCode() {
+        int result = 37;
+        result = 41 * result + name.hashCode();
+        return result;
+    }
     
 }

@@ -1,16 +1,14 @@
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Set;
+import java.util.*;
 
 public interface Read
 {
-	ArrayList<User> readPeople();
+	Set<User> readPeople();
 	
-	void readConfig(Model model);
+	ModelAttributes readConfig();
 	
-	HashMap<String, Double> readDrinks();
+	Map<String, Double> readDrinks();
 	
-	HashMap<String, Double> readExtraFoods();
+	Map<String, Double> readExtraFoods();
 	
 	Set<Recipe> readRecipes();
 	
@@ -18,7 +16,7 @@ public interface Read
 	
 	Set<ThematicMenu> readThematicMenu();
 	
-	HashMap<DateOur, ArrayList<Booking>> readBooking();
+	Map<DateOur, List<Booking>> readBooking();
 	
 	Set<Ingredient> readRegister();
 }

@@ -1,14 +1,15 @@
 import java.util.HashMap;
+import java.util.Map;
 
 public class Booking
 {
     private final String name; //nome della prenotazione
     private final int number; //coperti della prenotazione
     private final int workload; //workload totale
-    private  HashMap<Dish,Integer> order; //insieme dei piatti ordinati con la relativa quantità
+    private  Map<Dish,Integer> order; //insieme dei piatti ordinati con la relativa quantità
 
 
-    public Booking(String name, int number, int workload, HashMap<Dish, Integer> order) {
+    public Booking(String name, int number, int workload, Map<Dish, Integer> order) {
         this.name = name;
         this.number = number;
         this.workload = workload;
@@ -23,7 +24,7 @@ public class Booking
         return workload;
     }
     
-    public HashMap<Dish, Integer> getOrder() {
+    public Map<Dish, Integer> getOrder() {
         return order;
     }
     

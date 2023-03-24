@@ -1,24 +1,22 @@
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Set;
+import java.util.*;
 
 public interface Write
 {
-    void writePeople(ArrayList<User> people);
+    void writePeople(Set<User> people);
     
     void writeConfigBase(int capacity, int workPersonLoad, DateOur today, int increment);
     
-    void writeDrinks(HashMap<String, Double> drinks);
+    void writeDrinks(Map<String, Double> drinks);
     
-    void writeExtraFoods(HashMap<String, Double> extraFoodsMap);
+    void writeExtraFoods(Map<String, Double> extraFoodsMap);
     
-    void writeRecipes(Set<Recipe> recipesSet);
+    void writeRecipes(Set<Recipe> recipesSet); // non usiamo cose più generali per evitare possibili problemi collaterali nel reader
     
     void writeDishes(Set<Dish> dishesSet);
     
     void writeThematicMenu(Set<ThematicMenu> thematicMenusSet);
     
-    void writeBookings(HashMap<DateOur, ArrayList<Booking>> bookingMap);
+    void writeBookings(Map<DateOur, List<Booking>> bookingMap);
     
     void writeRegister(Set<Ingredient> registro);
 }

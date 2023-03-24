@@ -147,7 +147,6 @@ public class SimpleUI extends JFrame implements ErrorSetter, GUI
     JScrollPane cfgRecipeScroll = new JScrollPane(cfgRecipeAreaOut);
     
     public void setRecipeList(String list) {
-        //commento todo
         cfgRecipeAreaOut.setText(list);
     }
 
@@ -407,6 +406,11 @@ public class SimpleUI extends JFrame implements ErrorSetter, GUI
         passSavePanel.add(passSaveButton,c);
 
 
+
+        passLoginUserText.setLineWrap(true);
+        passSaveUserText.setLineWrap(true);
+        passLoginUserText.setBorder(border);
+        passSaveUserText.setBorder(border);
         passTabbedPane.addTab("Login",passLoginPanel);
         passTabbedPane.addTab("Sign Up", passSavePanel);
         passSaveButton.addActionListener(e -> {
@@ -1208,7 +1212,7 @@ public class SimpleUI extends JFrame implements ErrorSetter, GUI
 
 
         wareTabbedPane.add("Lista della spesa", wareListPanel);
-        wareTabbedPane.add("Lista fine giornata:", wareReturnListPanel);  //todo cambiare nome
+        wareTabbedPane.add("Lista fine giornata:", wareReturnListPanel);
     }
 
     // Method to update the UI based on the current state

@@ -9,15 +9,15 @@ public class Model {
     private int capacity, workPersonLoad,increment;
     private double workloadRestaurant;
     private DateOur today;
-    private HashMap<String, Double> drinksMap = new HashMap<>();
-    private HashMap<String, Double> extraFoodsMap = new HashMap<>();
+    private Map<String, Double> drinksMap = new HashMap<>();
+    private Map<String, Double> extraFoodsMap = new HashMap<>();
     private Set<Dish> dishesSet = new HashSet<>();
     private Set<Recipe> recipesSet= new HashSet<>();
     private Set<ThematicMenu> thematicMenusSet= new HashSet<>();
-    private HashMap<DateOur,ArrayList<Booking>>  bookingMap = new HashMap<>();
+    private Map<DateOur,List<Booking>>  bookingMap = new HashMap<>();
     private Set<Ingredient> registroAfterMeal = new HashSet<>();
     private Set<Ingredient> registro = new HashSet<>();
-    private ArrayList<User> users = new ArrayList<>();
+    private Set<User> users = new HashSet<>();
     private User theUser;
     
     public User getTheUser()
@@ -40,12 +40,12 @@ public class Model {
         this.theUser = theUser;
     }
     
-    public ArrayList<User> getUsers()
+    public Set<User> getUsers()
     {
         return users;
     }
     
-    public void setUsers(ArrayList<User> users)
+    public void setUsers(Set<User> users)
     {
         this.users = users;
     }
@@ -85,11 +85,11 @@ public class Model {
         this.today = today;
     }
     
-    public HashMap<DateOur, ArrayList<Booking>> getBookingMap() {
+    public Map<DateOur, List<Booking>> getBookingMap() {
         return bookingMap;
     }
 
-    public void setBookingMap(HashMap<DateOur, ArrayList<Booking>> bookingMap) {
+    public void setBookingMap(Map<DateOur, List<Booking>> bookingMap) {
         this.bookingMap = bookingMap;
     }
 
@@ -134,19 +134,19 @@ public class Model {
         this.thematicMenusSet = thematicMenusSet;
     }
 
-    public HashMap<String, Double> getDrinksMap() {
+    public Map<String, Double> getDrinksMap() {
         return drinksMap;
     }
 
-    public void setDrinksMap(HashMap<String, Double> drinksMap) {
+    public void setDrinksMap(Map<String, Double> drinksMap) {
         this.drinksMap = drinksMap;
     }
 
-    public HashMap<String, Double> getExtraFoodsMap() {
+    public Map<String, Double> getExtraFoodsMap() {
         return extraFoodsMap;
     }
 
-    public void setExtraFoodsMap(HashMap<String, Double> extraFoodsMap) {
+    public void setExtraFoodsMap(Map<String, Double> extraFoodsMap) {
         this.extraFoodsMap = extraFoodsMap;
     }
 

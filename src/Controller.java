@@ -1,11 +1,11 @@
 import java.util.*;
 
-public class Controller  //todo le costanti spostare da sui a controller
+public class Controller implements SearchRecipe, SearchDish
 {
 	private final Model model = new Model();
 	private GUI gui;
 	private ErrorSetter erSet;
-	private final Read reader = new Reader(this);
+	private final Read reader = new Reader(this, this);
 	private final Write writer = new Writer();
 	
 	//costanti per la gestione degli errori
@@ -43,12 +43,12 @@ public class Controller  //todo le costanti spostare da sui a controller
 	}
 	
 	/**
-	 * metodo di inizializzazione
+	 * Metodo d'inizializzazione
 	 */
 	public void init()
 	{
 		gui = new SimpleUI(this);
-		erSet = (ErrorSetter) gui; //todo vedere se estrarre errorSetter da SUI
+		erSet = (ErrorSetter) gui;
 		loadModel();
 		gui.init(model.getToday().getStringDate());
 		generateGroceryList();
@@ -61,8 +61,12 @@ public class Controller  //todo le costanti spostare da sui a controller
 	private void loadModel()
 	{
 		// Chiamo tutti i reader per leggere i dati salvati
+		ModelAttributes modelAttributes = reader.readConfig();
+		model.setCapacity(modelAttributes.getCapacity());
+		model.setWorkPersonLoad(modelAttributes.getWorkloadPerson());
+		model.setToday(modelAttributes.getToday());
+		model.setIncrement(modelAttributes.getMaxWorkloadIncrement());
 		model.setUsers(reader.readPeople());
-		reader.readConfig(model);
 		model.setDrinksMap(reader.readDrinks());
 		model.setExtraFoodsMap(reader.readExtraFoods());
 		model.setRecipesSet(reader.readRecipes());
@@ -87,9 +91,9 @@ public class Controller  //todo le costanti spostare da sui a controller
 	private void updateConfig()
 	{
 		String[] configState = new String[5];
-		configState[0] = "Capacità: " + model.getCapacity() + "\n" + "IndividualWorkload: " +
-				model.getWorkPersonLoad() + "\n" + "Restaurant Worlkload: " + model.getWorkResturantLoad() + "\n"
-				+ "Data odierna: " + model.getToday().getStringDate() + "Surplus %: " + model.getIncrement();
+		configState[0] = "Capacità: " + model.getCapacity() + "\nIndividualWorkload: " +
+				model.getWorkPersonLoad() + "\nRestaurant Worlkload: " + model.getWorkResturantLoad() + "\nData odierna: " +
+				model.getToday().getStringDate() + "\nSurplus %: " + model.getIncrement();
 		configState[1] = Integer.toString(model.getCapacity());
 		configState[2] = Integer.toString(model.getWorkPersonLoad());
 		configState[3] = model.getToday().getStringDate();
@@ -99,7 +103,7 @@ public class Controller  //todo le costanti spostare da sui a controller
 	}
 	
 	/**
-	 * metodo che svuota la memoria
+	 * Metodo che svuota la memoria
 	 * @param name campo che va inizializzato
 	 */
 	public void clearInfo(String name)
@@ -129,12 +133,12 @@ public class Controller  //todo le costanti spostare da sui a controller
 			case "recipes.xml":
 				model.getRecipesSet().clear();
 				writer.writeRecipes(model.getRecipesSet());
-				updateRecipeStringList();    //se cancello le ricette devo cancellare anche i piatti, i menu ed i bookings
+				updateRecipeStringList();    //se cancello le ricette devo cancellare anche i piatti, i menu e i bookings
 			case "dishes.xml":
 				model.getDishesSet().clear();
 				writer.writeDishes(model.getDishesSet());
 				updateDishStringList();
-				menuCartaToday(); //todo spero sia giusto
+				menuCartaToday();
 			case "thematicMenus.xml":
 				model.getThematicMenusSet().clear();
 				writer.writeThematicMenu(model.getThematicMenusSet());
@@ -144,7 +148,6 @@ public class Controller  //todo le costanti spostare da sui a controller
 				model.getBookingMap().clear();
 				writeBookings();
 				break;
-			//todo clear del magazzino
 		}
 	}
 	
@@ -185,7 +188,7 @@ public class Controller  //todo le costanti spostare da sui a controller
 					erSet.errorSetter(SURPLUS_TOO_GREAT);
 				else
 				{
-					//salvo tutti i dati ed aggiorno la GUI
+					//salvo tutti i dati e aggiorno la GUI
 					model.setCapacity(capacity);
 					model.setWorkPersonLoad(workload);
 					model.setToday(today);
@@ -520,18 +523,14 @@ public class Controller  //todo le costanti spostare da sui a controller
 	 * @param list stringa di piatti
 	 * @return Array list di piatti
 	 */
-	public ArrayList<Dish> stringListToDishList(ArrayList<String> list)
+	public Dish searchDish(String name)
 	{
-		ArrayList<Dish> dishes = new ArrayList<>();
-		for (String s : list)
+		for (Dish dish : model.getDishesSet())
 		{
-			for (Dish d : model.getDishesSet())
-			{
-				if (d.getName().equals(s))
-					dishes.add(d);
-			}
+				if (dish.getName().equals(name))
+					return dish;
 		}
-		return dishes;
+		return null;
 	}
 	
 	/**
@@ -550,18 +549,16 @@ public class Controller  //todo le costanti spostare da sui a controller
 	
 	/**
 	 * Metodo che trasforma una stringa in una ricetta
-	 * @param id ricetta in forma di stringa
+	 * @param name ricetta in forma di stringa
 	 * @return ricetta
 	 */
-	public Recipe stringToRecipe(String id)
+	public Recipe searchRecipe(String name)
 	{
-		for (Recipe r : model.getRecipesSet())
-		{
-			if (r.getId().equals(id))
-				return r;
+		for (Recipe recipe : model.getRecipesSet()){
+			if (recipe.getId().equals(name))
+				return recipe;
 		}
-		erSet.errorSetter(-1); //errore generico
-		return null; //non dovrebbe succedere
+		return null;
 	}
 	
 	/**
@@ -569,7 +566,7 @@ public class Controller  //todo le costanti spostare da sui a controller
 	 */
 	public void updateRecipeStringList()
 	{
-		String[] recipes = new String[model.getRecipesSet().size()]; //todo controllare se recipeSet esiste anche se vuoto
+		String[] recipes = new String[model.getRecipesSet().size()]; //todo controllare se recipeSet esiste anche se vuoto // collegato al fatto che non devono esistere piatti se non ci sono ricette
 		if (model.getRecipesSet().isEmpty() || (model.getRecipesSet() == null)) //se le ricette sono vuote
 		{
 			gui.updateRecipes(recipes);
@@ -842,7 +839,7 @@ public class Controller  //todo le costanti spostare da sui a controller
 			{
 				int workload = 0;
 				HashMap<Dish, Integer> order = inputToOrder(orderString, date, number);
-				if (!order.isEmpty()) //todo mettiamo un errore se sta cosa è falsa?
+				if (!order.isEmpty())
 				{
 					if (number > 0)//il numero deve essere maggiore di 0
 					{
@@ -948,7 +945,7 @@ public class Controller  //todo le costanti spostare da sui a controller
 	 * Metodo che genera la lista della spesa in base ai piatti da servire oggi
 	 * ed in base al magazzino attuale
 	 */
-	private void generateGroceryList()  //todo sta cosa va snellita
+	private void generateGroceryList()
 	{
 		Set<Ingredient> grocerySet = new HashSet<>();
 		HashMap<String, Double> surplusMap = new HashMap<>();
