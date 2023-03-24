@@ -59,5 +59,4 @@ public class Ingredient implements ConvertToString
 	{
 		return this.name+":"+this.quantity+":"+this.unit;
 	}
-	//todo fare to string di tutte ste classi infami
 }

@@ -24,17 +24,7 @@ public class Model {
     {
         return theUser;
     }
-    
-    public double getWorkloadRestaurant()
-    {
-        return workloadRestaurant;
-    }
-    
-    public void setWorkloadRestaurant(double workloadRestaurant)
-    {
-        this.workloadRestaurant = workloadRestaurant;
-    }
-    
+
     public void setTheUser(User theUser)
     {
         this.theUser = theUser;

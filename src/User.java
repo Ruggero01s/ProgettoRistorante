@@ -6,7 +6,9 @@ import java.util.Base64;
 
 public class User
 {
-    private boolean manager, employee, storageWorker;
+    private boolean manager;
+    private boolean employee;
+    private boolean storageWorker;
     private String name;
     private String password;
     

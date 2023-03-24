@@ -21,7 +21,6 @@ public class SimpleUI extends JFrame implements ErrorSetter, GUI
 
     // Current state of the frame
     private State state;
-    private Controller ctrl;
 
     boolean MenuPermaRadio = false;
     boolean MenuSeasRadio = false;
@@ -587,13 +586,8 @@ public class SimpleUI extends JFrame implements ErrorSetter, GUI
         cfgResMenuCartaOut.setEditable(false);
 
 
-        cfgWriteButton.addActionListener(e -> ctrl.writeManager());
-        cfgBaseClearButton.addActionListener(e -> ctrl.clearInfo("config.xml"));
-        cfgFoodClearButton.addActionListener(e -> ctrl.clearInfo("extraFoods.xml"));
-        cfgRecipeClearButton.addActionListener(e -> ctrl.clearInfo("recipes.xml"));
-        cfgDrinksClearButton.addActionListener(e -> ctrl.clearInfo("drinks.xml"));
-        cfgDishClearButton.addActionListener(e -> ctrl.clearInfo("dishes.xml"));
-        cfgMenuClearButton.addActionListener(e -> ctrl.clearInfo("thematicMenus.xml"));
+        cfgWriteButton.addActionListener(e -> dataManager.writeManager());
+        cfgClearButton.addActionListener(e -> dataManager.clearInfo());
 
         //listener back button
         buttonBack1.addActionListener(back);
@@ -650,7 +644,7 @@ public class SimpleUI extends JFrame implements ErrorSetter, GUI
         cfgBasePanel.add(cfgBaseSendButton, c);
         c.gridx = 2;
         c.gridy = 5;
-        cfgBaseNextDayButton.addActionListener(e -> ctrl.nextDay());
+        cfgBaseNextDayButton.addActionListener(e -> dataManager.nextDay());
         cfgBasePanel.add(cfgBaseNextDayButton, c);
 
         // Drinks & Food
@@ -1043,8 +1037,11 @@ public class SimpleUI extends JFrame implements ErrorSetter, GUI
         c.gridx = 1;
         c.gridy = 7;
         empSeeBookingsPanel.add(empSeeBookClear, c);
-        empSeeBookClear.addActionListener(e -> ctrl.clearInfo("bookings"));
-
+        empSeeBookClear.addActionListener(e -> dataManager.clearBookings(dataManager.inputToDate(empSeeBookDateInput.getText())));
+        c.gridx = 2;
+        c.gridy = 7;
+        empSeeBookingsPanel.add(empSeeBookClear, c);
+        empSeeBookClearAll.addActionListener(e -> dataManager.clearBookings());
         // NewBooking prenotazioni
         titlePadding.gridx = 0;
         titlePadding.gridy = 0;
@@ -1086,7 +1083,7 @@ public class SimpleUI extends JFrame implements ErrorSetter, GUI
         empNewBookingPanel.add(empNewBookSend, c);
         empNewBookSend.addActionListener(e ->
         {
-            if(ctrl.saveBooking(empNewBookNameInput.getText().trim(),empNewBookDateInput.getText().trim(),Integer.parseInt(empNewBookNumInput.getText().trim()),empNewBookOrderInput.getText().trim()))
+            if(saver.saveBooking(empNewBookNameInput.getText().trim(),empNewBookDateInput.getText().trim(),Integer.parseInt(empNewBookNumInput.getText().trim()),empNewBookOrderInput.getText().trim()))
             {
                 empNewBookNameInput.setText("");
                 empNewBookDateInput.setText("");
@@ -1179,7 +1176,7 @@ public class SimpleUI extends JFrame implements ErrorSetter, GUI
         wareListPanel.add(buttonBack12, c);
         c.gridx = 1;
         c.gridy = 4;
-        wareListSend.addActionListener(e-> ctrl.writeRegister());
+        wareListSend.addActionListener(e-> dataManager.writeRegister());
         wareListPanel.add(wareListSend, c);
 
         //RETURNLIST PANEL
@@ -1188,7 +1185,7 @@ public class SimpleUI extends JFrame implements ErrorSetter, GUI
         wareReturnListPanel.add(wareReturnListOutText, c);
         c.gridx = 0;
         c.gridy = 1;
-        wareReturnListOut.setText(ctrl.setToString(ctrl.getModel().getRegistroAfterMeal()));
+        wareReturnListOut.setText(dataManager.setToString(dataManager.getModel().getRegistroAfterMeal()));
         wareReturnListPanel.add(wareReturnListOutScroll, c);
         c.gridx = 0;
         c.gridy = 2;
@@ -1203,7 +1200,7 @@ public class SimpleUI extends JFrame implements ErrorSetter, GUI
         c.gridy = 4;
         wareReturnListSend.addActionListener(e->
         {
-            if (ctrl.warehouseChanges(wareReturnListIn.getText().trim()))
+            if (dataManager.warehouseChanges(wareReturnListIn.getText().trim()))
             {
                 wareReturnListIn.setText("");
             }

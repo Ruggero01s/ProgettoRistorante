@@ -1,6 +1,6 @@
 import java.util.*;
 
-public class Controller implements SearchRecipe, SearchDish
+public class Controller implements SearchRecipe, SearchDish, Login, SaveData, DataManagement
 {
 	private final Model model = new Model();
 	private GUI gui;
@@ -104,52 +104,61 @@ public class Controller implements SearchRecipe, SearchDish
 	
 	/**
 	 * Metodo che svuota la memoria
-	 * @param name campo che va inizializzato
 	 */
-	public void clearInfo(String name)
+	public void clearInfo()
 	{
-		switch (name)
-		{
-			case "drinks.xml": //todo vedere gli effetti collaterali di tutti sti cosi
-				model.getDrinksMap().clear();
-				writer.writeDrinks(model.getDrinksMap());
-				updateDrinkList();
-				break;
-			case "extraFoods.xml":
-				model.getExtraFoodsMap().clear();
-				writer.writeExtraFoods(model.getExtraFoodsMap());
-				updateFoodList();
-				break;
-			case "config.xml":
-				model.setCapacity(0);
-				model.setWorkPersonLoad(0);
-				model.setIncrement(5);
-				model.setToday(new DateOur("01", "01", "1444"));
-				
-				writer.writeConfigBase(model.getCapacity(), model.getWorkPersonLoad(), model.getToday(), model.getIncrement());
-				String[] data = {"0", "0", "0", "01/01/1444", "5"};
-				gui.updateConfig(List.of(data));
-				clearInfo("bookings");
-			case "recipes.xml":
-				model.getRecipesSet().clear();
-				writer.writeRecipes(model.getRecipesSet());
-				updateRecipeStringList();    //se cancello le ricette devo cancellare anche i piatti, i menu e i bookings
-			case "dishes.xml":
-				model.getDishesSet().clear();
-				writer.writeDishes(model.getDishesSet());
-				updateDishStringList();
-				menuCartaToday();
-			case "thematicMenus.xml":
-				model.getThematicMenusSet().clear();
-				writer.writeThematicMenu(model.getThematicMenusSet());
-				updateMenuOut();
-				updateMenuBoxes();
-			case "bookings":
-				model.getBookingMap().clear();
-				writeBookings();
-				break;
-		}
+		//clear dei drinks
+		model.getDrinksMap().clear();
+		writer.writeDrinks(model.getDrinksMap());
+		updateDrinkList();
+		//clear dei  foods
+		model.getExtraFoodsMap().clear();
+		writer.writeExtraFoods(model.getExtraFoodsMap());
+		updateFoodList();
+		//clear dei config
+		model.setCapacity(0);
+		model.setWorkPersonLoad(0);
+		model.setIncrement(5);
+		model.setToday(new DateOur("01", "01", "1444"));
+		writer.writeConfigBase(model.getCapacity(), model.getWorkPersonLoad(), model.getToday(), model.getIncrement());
+		String[] data = {"0", "0", "0", "01/01/1444", "5"};
+		gui.updateConfig(List.of(data));
+		//clear delle recipe
+		model.getRecipesSet().clear();
+		writer.writeRecipes(model.getRecipesSet());
+		updateRecipeStringList();
+		//clear dei dish
+		model.getDishesSet().clear();
+		writer.writeDishes(model.getDishesSet());
+		updateDishStringList();
+		menuCartaToday();
+		//clear dei menu
+		model.getThematicMenusSet().clear();
+		writer.writeThematicMenu(model.getThematicMenusSet());
+		updateMenuOut();
+		updateMenuBoxes();
+		
+		//clear delle prenotazioni
+		model.getBookingMap().clear();
+		writeBookings();
+		
+		//clear del magazzino
+		model.getRegistro().clear();
+		writeRegister();
 	}
+	
+	public void clearBookings(DateOur input)
+	{
+		model.getBookingMap().remove(input);
+		writeBookings();
+	}
+	public void clearBookings()
+	{
+		model.getBookingMap().keySet().removeIf(k -> !(k.equals(model.getToday())));
+		writeBookings();
+	}
+	
+
 	
 	/**
 	 * Salvataggio tramite writer di tutti i dati del manager
@@ -527,8 +536,8 @@ public class Controller implements SearchRecipe, SearchDish
 	{
 		for (Dish dish : model.getDishesSet())
 		{
-				if (dish.getName().equals(name))
-					return dish;
+			if (dish.getName().equals(name))
+				return dish;
 		}
 		return null;
 	}
@@ -554,7 +563,8 @@ public class Controller implements SearchRecipe, SearchDish
 	 */
 	public Recipe searchRecipe(String name)
 	{
-		for (Recipe recipe : model.getRecipesSet()){
+		for (Recipe recipe : model.getRecipesSet())
+		{
 			if (recipe.getId().equals(name))
 				return recipe;
 		}
@@ -597,7 +607,7 @@ public class Controller implements SearchRecipe, SearchDish
 		}
 		gui.updateDishes(dishes);
 	}
-
+	
 	public String convertToString(Collection<ConvertToString> convertToStrings)
 	{
 		String out="";
@@ -605,18 +615,18 @@ public class Controller implements SearchRecipe, SearchDish
 			out+=convertToString.convertToString()+"\n";
 		return out;
 	}
-
-	public String [] convertToStringVector (Collection<ConvertToString> convertToStrings)
+	
+	public String[] convertToStringVector(Collection<ConvertToString> convertToStrings)
 	{
 		String[] out = new String[convertToStrings.size()];
-		int i=0;
-
-		for (ConvertToString convertToString:convertToStrings)
+		int i = 0;
+		
+		for (ConvertToString convertToString : convertToStrings)
 			out[i++] = convertToString.convertToString();
-
+		
 		return out;
 	}
-
+	
 	
 	/**
 	 * Metodo che serve per aggiornare i drinks nella GUI
