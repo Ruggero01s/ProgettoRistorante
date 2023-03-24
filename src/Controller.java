@@ -1352,8 +1352,9 @@ public class Controller implements SearchRecipe, SearchDish, Login, SaveData, Da
 		gui.nextDay(model.getToday().getStringDate());
 		updateConfig();
 		menuCartaToday();
-		
+
 		oldBooking(); //cancello le vecchie prenotazioni
+
 		//aggiorno e calcolo magazzino e lista della spesa
 		model.setRegistro(model.getRegistroAfterMeal());
 		generateGroceryList();
@@ -1365,11 +1366,13 @@ public class Controller implements SearchRecipe, SearchDish, Login, SaveData, Da
 	 */
 	private void oldBooking()
 	{
+		HashMap<DateOur,List<Booking>> temp = new HashMap<>(model.getBookingMap()); //per evitare concurrent access
 		for (Map.Entry<DateOur, List<Booking>> entry : model.getBookingMap().entrySet())
 		{
 			if (entry.getKey().getDate().before(model.getToday().getDate())) //rimuovo le prenotazioni che hanno una data precedente ad oggi
-				model.getBookingMap().remove(entry.getKey());
+				temp.remove(entry.getKey());
 		}
+		model.setBookingMap(temp);
 		updateBookedDates();
 	}
 	
