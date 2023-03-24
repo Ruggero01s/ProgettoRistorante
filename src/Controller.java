@@ -147,17 +147,26 @@ public class Controller implements SearchRecipe, SearchDish, Login, SaveData, Da
 		writeRegister();
 	}
 	
-	public void clearBookings(DateOur input)
+	/**
+	 * Cancella le prenotazioni in uno specifico giorno
+	 * @param input giorno in cui annullare le prenotazioni
+	 * @return true se la
+	 */
+	public boolean clearBookings(DateOur input)
 	{
-		model.getBookingMap().remove(input);
+		Object obj= model.getBookingMap().remove(input);
 		writeBookings();
+		return !(obj==null);
 	}
+	
+	/**
+	 * Cancella tutte le prenotazioni tranne quelle in data odierna
+	 */
 	public void clearBookings()
 	{
 		model.getBookingMap().keySet().removeIf(k -> !(k.equals(model.getToday())));
 		writeBookings();
 	}
-	
 
 	
 	/**
@@ -586,7 +595,7 @@ public class Controller implements SearchRecipe, SearchDish, Login, SaveData, Da
 			int i = 0;
 			for (Recipe recipe : model.getRecipesSet()) //trasformo le ricette in stringa
 			{
-				recipes[i] = (recipe.getId() + " - " + "[" + recipe.getIngredientsList() + "] - p." + recipe.getPortions() + " - w." + recipe.getWorkLoadPortion());
+				recipes[i] = recipe.convertToString();
 				i++;
 			}
 			gui.updateRecipes(recipes);
@@ -635,9 +644,8 @@ public class Controller implements SearchRecipe, SearchDish, Login, SaveData, Da
 	{
 		StringBuilder out = new StringBuilder();
 		for (Map.Entry<String, Double> drink : model.getDrinksMap().entrySet()) //trasformo la map di drinks in stringa
-		{
-			out.append(drink.getKey()).append(":").append(drink.getValue().toString()).append("\n");
-		}
+			out.append(drink.getKey()).append(":").append(drink.getValue().toString()).append(":L").append("\n");
+		
 		gui.updateDrinks(out.toString().trim());
 	}
 	
@@ -648,9 +656,8 @@ public class Controller implements SearchRecipe, SearchDish, Login, SaveData, Da
 	{
 		StringBuilder out = new StringBuilder();
 		for (Map.Entry<String, Double> food : model.getExtraFoodsMap().entrySet()) //trasformo la map di extra foods in stringa
-		{
-			out.append(food.getKey()).append(":").append(food.getValue().toString()).append("\n");
-		}
+			out.append(food.getKey()).append(":").append(food.getValue().toString()).append(":g").append("\n");
+		
 		gui.updateFoods(out.toString().trim());
 	}
 	
@@ -1356,7 +1363,8 @@ public class Controller implements SearchRecipe, SearchDish, Login, SaveData, Da
 	 * @param storageWorker true se ha accesso alla tab storageWorker, false altrimenti
 	 * @return true se il salvataggio è avvenuto, false altrimenti
 	 */
-	public boolean saveUser(String name, String password, String confPassword, boolean manager, boolean employee, boolean storageWorker)
+	public boolean saveUser(String name, String password, String
+			confPassword, boolean manager, boolean employee, boolean storageWorker)
 	{
 		if (manager || employee || storageWorker) //deve avere almeno un ruolo, altrimenti non può accedere a nulla
 		{

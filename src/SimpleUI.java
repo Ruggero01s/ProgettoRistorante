@@ -1029,7 +1029,12 @@ public class SimpleUI extends JFrame implements ErrorSetter, GUI
         c.gridx = 1;
         c.gridy = 7;
         empSeeBookingsPanel.add(empSeeBookClear, c);
-        empSeeBookClear.addActionListener(e -> dataManager.clearBookings(dataManager.inputToDate(empSeeBookDateInput.getText())));
+        empSeeBookClear.addActionListener(e ->
+                {
+                    if(dataManager.clearBookings(dataManager.inputToDate(empSeeBookDateInput.getText())))
+                        empSeeBookDateInput.setText("");
+                }
+        );
         c.gridx = 2;
         c.gridy = 7;
         empSeeBookingsPanel.add(empSeeBookClear, c);

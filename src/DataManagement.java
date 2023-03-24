@@ -25,7 +25,7 @@ public interface DataManagement
 	
 	boolean warehouseChanges(String trim);
 	
-	void clearBookings(DateOur date);
+	boolean clearBookings(DateOur date);
 	
 	void clearBookings();
 }

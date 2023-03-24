@@ -3,10 +3,10 @@
 	<booking date="05/06/2025">
 		<book name="Tullio" number="4" workload="16">
 			<order dish="Pizza Hawai" quantity="4"></order>
-			<order dish="Polpettine" quantity="4"></order>
-			<order dish="Pasta Tonnata" quantity="4"></order></book></booking>
+			<order dish="Pasta Tonnata" quantity="4"></order>
+			<order dish="Polpettine" quantity="4"></order></book></booking>
 	<booking date="12/08/2023">
 		<book name="test" number="2" workload="6">
-			<order dish="Polpettine" quantity="2"></order>
-			<order dish="Pasta Tonnata" quantity="2"></order></book></booking>
+			<order dish="Pasta Tonnata" quantity="2"></order>
+			<order dish="Polpettine" quantity="2"></order></book></booking>
 </bookings>
