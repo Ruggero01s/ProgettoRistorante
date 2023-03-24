@@ -53,7 +53,6 @@ public class Controller implements SearchRecipe, SearchDish, Login, SaveData, Da
 		loadModel();
 		gui.init(model.getToday().getStringDate());
 		generateGroceryList();
-		generateAfterMeal();
 	}
 	
 	/**
@@ -1093,6 +1092,8 @@ public class Controller implements SearchRecipe, SearchDish, Login, SaveData, Da
 			grocerySet.addAll(foods);
 			grocerySet.addAll(drinks);
 			
+			Set<Ingredient>temp = new HashSet<>(grocerySet);
+			
 			grocerySet = new HashSet<>(compareWithRegister(grocerySet)); //comparo la lista della spesa con ciò che ho in magazzino
 			
 			
@@ -1105,16 +1106,40 @@ public class Controller implements SearchRecipe, SearchDish, Login, SaveData, Da
 			
 			//aggiorno il magazzino
 			addToRegister(grocerySet);
-			addToRegister(drink);
-			addToRegister(food);
+			
+			/*addToRegister(drink);
+			addToRegister(food);*/
 			
 			groceryList = groceriesToString(grocerySet, drink, food);
+			generateAfterMeal(temp);
 		}
 		else
 		{
 			groceryList = "Non essendoci prenotazioni per oggi la lista della spesa è vuota"; //in caso non ci siano prenotazioni per oggi la lista della spesa è vuoto
 		}
 		gui.updateWare(groceryList, setToString(model.getRegistro()));
+	}
+	
+	private void generateAfterMeal(Set<Ingredient> consumed)
+	{
+		Set<Ingredient> temp =   new HashSet<>(model.getRegistro());
+		Set<Ingredient> registroNow = new HashSet<>(Set.copyOf(temp));//todo tutto
+		for (Ingredient regNow: registroNow)
+		{
+			for (Ingredient delta: consumed)
+			{
+				if(regNow.equals(delta))
+				{
+					double quantity = regNow.getQuantity()-delta.getQuantity();
+					if(quantity>0)
+						regNow.setQuantity(quantity);
+					else
+						regNow.setQuantity(-1);
+				}
+			}
+		}
+		registroNow.removeIf(ingredient -> ingredient.getQuantity() <=0);
+		model.setRegistroAfterMeal(registroNow);
 	}
 	
 	/**
@@ -1358,7 +1383,6 @@ public class Controller implements SearchRecipe, SearchDish, Login, SaveData, Da
 		//aggiorno e calcolo magazzino e lista della spesa
 		model.setRegistro(model.getRegistroAfterMeal());
 		generateGroceryList();
-		generateAfterMeal();
 	}
 	
 	/**
