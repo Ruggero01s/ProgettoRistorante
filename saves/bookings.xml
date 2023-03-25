@@ -1,22 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
 <bookings>
 	<booking date="02/06/2023">
-		<book name="1" number="5" workload="24">
-			<order dish="Polpettine" quantity="2"></order>
-			<order dish="Cotoletta alla Milanese" quantity="5"></order>
-			<order dish="Pasta Tonnata" quantity="5"></order></book></booking>
+		<book name="test1" number="5" workload="24">
+			<order dish="Pepperoni" quantity="1"></order></book></booking>
 	<booking date="05/06/2023">
-		<book name="Tullio" number="4" workload="16">
-			<order dish="Pizza Hawai" quantity="4"></order>
-			<order dish="Pasta Tonnata" quantity="4"></order>
-			<order dish="Polpettine" quantity="4"></order></book></booking>
+		<book name="test2" number="5" workload="24">
+			<order dish="Pepperoni" quantity="1"></order></book></booking>
 	<booking date="12/08/2023">
-		<book name="test" number="2" workload="6">
-			<order dish="Pasta Tonnata" quantity="2"></order>
-			<order dish="Polpettine" quantity="2"></order></book></booking>
+		<book name="test3" number="5" workload="24">
+			<order dish="Pepperoni" quantity="1"></order></book></booking>
 	<booking date="03/06/2023">
-		<book name="2" number="7" workload="36">
-			<order dish="Polpettine" quantity="4"></order>
-			<order dish="Cotoletta alla Milanese" quantity="7"></order>
-			<order dish="Pasta Tonnata" quantity="7"></order></book></booking>
+		<book name="test4" number="5" workload="24">
+			<order dish="Pepperoni" quantity="1"></order></book></booking>
 </bookings>

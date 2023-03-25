@@ -12,7 +12,7 @@
 	<recipe id="d" portions="1" workLoadPortion="1.0">
 		<ingredient name="a" quantity="1.0" unity="g"></ingredient></recipe>
 	<recipe id="peperonata" portions="2" workLoadPortion="1.0">
-		<ingredient name="pepperoni" quantity="500.0" unity="g"></ingredient></recipe>
+		<ingredient name="pepperoni" quantity="100.0" unity="g"></ingredient></recipe>
 	<recipe id="pastaTonno" portions="2" workLoadPortion="1.0">
 		<ingredient name="farina" quantity="200.0" unity="g"></ingredient>
 		<ingredient name="tonno" quantity="100.0" unity="g"></ingredient></recipe>

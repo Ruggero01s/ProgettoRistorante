@@ -16,7 +16,7 @@ public class Model {
     private Set<ThematicMenu> thematicMenusSet= new HashSet<>();
     private Map<DateOur,List<Booking>>  bookingMap = new HashMap<>();
     private Set<Ingredient> registroAfterMeal = new HashSet<>();
-    private Set<Ingredient> registro = new HashSet<>();
+    private Set<Ingredient> registroBeforeMeal = new HashSet<>();
     private Set<User> users = new HashSet<>();
     private User theUser;
     
@@ -48,14 +48,14 @@ public class Model {
         this.registroAfterMeal = registroAfterMeal;
     }
 
-    public Set<Ingredient> getRegistro()
+    public Set<Ingredient> getRegistroBeforeMeal()
     {
-        return registro;
+        return registroBeforeMeal;
     }
     
-    public void setRegistro(Set<Ingredient> registro)
+    public void setRegistroBeforeMeal(Set<Ingredient> registroBeforeMeal)
     {
-        this.registro = registro;
+        this.registroBeforeMeal = registroBeforeMeal;
     }
 
     public int getWorkPersonLoad() {
