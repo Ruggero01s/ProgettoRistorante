@@ -12,8 +12,8 @@ public interface GUI
 		void updateMenus(String menus);
 		void updateMenuBoxes(String[] menus);
 		void nextDay(String today);
-		void updateWareReturnList (String out);
-		void updateWare(String groceryList, String register);
+		void updateWareReturnList (String afterMeal);
+		void updateWare(String groceryList, String beforeMeal);
 		void login();
 		void updateBooking (String name, String number, String work, String capacity, String workload);
 		void updateBookedDates(String dates);

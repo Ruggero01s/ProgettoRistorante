@@ -1352,22 +1352,22 @@ public class SimpleUI extends JFrame implements ErrorSetter, GUI
     
     /**
      * Metodo che aggiorna il magazzino
-     * @param out magazzino sotto forma di stringa
+     * @param afterMeal magazzino sotto forma di stringa
      */
-    public void updateWareReturnList (String out)
+    public void updateWareReturnList (String afterMeal)
     {
-        wareReturnListOut.setText(out);
+        wareReturnListOut.setText(afterMeal);
     }
     
     /**
      * Metodo che aggiorna il magazzino e la lista della spesa
      * @param groceryList lista della spesa sotto forma di testo
-     * @param register magazzino sotto forma di testo
+     * @param beforeMeal magazzino sotto forma di testo
      */
-    public void updateWare(String groceryList, String register)
+    public void updateWare(String groceryList, String beforeMeal)
     {
         wareListOut.setText(groceryList);
-        wareListMagOut.setText(register);
+        wareListMagOut.setText(beforeMeal);
     }
     
     /**
