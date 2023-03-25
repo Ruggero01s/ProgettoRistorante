@@ -985,6 +985,7 @@ public class Controller implements SearchRecipe, SearchDish, Login, SaveData, Da
 		int multi;
 		Recipe recipe;
 		String groceryList;
+		Set<Ingredient>temp = new HashSet<>();
 		
 		if (model.getBookingMap().containsKey(model.getToday()))
 		{
@@ -1092,7 +1093,7 @@ public class Controller implements SearchRecipe, SearchDish, Login, SaveData, Da
 			grocerySet.addAll(foods);
 			grocerySet.addAll(drinks);
 			
-			Set<Ingredient>temp = new HashSet<>(grocerySet);
+			temp = new HashSet<>(grocerySet);
 			
 			grocerySet = new HashSet<>(compareWithRegister(grocerySet)); //comparo la lista della spesa con ciò che ho in magazzino
 			
@@ -1111,20 +1112,19 @@ public class Controller implements SearchRecipe, SearchDish, Login, SaveData, Da
 			addToRegister(food);*/
 			
 			groceryList = groceriesToString(grocerySet, drink, food);
-			generateAfterMeal(temp);
 		}
 		else
 		{
 			groceryList = "Non essendoci prenotazioni per oggi la lista della spesa è vuota"; //in caso non ci siano prenotazioni per oggi la lista della spesa è vuoto
 		}
+		generateAfterMeal(temp);
 		gui.updateWare(groceryList, setToString(model.getRegistro()));
 	}
 	
 	private void generateAfterMeal(Set<Ingredient> consumed)
 	{
 		Set<Ingredient> temp =   new HashSet<>();
-		Set<Ingredient> registroNow = new HashSet<>(model.getRegistro());//todo tutto
-		for (Ingredient regNow: registroNow)
+		for (Ingredient regNow: model.getRegistro())
 		{
 			for (Ingredient delta: consumed)
 			{
