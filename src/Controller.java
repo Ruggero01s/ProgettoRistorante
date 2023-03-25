@@ -659,7 +659,7 @@ public class Controller implements SearchRecipe, SearchDish, Login, SaveData, Da
 	{
 		StringBuilder out = new StringBuilder();
 		for (Map.Entry<String, Double> food : model.getExtraFoodsMap().entrySet()) //trasformo la map di extra foods in stringa
-			out.append(food.getKey()).append(":").append(food.getValue().toString()).append(":g").append("\n");
+			out.append(food.getKey()).append(":").append(food.getValue().toString()).append(":Hg").append("\n");
 		
 		gui.updateFoods(out.toString().trim());
 	}
