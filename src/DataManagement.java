@@ -19,8 +19,6 @@ public interface DataManagement
 	
 	void nextDay();
 	
-	Model getModel();
-	
 	String setToString(Set<Ingredient> registroAfterMeal);
 	
 	boolean warehouseChanges(String trim);

@@ -5,7 +5,7 @@ public class Controller implements SearchRecipe, SearchDish, Login, SaveData, Da
 	private final Model model = new Model();
 	private GUI gui;
 	private ErrorSetter erSet;
-	private final Read reader = new Reader(this, this);
+	private final Read reader = new Reader(this, this); //todo controllare interazioni con write e read
 	private final Write writer = new Writer();
 	
 	//costanti per la gestione degli errori
@@ -36,12 +36,6 @@ public class Controller implements SearchRecipe, SearchDish, Login, SaveData, Da
 	public static final int NO_PERMISSION = 23;
 	public static final int EMPTY_INPUT = 24;
 	public static final int WRONG_UNIT = 25;
-	
-	
-	public Model getModel ()
-	{
-		return model;
-	}
 	
 	/**
 	 * Metodo d'inizializzazione
@@ -89,18 +83,16 @@ public class Controller implements SearchRecipe, SearchDish, Login, SaveData, Da
 		model.setBookingMap(reader.readBooking());
 		model.setRegistroBeforeMeal(reader.readRegister());
 		//aggiorno le varie stringhe per la GUI
-		updateRecipeStringList();
-		updateDishStringList();
-		
+		gui.updateRecipes(convertToStringVector(model.getRecipeSetConverted()));
 		updateDrinkList();
-		//convertToStringVector(model.getDishesSetConverted());
+		gui.updateDishes(convertToStringVector(model.getDishesSetConverted()));
 		updateFoodList();
-		updateMenuOut();
-		updateMenuBoxes();
+		gui.updateMenus(convertToString(model.getThematicMenuSetConverted()));
+		gui.updateMenuBoxes(makeMenuList());
 		menuCartaToday();
 		updateBookedDates();
 		updateConfig();
-		oldBooking();
+		oldBooking(); //elimino le vecchie prenotazioni
 	}
 	
 	/**
@@ -144,17 +136,17 @@ public class Controller implements SearchRecipe, SearchDish, Login, SaveData, Da
 		//clear delle recipe
 		model.getRecipesSet().clear();
 		writer.writeRecipes(model.getRecipesSet());
-		updateRecipeStringList();
+		gui.updateRecipes(convertToStringVector(model.getRecipeSetConverted()));
 		//clear dei dish
 		model.getDishesSet().clear();
 		writer.writeDishes(model.getDishesSet());
-		updateDishStringList();
+		gui.updateDishes(convertToStringVector(model.getDishesSetConverted()));
 		menuCartaToday();
 		//clear dei menu
 		model.getThematicMenusSet().clear();
 		writer.writeThematicMenu(model.getThematicMenusSet());
-		updateMenuOut();
-		updateMenuBoxes();
+		gui.updateMenus(convertToString(model.getThematicMenuSetConverted()));
+		gui.updateMenuBoxes(makeMenuList());
 		
 		//clear delle prenotazioni
 		model.getBookingMap().clear();
@@ -359,7 +351,7 @@ public class Controller implements SearchRecipe, SearchDish, Login, SaveData, Da
 			{
 				if (model.getRecipesSet().add(new Recipe(inputName, ingredientQuantitySet, portions, workLoad)))
 				{
-					updateRecipeStringList();
+					gui.updateRecipes(convertToStringVector(model.getRecipeSetConverted()));
 				}
 				else
 					erSet.errorSetter(EXISTING_NAME);
@@ -425,7 +417,7 @@ public class Controller implements SearchRecipe, SearchDish, Login, SaveData, Da
 				{
 					if (model.getDishesSet().add(new Dish(inputName, r, inputStartDate, inputEndDate, seasonal, perm))) //associo il piatto alla ricetta
 					{
-						updateDishStringList();
+						gui.updateDishes(convertToStringVector(model.getDishesSetConverted()));
 						found = true;
 						break;
 					}
@@ -509,8 +501,8 @@ public class Controller implements SearchRecipe, SearchDish, Login, SaveData, Da
 					{
 						if (model.getThematicMenusSet().add(temp)) //aggiorno la GUI
 						{
-							updateMenuOut();
-							updateMenuBoxes();
+							gui.updateMenus(convertToString(model.getThematicMenuSetConverted()));
+							gui.updateMenuBoxes(makeMenuList());
 						}
 						else
 							erSet.errorSetter(EXISTING_NAME);
@@ -570,20 +562,6 @@ public class Controller implements SearchRecipe, SearchDish, Login, SaveData, Da
 	}
 	
 	/**
-	 * Metodo che aggiorna la GUI scrivendo in output
-	 * tutti i menu tematici con i relativi dati
-	 */
-	public void updateMenuOut ()
-	{
-		StringBuilder out = new StringBuilder();
-		for (ThematicMenu m : model.getThematicMenusSet())
-		{
-			out.append(m.getName()).append(" - [").append(m.getStartPeriod().getStringDate()).append(" || ").append(m.getStartPeriod().getStringDate()).append("] - w.").append(m.getWorkThematicMenuLoad()).append(" \n");
-		}
-		gui.updateMenus(out.toString().trim());
-	}
-	
-	/**
 	 * Metodo che trasforma una stringa in una ricetta
 	 * @param name ricetta in forma di stringa
 	 * @return ricetta
@@ -599,51 +577,24 @@ public class Controller implements SearchRecipe, SearchDish, Login, SaveData, Da
 	}
 	
 	/**
-	 * Metodo che serve per aggiornare le ricette nella GUI
+	 * Metodo che converte un oggetto che implementa ConvertToStrings in una stringa
+	 * @param convertToStrings collection da convertire
+	 * @return stringa che elenca la collection
 	 */
-	public void updateRecipeStringList ()
-	{
-		String[] recipes = new String[model.getRecipesSet().size()];
-		if (model.getRecipesSet().isEmpty() || (model.getRecipesSet() == null)) //se le ricette sono vuote
-		{
-			gui.updateRecipes(recipes);
-		}
-		else //se c'è almeno una ricetta
-		{
-			int i = 0;
-			for (Recipe recipe : model.getRecipesSet()) //trasformo le ricette in stringa
-			{
-				recipes[i] = recipe.convertToString();
-				i++;
-			}
-			gui.updateRecipes(recipes);
-		}
-	}
-	
-	/**
-	 * Metodo che serve per aggiornare i piatti nella GUI
-	 */
-	public void updateDishStringList ()
-	{
-		String[] dishes = new String[model.getDishesSet().size()];
-		int i = 0;
-		for (Dish d : model.getDishesSet()) //trasformo i dish in stringa
-		{
-			dishes[i] = (d.getName() + " - [" + d.getStartPeriod().getStringDate() + " || " + d.getEndPeriod().getStringDate() + "] - " + "(" + d.getRecipe().getId() + ")");
-			i++;
-		}
-		gui.updateDishes(dishes);
-	}
-	
-	public String convertToString (Collection<ConvertToString> convertToStrings)
+	private String convertToString (Collection<ConvertToString> convertToStrings)
 	{
 		StringBuilder out = new StringBuilder();
 		for (ConvertToString convertToString : convertToStrings)
 			out.append(convertToString.convertToString()).append("\n");
-		return out.toString();
+		return out.toString().trim();
 	}
 	
-	public String[] convertToStringVector (Collection<ConvertToString> convertToStrings)
+	/**
+	 * Metodo che converte un oggetto che implementa ConvertToStrings in un vettore di stringhe
+	 * @param convertToStrings collection di oggetti che implementano l'interfaccia
+	 * @return la collection convertita in vettore di stringhe
+	 */
+	private String[] convertToStringVector (Collection<ConvertToString> convertToStrings)
 	{
 		String[] out = new String[convertToStrings.size()];
 		int i = 0;
@@ -657,7 +608,7 @@ public class Controller implements SearchRecipe, SearchDish, Login, SaveData, Da
 	/**
 	 * Metodo che serve per aggiornare i drinks nella GUI
 	 */
-	public void updateDrinkList ()
+	private void updateDrinkList ()
 	{
 		StringBuilder out = new StringBuilder();
 		for (Map.Entry<String, Double> drink : model.getDrinksMap().entrySet()) //trasformo la map di drinks in stringa
@@ -669,21 +620,13 @@ public class Controller implements SearchRecipe, SearchDish, Login, SaveData, Da
 	/**
 	 * Metodo che serve per aggiornare gli extra foods nella GUI
 	 */
-	public void updateFoodList ()
+	private void updateFoodList ()
 	{
 		StringBuilder out = new StringBuilder();
 		for (Map.Entry<String, Double> food : model.getExtraFoodsMap().entrySet()) //trasformo la map di extra foods in stringa
 			out.append(food.getKey()).append(":").append(food.getValue().toString()).append(":Hg").append("\n");
 		
 		gui.updateFoods(out.toString().trim());
-	}
-	
-	/**
-	 * metodo per aggiornare le liste di menu nelle comboBox
-	 */
-	public void updateMenuBoxes ()
-	{
-		gui.updateMenuBoxes(makeMenuList());
 	}
 	
 	/**
@@ -711,7 +654,7 @@ public class Controller implements SearchRecipe, SearchDish, Login, SaveData, Da
 	/**
 	 * @return una stringa con un nome per ogni menu per riga
 	 */
-	public String[] makeMenuList ()
+	private String[] makeMenuList ()
 	{
 		String[] out = new String[model.getThematicMenusSet().size()];
 		int i = 0;
@@ -750,7 +693,7 @@ public class Controller implements SearchRecipe, SearchDish, Login, SaveData, Da
 	 * @param number numero del piatto/menu ordinato
 	 * @return un HashMap che contiene per ogni Dish nell'ordine la quantità ordinata
 	 */
-	public HashMap<Dish, Integer> inputToOrder (String in, DateOur date, int number)
+	private HashMap<Dish, Integer> inputToOrder (String in, DateOur date, int number)
 	{
 		if (in.isBlank()) throw new RuntimeException();
 		String[] lines = in.split("\n");
@@ -925,7 +868,7 @@ public class Controller implements SearchRecipe, SearchDish, Login, SaveData, Da
 	 * @param order    hashmap di tutti i piatti ordinati
 	 * @return true se la prenotazione è stata salvata, false altrimenti
 	 */
-	public boolean manageBooking (String name, DateOur date, int number, int workload, HashMap<Dish, Integer> order)
+	private boolean manageBooking (String name, DateOur date, int number, int workload, HashMap<Dish, Integer> order)
 	{
 		ArrayList<Booking> day = new ArrayList<>();
 		int capacity = number;
@@ -961,7 +904,7 @@ public class Controller implements SearchRecipe, SearchDish, Login, SaveData, Da
 	 * Metodo che produce una stringa di date
 	 * di tutti i giorni in cui c'è almeno una prenotazione
 	 */
-	public void updateBookedDates ()
+	private void updateBookedDates ()
 	{
 		Set<DateOur> daysList = model.getBookingMap().keySet(); //insieme di date con almeno una prenotazione
 		StringBuilder out = new StringBuilder();
@@ -989,7 +932,6 @@ public class Controller implements SearchRecipe, SearchDish, Login, SaveData, Da
 		writer.writeRegister(model.getRegistroBeforeMeal());
 	}
 	
-	
 	/**
 	 * Metodo che converte set d'ingredienti in stringhe
 	 * @param set set da convertire
@@ -999,9 +941,7 @@ public class Controller implements SearchRecipe, SearchDish, Login, SaveData, Da
 	{
 		StringBuilder out = new StringBuilder();
 		for (Ingredient entry : set)
-		{
-			out.append(entry.getName()).append(":").append(entry.getQuantity()).append(":").append(entry.getUnit()).append("\n");
-		}
+			out.append(entry.convertToString()).append("\n");
 		return out.toString().trim();
 	}
 	
@@ -1124,9 +1064,9 @@ public class Controller implements SearchRecipe, SearchDish, Login, SaveData, Da
 	{
 		model.getToday().getDate().add(Calendar.DATE, 1); //cambio la data
 		//update GUI
-		updateDishStringList();
-		updateMenuOut();
-		updateMenuBoxes();
+		gui.updateDishes(convertToStringVector(model.getDishesSetConverted()));
+		gui.updateMenus(convertToString(model.getThematicMenuSetConverted()));
+		gui.updateMenuBoxes(makeMenuList());
 		gui.nextDay(model.getToday().getStringDate());
 		updateConfig();
 		menuCartaToday();
@@ -1299,9 +1239,9 @@ public class Controller implements SearchRecipe, SearchDish, Login, SaveData, Da
 	}
 	
 	/**
-	 *Metodo che calcola il magazzino prima di un pasto
+	 * Metodo che calcola il magazzino prima di un pasto
 	 * in base al magazzino del giorno precedente e alla lista della spesa
-	 *  @param groceryList lista della spesa
+	 * @param groceryList lista della spesa
 	 */
 	private void generateRegistroBeforeMeal (Set<Ingredient> groceryList)
 	{
@@ -1448,12 +1388,15 @@ public class Controller implements SearchRecipe, SearchDish, Login, SaveData, Da
 	 */
 	public boolean checkPermission (String role)
 	{
-		return switch (role)
+		boolean out = switch (role)
 				{
 					case "manager" -> model.getTheUser().isManager();
 					case "employee" -> model.getTheUser().isEmployee();
 					case "warehouse worker" -> model.getTheUser().isStorageWorker();
 					default -> false;
 				};
+		if (!out)
+			erSet.errorSetter(NO_PERMISSION); //in caso non abbia i permessi giusto avviso l'utente
+		return out;
 	}
 }

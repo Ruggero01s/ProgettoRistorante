@@ -1200,7 +1200,6 @@ public class SimpleUI extends JFrame implements ErrorSetter, GUI
         wareReturnListPanel.add(wareReturnListOutText, c);
         c.gridx = 0;
         c.gridy = 1;
-        wareReturnListOut.setText(dataManager.setToString(dataManager.getModel().getRegistroAfterMeal()));
         wareReturnListPanel.add(wareReturnListOutScroll, c);
         c.gridx = 0;
         c.gridy = 2;
