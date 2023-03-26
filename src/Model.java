@@ -2,6 +2,7 @@ import java.util.*;
 
 public class Model {
     static final double INCREASE20 = 1.20;
+    public static final String CLEAR = "";
     private int capacity, workPersonLoad,increment;
     private double workloadRestaurant;
     private DateOur today;
@@ -15,6 +16,11 @@ public class Model {
     private Set<Ingredient> registroBeforeMeal = new HashSet<>();
     private Set<User> users = new HashSet<>();
     private User theUser;
+    
+    public Set<ConvertToString> getDishesSetConverted()
+    {
+        return new HashSet<>(this.dishesSet);
+    }
     
     public User getTheUser()
     {

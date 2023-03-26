@@ -91,7 +91,9 @@ public class Controller implements SearchRecipe, SearchDish, Login, SaveData, Da
 		//aggiorno le varie stringhe per la GUI
 		updateRecipeStringList();
 		updateDishStringList();
+		
 		updateDrinkList();
+		//convertToStringVector(model.getDishesSetConverted());
 		updateFoodList();
 		updateMenuOut();
 		updateMenuBoxes();
