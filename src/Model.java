@@ -1,11 +1,7 @@
 import java.util.*;
 
 public class Model {
-
-    public static final String CLEAR= "";
-
     static final double INCREASE20 = 1.20;
-
     private int capacity, workPersonLoad,increment;
     private double workloadRestaurant;
     private DateOur today;

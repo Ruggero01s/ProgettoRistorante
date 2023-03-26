@@ -38,7 +38,7 @@ public class Controller implements SearchRecipe, SearchDish, Login, SaveData, Da
 	public static final int WRONG_UNIT = 25;
 	
 	
-	public Model getModel()
+	public Model getModel ()
 	{
 		return model;
 	}
@@ -46,7 +46,7 @@ public class Controller implements SearchRecipe, SearchDish, Login, SaveData, Da
 	/**
 	 * Metodo d'inizializzazione
 	 */
-	public void init()
+	public void init ()
 	{
 		gui = new SimpleUI(this, this, this);
 		erSet = (ErrorSetter) gui;
@@ -59,7 +59,7 @@ public class Controller implements SearchRecipe, SearchDish, Login, SaveData, Da
 	 * Metodo che calcola e salva tutti i dati del magazziniere, ovvero:
 	 * lista della spesa, magazzino prima del pasto e magazzino dopo il pasto
 	 */
-	private void calculateWarehouse()
+	private void calculateWarehouse ()
 	{
 		Set<Ingredient> consumedSet = new HashSet<>(generateConsumedList());
 		Set<Ingredient> grocerySet = generateGroceryList(consumedSet);
@@ -72,7 +72,7 @@ public class Controller implements SearchRecipe, SearchDish, Login, SaveData, Da
 	/**
 	 * Inizializzazione del model tramite i reader
 	 */
-	private void loadModel()
+	private void loadModel ()
 	{
 		// Chiamo tutti i reader per leggere i dati salvati
 		ModelAttributes modelAttributes = reader.readConfig();
@@ -104,7 +104,7 @@ public class Controller implements SearchRecipe, SearchDish, Login, SaveData, Da
 	/**
 	 * Metodo che aggiorna la pagina dei config
 	 */
-	private void updateConfig()
+	private void updateConfig ()
 	{
 		List<String> configState = new ArrayList<>();
 		configState.add("Capacità: " + model.getCapacity() + "\nIndividualWorkload: " +
@@ -121,7 +121,7 @@ public class Controller implements SearchRecipe, SearchDish, Login, SaveData, Da
 	/**
 	 * Metodo che svuota la memoria
 	 */
-	public void clearInfo()
+	public void clearInfo ()
 	{
 		//clear dei drinks
 		model.getDrinksMap().clear();
@@ -168,7 +168,7 @@ public class Controller implements SearchRecipe, SearchDish, Login, SaveData, Da
 	 * @param input giorno in cui annullare le prenotazioni
 	 * @return true se la
 	 */
-	public boolean clearBookings(DateOur input)
+	public boolean clearBookings (DateOur input)
 	{
 		Object obj = model.getBookingMap().remove(input);
 		writeBookings();
@@ -178,7 +178,7 @@ public class Controller implements SearchRecipe, SearchDish, Login, SaveData, Da
 	/**
 	 * Cancella tutte le prenotazioni tranne quelle in data odierna
 	 */
-	public void clearBookings()
+	public void clearBookings ()
 	{
 		model.getBookingMap().keySet().removeIf(k -> !(k.equals(model.getToday())));
 		writeBookings();
@@ -187,7 +187,7 @@ public class Controller implements SearchRecipe, SearchDish, Login, SaveData, Da
 	/**
 	 * Salvataggio tramite writer di tutti i dati del manager
 	 */
-	public void writeManager()
+	public void writeManager ()
 	{
 		writer.writeDrinks(model.getDrinksMap());
 		writer.writeExtraFoods(model.getExtraFoodsMap());
@@ -200,7 +200,7 @@ public class Controller implements SearchRecipe, SearchDish, Login, SaveData, Da
 	/**
 	 * Metodo che legge e salva i config dalla GUI
 	 */
-	public void saveConfig(String inputCapacity, String inputWorkload, String inputPercent, String todayString)
+	public void saveConfig (String inputCapacity, String inputWorkload, String inputPercent, String todayString)
 	{
 		try
 		{
@@ -240,7 +240,7 @@ public class Controller implements SearchRecipe, SearchDish, Login, SaveData, Da
 	/**
 	 * Metodo che legge e salva i drinks
 	 */
-	public void saveDrinks(String input)
+	public void saveDrinks (String input)
 	{
 		try
 		{
@@ -273,7 +273,7 @@ public class Controller implements SearchRecipe, SearchDish, Login, SaveData, Da
 	/**
 	 * Metodo che legge e salva i foods aggiuntivi
 	 */
-	public void saveFoods(String input)
+	public void saveFoods (String input)
 	{
 		try
 		{
@@ -305,7 +305,7 @@ public class Controller implements SearchRecipe, SearchDish, Login, SaveData, Da
 	/**
 	 * Metodo che legge e salva le ricette
 	 */
-	public void saveRecipe(String inputName, String inputIngredients, String inputPortions, String inputWorkload)
+	public void saveRecipe (String inputName, String inputIngredients, String inputPortions, String inputWorkload)
 	{
 		try
 		{
@@ -375,7 +375,7 @@ public class Controller implements SearchRecipe, SearchDish, Login, SaveData, Da
 	 * @param quantity quantità da convertire
 	 * @return quantità convertita
 	 */
-	private double checkUnit(String unit, Double quantity)
+	private double checkUnit (String unit, Double quantity)
 	{
 		if (!(unit.equalsIgnoreCase("g") || unit.equalsIgnoreCase("l"))) //converto solo se l'unità non è grammi o litri
 		{
@@ -396,7 +396,7 @@ public class Controller implements SearchRecipe, SearchDish, Login, SaveData, Da
 	/**
 	 * Leggo e salvo i piatti
 	 */
-	public void saveDish(String inputName, String inputRecipe, String inputStartDate, String inputEndDate, boolean perm, boolean seasonal)
+	public void saveDish (String inputName, String inputRecipe, String inputStartDate, String inputEndDate, boolean perm, boolean seasonal)
 	{
 		try
 		{
@@ -444,7 +444,7 @@ public class Controller implements SearchRecipe, SearchDish, Login, SaveData, Da
 	/**
 	 * Leggo e salvo i menu tematici
 	 */
-	public void saveMenu(String inputName, String inputs, String inputStartDate, String inputEndDate, boolean permanent, boolean seasonal)
+	public void saveMenu (String inputName, String inputs, String inputStartDate, String inputEndDate, boolean permanent, boolean seasonal)
 	{
 		try
 		{
@@ -531,7 +531,7 @@ public class Controller implements SearchRecipe, SearchDish, Login, SaveData, Da
 	 * @param s data da controllare
 	 * @return true se valida, false altrimenti
 	 */
-	public static boolean checkDate(String s)
+	public static boolean checkDate (String s)
 	{
 		if (s.isBlank()) //se è vuota non è valida
 			return false;
@@ -557,7 +557,7 @@ public class Controller implements SearchRecipe, SearchDish, Login, SaveData, Da
 	 * @param name stringa di piatti
 	 * @return Array list di piatti
 	 */
-	public Dish searchDish(String name)
+	public Dish searchDish (String name)
 	{
 		for (Dish dish : model.getDishesSet())
 		{
@@ -571,7 +571,7 @@ public class Controller implements SearchRecipe, SearchDish, Login, SaveData, Da
 	 * Metodo che aggiorna la GUI scrivendo in output
 	 * tutti i menu tematici con i relativi dati
 	 */
-	public void updateMenuOut()
+	public void updateMenuOut ()
 	{
 		StringBuilder out = new StringBuilder();
 		for (ThematicMenu m : model.getThematicMenusSet())
@@ -586,7 +586,7 @@ public class Controller implements SearchRecipe, SearchDish, Login, SaveData, Da
 	 * @param name ricetta in forma di stringa
 	 * @return ricetta
 	 */
-	public Recipe searchRecipe(String name)
+	public Recipe searchRecipe (String name)
 	{
 		for (Recipe recipe : model.getRecipesSet())
 		{
@@ -599,9 +599,9 @@ public class Controller implements SearchRecipe, SearchDish, Login, SaveData, Da
 	/**
 	 * Metodo che serve per aggiornare le ricette nella GUI
 	 */
-	public void updateRecipeStringList()
+	public void updateRecipeStringList ()
 	{
-		String[] recipes = new String[model.getRecipesSet().size()]; //todo controllare se recipeSet esiste anche se vuoto // collegato al fatto che non devono esistere piatti se non ci sono ricette
+		String[] recipes = new String[model.getRecipesSet().size()];
 		if (model.getRecipesSet().isEmpty() || (model.getRecipesSet() == null)) //se le ricette sono vuote
 		{
 			gui.updateRecipes(recipes);
@@ -621,7 +621,7 @@ public class Controller implements SearchRecipe, SearchDish, Login, SaveData, Da
 	/**
 	 * Metodo che serve per aggiornare i piatti nella GUI
 	 */
-	public void updateDishStringList()
+	public void updateDishStringList ()
 	{
 		String[] dishes = new String[model.getDishesSet().size()];
 		int i = 0;
@@ -633,7 +633,7 @@ public class Controller implements SearchRecipe, SearchDish, Login, SaveData, Da
 		gui.updateDishes(dishes);
 	}
 	
-	public String convertToString(Collection<ConvertToString> convertToStrings)
+	public String convertToString (Collection<ConvertToString> convertToStrings)
 	{
 		StringBuilder out = new StringBuilder();
 		for (ConvertToString convertToString : convertToStrings)
@@ -641,7 +641,7 @@ public class Controller implements SearchRecipe, SearchDish, Login, SaveData, Da
 		return out.toString();
 	}
 	
-	public String[] convertToStringVector(Collection<ConvertToString> convertToStrings)
+	public String[] convertToStringVector (Collection<ConvertToString> convertToStrings)
 	{
 		String[] out = new String[convertToStrings.size()];
 		int i = 0;
@@ -652,11 +652,10 @@ public class Controller implements SearchRecipe, SearchDish, Login, SaveData, Da
 		return out;
 	}
 	
-	
 	/**
 	 * Metodo che serve per aggiornare i drinks nella GUI
 	 */
-	public void updateDrinkList()
+	public void updateDrinkList ()
 	{
 		StringBuilder out = new StringBuilder();
 		for (Map.Entry<String, Double> drink : model.getDrinksMap().entrySet()) //trasformo la map di drinks in stringa
@@ -668,7 +667,7 @@ public class Controller implements SearchRecipe, SearchDish, Login, SaveData, Da
 	/**
 	 * Metodo che serve per aggiornare gli extra foods nella GUI
 	 */
-	public void updateFoodList()
+	public void updateFoodList ()
 	{
 		StringBuilder out = new StringBuilder();
 		for (Map.Entry<String, Double> food : model.getExtraFoodsMap().entrySet()) //trasformo la map di extra foods in stringa
@@ -680,7 +679,7 @@ public class Controller implements SearchRecipe, SearchDish, Login, SaveData, Da
 	/**
 	 * metodo per aggiornare le liste di menu nelle comboBox
 	 */
-	public void updateMenuBoxes()
+	public void updateMenuBoxes ()
 	{
 		gui.updateMenuBoxes(makeMenuList());
 	}
@@ -689,7 +688,7 @@ public class Controller implements SearchRecipe, SearchDish, Login, SaveData, Da
 	 * Crea una stringa con i dati di un certo menu con nome menuName
 	 * @param menuName menu da trasformare in stringa
 	 */
-	public void writeMenuComp(String menuName)
+	public void writeMenuComp (String menuName)
 	{
 		StringBuilder out = new StringBuilder();
 		for (ThematicMenu menu : model.getThematicMenusSet())
@@ -710,7 +709,7 @@ public class Controller implements SearchRecipe, SearchDish, Login, SaveData, Da
 	/**
 	 * @return una stringa con un nome per ogni menu per riga
 	 */
-	public String[] makeMenuList()
+	public String[] makeMenuList ()
 	{
 		String[] out = new String[model.getThematicMenusSet().size()];
 		int i = 0;
@@ -727,7 +726,7 @@ public class Controller implements SearchRecipe, SearchDish, Login, SaveData, Da
 	 * @param input stringa da convertire
 	 * @return data costruita
 	 */
-	public DateOur inputToDate(String input)
+	public DateOur inputToDate (String input)
 	{
 		String[] bookDates;
 		try
@@ -749,7 +748,7 @@ public class Controller implements SearchRecipe, SearchDish, Login, SaveData, Da
 	 * @param number numero del piatto/menu ordinato
 	 * @return un HashMap che contiene per ogni Dish nell'ordine la quantità ordinata
 	 */
-	public HashMap<Dish, Integer> inputToOrder(String in, DateOur date, int number)
+	public HashMap<Dish, Integer> inputToOrder (String in, DateOur date, int number)
 	{
 		if (in.isBlank()) throw new RuntimeException();
 		String[] lines = in.split("\n");
@@ -850,7 +849,7 @@ public class Controller implements SearchRecipe, SearchDish, Login, SaveData, Da
 	 * Metodo che mostra in GUI tutte le prenotazioni di un giorno
 	 * @param data giorno da controllare
 	 */
-	public void seeBookings(DateOur data)
+	public void seeBookings (DateOur data)
 	{
 		if (model.getBookingMap().containsKey(data))
 		{
@@ -883,7 +882,7 @@ public class Controller implements SearchRecipe, SearchDish, Login, SaveData, Da
 	 * @param orderString ordini sotto forma di stringa
 	 * @return true se la prenotazione è stata salvata, false altrimenti
 	 */
-	public boolean saveBooking(String name, String dateString, int number, String orderString)
+	public boolean saveBooking (String name, String dateString, int number, String orderString)
 	{
 		try
 		{
@@ -924,7 +923,7 @@ public class Controller implements SearchRecipe, SearchDish, Login, SaveData, Da
 	 * @param order    hashmap di tutti i piatti ordinati
 	 * @return true se la prenotazione è stata salvata, false altrimenti
 	 */
-	public boolean manageBooking(String name, DateOur date, int number, int workload, HashMap<Dish, Integer> order)
+	public boolean manageBooking (String name, DateOur date, int number, int workload, HashMap<Dish, Integer> order)
 	{
 		ArrayList<Booking> day = new ArrayList<>();
 		int capacity = number;
@@ -956,11 +955,15 @@ public class Controller implements SearchRecipe, SearchDish, Login, SaveData, Da
 		}
 	}
 	
-	public void updateBookedDates()
+	/**
+	 * Metodo che produce una stringa di date
+	 * di tutti i giorni in cui c'è almeno una prenotazione
+	 */
+	public void updateBookedDates ()
 	{
-		Set<DateOur> daysList = model.getBookingMap().keySet();
+		Set<DateOur> daysList = model.getBookingMap().keySet(); //insieme di date con almeno una prenotazione
 		StringBuilder out = new StringBuilder();
-		for (DateOur date : daysList)
+		for (DateOur date : daysList) //scorro le date e creo una stringa
 		{
 			String s = date.getStringDate();
 			out.append(s).append("\n");
@@ -968,11 +971,10 @@ public class Controller implements SearchRecipe, SearchDish, Login, SaveData, Da
 		gui.updateBookedDates(out.toString().trim());
 	}
 	
-	
 	/**
 	 * Metodo che chiama il writer per le prenotazioni
 	 */
-	public void writeBookings()
+	public void writeBookings ()
 	{
 		writer.writeBookings(model.getBookingMap());
 	}
@@ -980,7 +982,7 @@ public class Controller implements SearchRecipe, SearchDish, Login, SaveData, Da
 	/**
 	 * Metodo che chiama il writer per il magazzino
 	 */
-	public void writeRegister()
+	public void writeRegister ()
 	{
 		writer.writeRegister(model.getRegistroBeforeMeal());
 	}
@@ -991,7 +993,7 @@ public class Controller implements SearchRecipe, SearchDish, Login, SaveData, Da
 	 * @param set set da convertire
 	 * @return stringa del set
 	 */
-	public String setToString(Set<Ingredient> set)
+	public String setToString (Set<Ingredient> set)
 	{
 		StringBuilder out = new StringBuilder();
 		for (Ingredient entry : set)
@@ -1006,7 +1008,7 @@ public class Controller implements SearchRecipe, SearchDish, Login, SaveData, Da
 	 * @param text ingredienti da cambiare
 	 * @return true se è andato a buon fine, false altrimenti
 	 */
-	public boolean warehouseChanges(String text)
+	public boolean warehouseChanges (String text)
 	{
 		if (text.isBlank()) //controllo che il testo non sia valido
 		{
@@ -1065,7 +1067,7 @@ public class Controller implements SearchRecipe, SearchDish, Login, SaveData, Da
 	 * @param ingredients ingredienti da togliere e/o da aggiungere
 	 * @throws RuntimeException usata per gestire i problemi di formato
 	 */
-	private void updateAfterMeal(Set<Ingredient> ingredients) throws RuntimeException
+	private void updateAfterMeal (Set<Ingredient> ingredients) throws RuntimeException
 	{
 		Set<Ingredient> register = new HashSet<>(model.getRegistroAfterMeal());
 		for (Ingredient deltaIngredient : ingredients)
@@ -1116,7 +1118,7 @@ public class Controller implements SearchRecipe, SearchDish, Login, SaveData, Da
 	/**
 	 * Metodo che si occupa delle operazioni necessarie per il cambio di giorno
 	 */
-	public void nextDay()
+	public void nextDay ()
 	{
 		model.getToday().getDate().add(Calendar.DATE, 1); //cambio la data
 		//update GUI
@@ -1137,7 +1139,7 @@ public class Controller implements SearchRecipe, SearchDish, Login, SaveData, Da
 	/**
 	 * Metodo che rimuove tutte le prenotazioni scadute
 	 */
-	private void oldBooking()
+	private void oldBooking ()
 	{
 		HashMap<DateOur, List<Booking>> temp = new HashMap<>(model.getBookingMap()); //per evitare concurrent access
 		for (Map.Entry<DateOur, List<Booking>> entry : model.getBookingMap().entrySet())
@@ -1153,7 +1155,7 @@ public class Controller implements SearchRecipe, SearchDish, Login, SaveData, Da
 	 * Metodo che mostra in GUI
 	 * tutti i piatti validi oggi
 	 */
-	private void menuCartaToday()
+	private void menuCartaToday ()
 	{
 		StringBuilder menuCarta = new StringBuilder();
 		for (Dish dish : model.getDishesSet()) //genero la lista di piatti
@@ -1168,7 +1170,7 @@ public class Controller implements SearchRecipe, SearchDish, Login, SaveData, Da
 	 * Metodo che genera una lista d'ingredienti consumati nel giorno di oggi
 	 * @return set d'ingredienti consumati
 	 */
-	private Set<Ingredient> generateConsumedList()
+	private Set<Ingredient> generateConsumedList ()
 	{
 		Set<Ingredient> consumedSet = new HashSet<>();
 		Set<Ingredient> drinks = new HashSet<>();
@@ -1254,18 +1256,18 @@ public class Controller implements SearchRecipe, SearchDish, Login, SaveData, Da
 		}
 		return consumedSet;
 	}
-    
-    /**
-     * Metodo che genera la lista della spesa in base agli ingredienti
-     * consumati oggi e quelli disponibili in magazzino
-     * @param consumedSet ingredienti consumati oggi
-     * @return lista della spesa
-     */
-	private Set<Ingredient> generateGroceryList(Set<Ingredient> consumedSet)
+	
+	/**
+	 * Metodo che genera la lista della spesa in base agli ingredienti
+	 * consumati oggi e quelli disponibili in magazzino
+	 * @param consumedSet ingredienti consumati oggi
+	 * @return lista della spesa
+	 */
+	private Set<Ingredient> generateGroceryList (Set<Ingredient> consumedSet)
 	{
 		Set<Ingredient> registroBeforeMeal = new HashSet<>(model.getRegistroBeforeMeal());
 		Set<Ingredient> consumedCopy = new HashSet<>();
-  
+		
 		for (Ingredient consIngr : consumedSet)//faccio una copia in modo da non modificare l'originale
 			consumedCopy.add(new Ingredient(consIngr.getName(), consIngr.getUnit(), consIngr.getQuantity()));
 		
@@ -1294,12 +1296,16 @@ public class Controller implements SearchRecipe, SearchDish, Login, SaveData, Da
 		return groceryList;
 	}
 	
-	private void generateRegistroBeforeMeal(Set<Ingredient> groceryList)
+	/**
+	 *Metodo che calcola il magazzino prima di un pasto
+	 * in base al magazzino del giorno precedente e alla lista della spesa
+	 *  @param groceryList lista della spesa
+	 */
+	private void generateRegistroBeforeMeal (Set<Ingredient> groceryList)
 	{
 		Set<Ingredient> registroBeforeMeal = new HashSet<>();
-		for (Ingredient regIngr : model.getRegistroBeforeMeal())
+		for (Ingredient regIngr : model.getRegistroBeforeMeal()) //faccio una copia per non modificare l'originale
 			registroBeforeMeal.add(new Ingredient(regIngr.getName(), regIngr.getUnit(), regIngr.getQuantity()));
-		
 		
 		for (Ingredient grocery : groceryList)
 		{
@@ -1309,20 +1315,24 @@ public class Controller implements SearchRecipe, SearchDish, Login, SaveData, Da
 				{
 					if (regIngr.equals(grocery))
 					{
+						//se un ingrediente è nella lista e nel magazzino lo addo al magazzino considerando anche la quantità residua nello stesso
 						regIngr.setQuantity(grocery.getQuantity() + regIngr.getQuantity());
 						break;
 					}
 				}
 			}
-			else
-			{
+			else //se un ingrediente è nella lista ma non nel magazzino lo addo al magazzino
 				registroBeforeMeal.add(grocery);
-			}
 		}
 		model.setRegistroBeforeMeal(registroBeforeMeal);
 	}
 	
-	private void generateRegistroAfterMeal(Set<Ingredient> consumedList)
+	/**
+	 * Metodo che genera il magazzino dopo il pasto
+	 * calcolandolo dal magazzino prima del pasto
+	 * @param consumedList lista d'ingredienti consumati nel pasto
+	 */
+	private void generateRegistroAfterMeal (Set<Ingredient> consumedList)
 	{
 		Set<Ingredient> registroBeforeMeal = new HashSet<>(model.getRegistroBeforeMeal());
 		Set<Ingredient> registroAfterMeal = new HashSet<>();
@@ -1333,16 +1343,16 @@ public class Controller implements SearchRecipe, SearchDish, Login, SaveData, Da
 			{
 				if (beforeIngr.equals(consumedIngr))
 				{
-					double q = beforeIngr.getQuantity() - consumedIngr.getQuantity();
+					double q = beforeIngr.getQuantity() - consumedIngr.getQuantity(); //calcolo quanta quantità mi è rimasta
 					if (q > 0)
-						registroAfterMeal.add(new Ingredient(beforeIngr.getName(), beforeIngr.getUnit(), q));
+						registroAfterMeal.add(new Ingredient(beforeIngr.getName(), beforeIngr.getUnit(), q)); //se è maggiore di 0 la salvo
 					break;
 				}
 			}
 		}
 		model.setRegistroAfterMeal(registroAfterMeal);
 	}
- 
+	
 	/**
 	 * Metodo che salva un nuovo utente tramite i dati della GUI
 	 * @param name          nome dell'utente
@@ -1353,7 +1363,7 @@ public class Controller implements SearchRecipe, SearchDish, Login, SaveData, Da
 	 * @param storageWorker true se ha accesso alla tab storageWorker, false altrimenti
 	 * @return true se il salvataggio è avvenuto, false altrimenti
 	 */
-	public boolean saveUser(String name, String password, String confPassword, boolean manager, boolean employee, boolean storageWorker)
+	public boolean saveUser (String name, String password, String confPassword, boolean manager, boolean employee, boolean storageWorker)
 	{
 		if (manager || employee || storageWorker) //deve avere almeno un ruolo, altrimenti non può accedere a nulla
 		{
@@ -1400,7 +1410,7 @@ public class Controller implements SearchRecipe, SearchDish, Login, SaveData, Da
 	 * @param password password inserita
 	 * @return true se il login è andato a buon fine, false altrimenti
 	 */
-	public boolean login(String name, String password)
+	public boolean login (String name, String password)
 	{
 		if (!name.isBlank() && !password.isBlank()) //controllo che abbiano un valore
 		{
@@ -1434,7 +1444,7 @@ public class Controller implements SearchRecipe, SearchDish, Login, SaveData, Da
 	 * @param role ruolo che devo controllare
 	 * @return true se l'utente ha i permessi, false altrimenti
 	 */
-	public boolean checkPermission(String role)
+	public boolean checkPermission (String role)
 	{
 		return switch (role)
 				{
