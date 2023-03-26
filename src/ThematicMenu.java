@@ -91,7 +91,7 @@ public class ThematicMenu implements ConvertToString
 	/**
 	 * Controllo la validità di un menu
 	 * @param date data da controllare
-	 * @return true se il menu è valido nella date, false altrimenti
+	 * @return true se il menu è valido nella data, false altrimenti
 	 */
 	public boolean isValid(DateOur date)
 	{

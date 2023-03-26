@@ -19,10 +19,7 @@ public class Writer implements Write
 	
 	private static final String SALUTO = "\nOutput generato correttamente, arrivederci";
 	private static final String ERRORE = "\nErrore nel writer: ";
-	
-	public Writer()
-	{
-	}
+
 	
 	public void writePeople(Set<User> people)
 	{

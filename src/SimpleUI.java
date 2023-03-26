@@ -8,9 +8,9 @@ import java.util.Objects;
 
 public class SimpleUI extends JFrame implements ErrorSetter, GUI
 {
+    private final String BLANK = "";
 
-
-    // Enum for the different states of the frame
+    // Enum per gli stati della UI
     private enum State {
         PASSWORD,
         LOGIN,
@@ -18,52 +18,49 @@ public class SimpleUI extends JFrame implements ErrorSetter, GUI
         EMPLOYEE,
         WAREHOUSE_WORKER
     }
+
+    //interfacce usate
     private SaveData saver;
     private Login loginner;
     private DataManagement dataManager;
-    // Current state of the frame
+
+    // variabile per lo stato
     private State state;
 
+    //usate per permettere deselezione di radioButtons
     boolean MenuPermaRadio = false;
     boolean MenuSeasRadio = false;
     boolean DishPermaRadio = false;
     boolean DishSeasRadio = false;
 
-    private final int WIDTH = 400;
-
-    private final int HEIGHT = 400;
+   //Inizio variabili "grafiche"
     //GENERAL
     private JButton managerButton = new JButton("Manager");
     private JButton employeeButton = new JButton("Employee");
     private JButton warehouseWorkerButton = new JButton("Warehouse Worker");
     private JPanel loginPanel = new JPanel(new GridBagLayout());
-    private JTabbedPane cfgTabbedPane = new JTabbedPane();
-    JLabel titleText = new JLabel("Title");
+
+    private JLabel roleText = new JLabel("Scegli il tuo ruolo");
+
     private GridBagConstraints c = new GridBagConstraints();
     private GridBagConstraints titlePadding = new GridBagConstraints();
     private GridBagConstraints endPadding = new GridBagConstraints();
-    JPanel cfgBasePanel = new JPanel(new GridBagLayout());
-    JPanel cfgDrinksFoodsPanel = new JPanel(new GridBagLayout());
-    JPanel cfgRecipesPanel = new JPanel(new GridBagLayout());
-    JPanel cfgDishesPanel = new JPanel(new GridBagLayout());
-    JPanel cfgMenuPanel = new JPanel(new GridBagLayout());
-    JPanel cfgResPanel = new JPanel(new GridBagLayout());
-    JPanel cfgWriteClearPanel = new JPanel(new GridBagLayout());
-    JButton buttonBack1 = new JButton("Back");
-    JButton buttonBack2 = new JButton("Back");
-    JButton buttonBack3 = new JButton("Back");
-    JButton buttonBack4 = new JButton("Back");
-    JButton buttonBack5 = new JButton("Back");
-    JButton buttonBack6 = new JButton("Back");
-    JButton buttonBack7 = new JButton("Back");
-    JButton buttonBack8 = new JButton("Back");
-    JButton buttonBack9 = new JButton("Back");
-    JButton buttonBack10 = new JButton("Back");
-    JButton buttonBack11 = new JButton("Back");
-    JButton buttonBack12 = new JButton("Back");
-    JButton buttonBack13 = new JButton("Back");
-    JButton buttonBack14 = new JButton("Back");
-    JButton buttonBack15 = new JButton("Back");
+
+    //I vari bottoni "Back", servono uno per panel perchè non si può aggiungere lo stesso oggetto ad un tabbed pane in più tab diversi
+    private JButton buttonBack1 = new JButton("Back");
+    private JButton buttonBack2 = new JButton("Back");
+    private JButton buttonBack3 = new JButton("Back");
+    private JButton buttonBack4 = new JButton("Back");
+    private JButton buttonBack5 = new JButton("Back");
+    private JButton buttonBack6 = new JButton("Back");
+    private JButton buttonBack7 = new JButton("Back");
+    private JButton buttonBack8 = new JButton("Back");
+    private JButton buttonBack9 = new JButton("Back");
+    private JButton buttonBack10 = new JButton("Back");
+    private JButton buttonBack11 = new JButton("Back");
+    private JButton buttonBack12 = new JButton("Back");
+    private JButton buttonBack13 = new JButton("Back");
+    private JButton buttonBack14 = new JButton("Back");
     
     //------------------------------------------------------------------------------------------
     //PASSWORD
@@ -74,256 +71,240 @@ public class SimpleUI extends JFrame implements ErrorSetter, GUI
     private JLabel passLoginUserLabel = new JLabel("Inserisci username: ");
     private JButton passExitButton = new JButton("Esci");
     private JButton passWriteButton = new JButton("Salva tutto");
-    JTextArea passLoginUserText = new JTextArea();
+    private JTextArea passLoginUserText = new JTextArea();
     private JLabel passLoginPasswordLabel = new JLabel("Inserisci password: ");
-    JPasswordField passLoginPasswordField = new JPasswordField();
+    private JPasswordField passLoginPasswordField = new JPasswordField();
     private JButton passLoginButton = new JButton("Login");
     private JLabel passSaveTitle= new JLabel("Creazione nuovo utente");
     private JLabel passSaveUsernameLabel = new JLabel("Inserisci username: ");
-    JTextArea passSaveUserText = new JTextArea();
+    private JTextArea passSaveUserText = new JTextArea();
     private JLabel passSavePasswordLabel = new JLabel("Inserisci password: ");
-    JPasswordField passSavePasswordField = new JPasswordField();
+    private JPasswordField passSavePasswordField = new JPasswordField();
     private JLabel passSavePassword2Label = new JLabel("Conferma password: ");
-    JPasswordField passSavePassword2Field = new JPasswordField();
+    private JPasswordField passSavePassword2Field = new JPasswordField();
 
-    JCheckBox passManCheck = new JCheckBox("Manager");
-    JCheckBox passEmpCheck = new JCheckBox("Employee");
-    JCheckBox passWareCheck = new JCheckBox("Warehouse Worker");
+    private JCheckBox passManCheck = new JCheckBox("Manager");
+    private JCheckBox passEmpCheck = new JCheckBox("Employee");
+    private JCheckBox passWareCheck = new JCheckBox("Warehouse Worker");
 
     private JButton passSaveButton = new JButton("Salva");
     
     
     //------------------------------------------------------------------------------------------
+    //CONFIG BASE
+    private JTabbedPane cfgTabbedPane = new JTabbedPane();
+    private JPanel cfgBasePanel = new JPanel(new GridBagLayout());
+    private JPanel cfgDrinksFoodsPanel = new JPanel(new GridBagLayout());
+    private JPanel cfgRecipesPanel = new JPanel(new GridBagLayout());
+    private JPanel cfgDishesPanel = new JPanel(new GridBagLayout());
+    private JPanel cfgMenuPanel = new JPanel(new GridBagLayout());
+    private JPanel cfgResPanel = new JPanel(new GridBagLayout());
+    private JPanel cfgWriteClearPanel = new JPanel(new GridBagLayout());
     //CONFIG_BASE
-    JLabel cfgBaseText = new JLabel("Inserisci dati ristorante:");
-    JLabel cfgBaseCapacityText = new JLabel("Posti a sedere:");
-    JLabel cfgBaseIndiviualWorkloadAreaText = new JLabel("Carico lavoro max:");
-    JLabel cfgBaseDateText = new JLabel("Inserisci data odierna:");
-    JLabel cfgBaseSurplusText = new JLabel("Surplus da comprare (%):");
-    JButton cfgBaseSendButton = new JButton("Conferma");
-    JButton cfgBaseNextDayButton = new JButton("Prossimo giorno");
-    JTextArea cfgBaseInputCap = new JTextArea();
-    JTextArea cfgBaseInputIndWork = new JTextArea();
-    JTextArea cfgBaseInputDate = new JTextArea();
-    JTextArea cfgBaseInputSurplus = new JTextArea();
-    public void setDrinkList(String drinkList) {
-        this.drinkList = drinkList;
-        cfgDrinksAreaOut.setText(this.drinkList);
-    }
-
-    public void setFoodsList(String foodsList) {
-        this.foodsList = foodsList;
-        cfgFoodsAreaOut.setText(this.foodsList);
-    }
+    private JLabel cfgBaseText = new JLabel("Inserisci dati ristorante:");
+    private JLabel cfgBaseCapacityText = new JLabel("Posti a sedere:");
+    private JLabel cfgBaseIndiviualWorkloadAreaText = new JLabel("Carico lavoro max:");
+    private JLabel cfgBaseDateText = new JLabel("Inserisci data odierna:");
+    private JLabel cfgBaseSurplusText = new JLabel("Surplus da comprare (%):");
+    private JButton cfgBaseSendButton = new JButton("Conferma");
+    private JButton cfgBaseNextDayButton = new JButton("Prossimo giorno");
+    private JTextArea cfgBaseInputCap = new JTextArea();
+    private JTextArea cfgBaseInputIndWork = new JTextArea();
+    private JTextArea cfgBaseInputDate = new JTextArea();
+    private JTextArea cfgBaseInputSurplus = new JTextArea();
 
     //------------------------------------------------------------------------------------------
     //CONFIG_DRINKS
-    private String drinkList;
-    JLabel cfgDrinksText = new JLabel("Inserisci dati bevanda: (nome : quantità (L))");
-    JLabel cfgDrinksTextOut = new JLabel("Elenco dati bevande: (nome : quantità (L))");
-    JTextArea cfgDrinksAreaOut = new JTextArea(drinkList);
-    JScrollPane cfgDrinksAreaScroll = new JScrollPane(cfgDrinksAreaOut);
-    JButton cfgDrinksSendButton = new JButton("Inserisci");
-    JTextArea cfgDrinksInput = new JTextArea();
+    private JLabel cfgDrinksText = new JLabel("Inserisci dati bevanda: (nome : quantità (L))");
+    private JLabel cfgDrinksTextOut = new JLabel("Elenco dati bevande: (nome : quantità (L))");
+    private JTextArea cfgDrinksAreaOut = new JTextArea();
+    private JScrollPane cfgDrinksAreaScroll = new JScrollPane(cfgDrinksAreaOut);
+    private JButton cfgDrinksSendButton = new JButton("Inserisci");
+    private JTextArea cfgDrinksInput = new JTextArea();
     //------------------------------------------------------------------------------------------
     //CONFIG_EXTRAFOODS
     private String foodsList;
-    JLabel cfgFoodText = new JLabel("Inserisci dati generi alimentari extra: (nome : quantità (Hg)");
-    JButton cfgFoodSendButton = new JButton("Inserisci");
-    JTextArea cfgFoodsInput = new JTextArea();
-    JLabel cfgFoodsTextOut = new JLabel("Elenco dati cibi extra: (nome : quantità (Hg))");
-    JTextArea cfgFoodsAreaOut = new JTextArea(foodsList);
-    JScrollPane cfgFoodsAreaScroll = new JScrollPane(cfgFoodsAreaOut);
+    private JLabel cfgFoodText = new JLabel("Inserisci dati generi alimentari extra: (nome : quantità (Hg)");
+    private JButton cfgFoodSendButton = new JButton("Inserisci");
+    private JTextArea cfgFoodsInput = new JTextArea();
+    private JLabel cfgFoodsTextOut = new JLabel("Elenco dati cibi extra: (nome : quantità (Hg))");
+    private JTextArea cfgFoodsAreaOut = new JTextArea();
+    private JScrollPane cfgFoodsAreaScroll = new JScrollPane(cfgFoodsAreaOut);
     //------------------------------------------------------------------------------------------
     //CONFIG_RECIPES
-    JLabel cfgRecipeTextTitle = new JLabel("Inserisci dati ricetta");
-    JLabel cfgRecipeTextName = new JLabel("Inserisci nome: ");
-    JTextArea cfgRecipeNameInput = new JTextArea();
-    JLabel cfgRecipeTextPortions = new JLabel("Inserisci porzioni: ");
-    JTextArea cfgRecipePortionsInput = new JTextArea();
-    JLabel cfgRecipeTextIngredients = new JLabel("Inserisci ingredienti (ingredienti:quantità:unità): ");
-    JTextArea cfgRecipeIngredientsInput = new JTextArea();
-    JLabel cfgRecipeTextWorkLoad = new JLabel("Inserisci workload/person: ");
-    JTextArea cfgRecipeWorkLoadInput = new JTextArea();
-    JLabel cfgRecipeTextOut = new JLabel("Elenco ricette: ");
-    JTextArea cfgRecipeAreaOut = new JTextArea();
-    JButton cfgRecipeSendButton = new JButton("Conferma ricetta");
-    JScrollPane cfgRecipeScroll = new JScrollPane(cfgRecipeAreaOut);
-    
-    public void setRecipeList(String list) {
-        cfgRecipeAreaOut.setText(list);
-    }
+    private JLabel cfgRecipeTextTitle = new JLabel("Inserisci dati ricetta");
+    private JLabel cfgRecipeTextName = new JLabel("Inserisci nome: ");
+    private JTextArea cfgRecipeNameInput = new JTextArea();
+    private JLabel cfgRecipeTextPortions = new JLabel("Inserisci porzioni: ");
+    private JTextArea cfgRecipePortionsInput = new JTextArea();
+    private JLabel cfgRecipeTextIngredients = new JLabel("Inserisci ingredienti (ingredienti:quantità:unità): ");
+    private JTextArea cfgRecipeIngredientsInput = new JTextArea();
+    private JLabel cfgRecipeTextWorkLoad = new JLabel("Inserisci workload/person: ");
+    private JTextArea cfgRecipeWorkLoadInput = new JTextArea();
+    private JLabel cfgRecipeTextOut = new JLabel("Elenco ricette: ");
+    private JTextArea cfgRecipeAreaOut = new JTextArea();
+    private JButton cfgRecipeSendButton = new JButton("Conferma ricetta");
+    private JScrollPane cfgRecipeScroll = new JScrollPane(cfgRecipeAreaOut);
 
     //------------------------------------------------------------------------------------------
     //CONFIG_DISHES
-    JLabel cfgDishTextTitle = new JLabel("Inserisci dati piatto");
-    JLabel cfgDishTextName = new JLabel("Inserisci nome: ");
-    JLabel cfgDishTextOut = new JLabel("Elenco piatti inseriti: ");
-    JLabel cfgDishTextRecipe = new JLabel("Seleziona ricetta: ");
-    JLabel cfgDishTextDate = new JLabel("Inserisci data di inizio e fine: ");
-    JTextArea cfgDishAreaOut = new JTextArea();
-    JScrollPane cfgDishAreaScroll = new JScrollPane(cfgDishAreaOut);
-    JButton cfgDishSendButton = new JButton("Conferma piatto");
+    private JLabel cfgDishTextTitle = new JLabel("Inserisci dati piatto");
+    private JLabel cfgDishTextName = new JLabel("Inserisci nome: ");
+    private JLabel cfgDishTextOut = new JLabel("Elenco piatti inseriti: ");
+    private JLabel cfgDishTextRecipe = new JLabel("Seleziona ricetta: ");
+    private JLabel cfgDishTextDate = new JLabel("Inserisci data di inizio e fine: ");
+    private JTextArea cfgDishAreaOut = new JTextArea();
+    private JScrollPane cfgDishAreaScroll = new JScrollPane(cfgDishAreaOut);
+    private JButton cfgDishSendButton = new JButton("Conferma piatto");
 
-    JRadioButton cfgDishPermanentRadio = new JRadioButton("Permanente");
-    JRadioButton cfgDishSeasonalRadio = new JRadioButton("Stagionale");
-    ButtonGroup cfgDishGroup = new ButtonGroup();
+    private JRadioButton cfgDishPermanentRadio = new JRadioButton("Permanente");
+    private JRadioButton cfgDishSeasonalRadio = new JRadioButton("Stagionale");
+    private ButtonGroup cfgDishGroup = new ButtonGroup();
 
-    JTextArea cfgDishNameInput = new JTextArea();
-    String dishList;
+    private JTextArea cfgDishNameInput = new JTextArea();
 
-    public void setDishList(String list) {
-        this.dishList = list;
-        cfgDishAreaOut.setText(this.dishList);
-    }
-
-    String[] recipeString = {};
-    JComboBox<String> cfgDishComboBox = new JComboBox<>(recipeString);
-    JTextArea cfgDishSDateInput = new JTextArea();
-    JTextArea cfgDishEDateInput = new JTextArea();
+    private JComboBox<String> cfgDishComboBox = new JComboBox<>();
+    private JTextArea cfgDishSDateInput = new JTextArea();
+    private JTextArea cfgDishEDateInput = new JTextArea();
     
-    JLabel cfgMenuTextTitle = new JLabel("Inserisci dati menu");
-    JLabel cfgMenuTextName = new JLabel("Inserisci nome: ");
-    JLabel cfgMenuTextOut = new JLabel("Elenco menu inseriti: ");
-    JTextArea cfgMenuAreaOut = new JTextArea();
-    JScrollPane cfgMenuAreaScroll = new JScrollPane(cfgMenuAreaOut);
-    JLabel cfgMenuTextDish = new JLabel("Seleziona od inserisci piatti: ");
-    JLabel cfgMenuTextDate = new JLabel("Inserisci data di inizio e fine: ");
-    JButton cfgMenuSendButton = new JButton("Conferma menu");
+    private JLabel cfgMenuTextTitle = new JLabel("Inserisci dati menu");
+    private JLabel cfgMenuTextName = new JLabel("Inserisci nome: ");
+    private JLabel cfgMenuTextOut = new JLabel("Elenco menu inseriti: ");
+    private JTextArea cfgMenuAreaOut = new JTextArea();
+    private JScrollPane cfgMenuAreaScroll = new JScrollPane(cfgMenuAreaOut);
+    private JLabel cfgMenuTextDish = new JLabel("Seleziona od inserisci piatti: ");
+    private JLabel cfgMenuTextDate = new JLabel("Inserisci data di inizio e fine: ");
+    private JButton cfgMenuSendButton = new JButton("Conferma menu");
 
-    public void setMenuList(String list) {
-        //------------------------------------------------------------------------------------------
-        //CONFIG_MENUS
-        cfgMenuAreaOut.setText(list);
-    }
+    //------------------------------------------------------------------------------------------
+    //CONFIG_MENUS
+    private JRadioButton cfgMenuPermanentRadio = new JRadioButton("Permanente");
+    private JRadioButton cfgMenuSeasonalRadio = new JRadioButton("Stagionale");
+    private ButtonGroup cfgMenuGroup = new ButtonGroup();
 
-    JRadioButton cfgMenuPermanentRadio = new JRadioButton("Permanente");
-    JRadioButton cfgMenuSeasonalRadio = new JRadioButton("Stagionale");
-    ButtonGroup cfgMenuGroup = new ButtonGroup();
-
-    JTextArea cfgMenuNameInput = new JTextArea();
-    JTextArea cfgMenuDishesInput = new JTextArea();
-    JTextArea cfgMenuSDateInput = new JTextArea();
-    JTextArea cfgMenuEDateInput = new JTextArea();
-    String[] dishString = {};
-    JComboBox<String> cfgMenuComboBox = new JComboBox<>(dishString);
+    private JTextArea cfgMenuNameInput = new JTextArea();
+    private JTextArea cfgMenuDishesInput = new JTextArea();
+    private JTextArea cfgMenuSDateInput = new JTextArea();
+    private JTextArea cfgMenuEDateInput = new JTextArea();
+    private JComboBox<String> cfgMenuComboBox = new JComboBox<>();
 
     //------------------------------------------------------------------------------------------
     //CONFIG_RESOCONTO
-    JLabel cfgResText = new JLabel("Resoconto:");
-    JLabel cfgResBaseText = new JLabel("Dati ristorante:");
-    JLabel cfgResDrinksText = new JLabel("Dati bevande:");
-    JLabel cfgResFoodsText = new JLabel("Dati cibi extra:");
-    JLabel cfgResRecipesText = new JLabel("Dati ricette:");
-    JLabel cfgResDishesText = new JLabel("Dati piatti:");
-    JLabel cfgResMenuCartaText = new JLabel("Menù alla carta:");
-    JLabel cfgResMenuText = new JLabel("Dati menu:");
-    JTextArea cfgResBaseOut = new JTextArea();
-    JTextArea cfgResDrinksOut = new JTextArea();
-    JTextArea cfgResFoodsOut = new JTextArea();
-    JTextArea cfgResRecipesOut = new JTextArea();
-    JTextArea cfgResDishesOut = new JTextArea();
-    JTextArea cfgResMenuOut = new JTextArea();
-    JScrollPane cfgResBaseScroll = new JScrollPane(cfgResBaseOut);
-    JScrollPane cfgResDrinksScroll = new JScrollPane(cfgResDrinksOut);
-    JScrollPane cfgResFoodsScroll = new JScrollPane(cfgResFoodsOut);
-    JScrollPane cfgResRecipesScroll = new JScrollPane(cfgResRecipesOut);
-    JScrollPane cfgResDishesScroll = new JScrollPane(cfgResDishesOut);
-    JScrollPane cfgResMenuScroll = new JScrollPane(cfgResMenuOut);
-    JComboBox cfgResDatiMenuBox = new JComboBox();
-    JTextArea cfgResDatiMenuOut = new JTextArea();
-    JScrollPane cfgResDatiMenuScroll = new JScrollPane(cfgResDatiMenuOut);
-    JTextArea cfgResMenuCartaOut = new JTextArea();
-    JScrollPane cfgResMenuCartaScroll = new JScrollPane(cfgResMenuCartaOut);
+    private JLabel cfgResText = new JLabel("Resoconto:");
+    private JLabel cfgResBaseText = new JLabel("Dati ristorante:");
+    private JLabel cfgResDrinksText = new JLabel("Dati bevande:");
+    private JLabel cfgResFoodsText = new JLabel("Dati cibi extra:");
+    private JLabel cfgResRecipesText = new JLabel("Dati ricette:");
+    private JLabel cfgResDishesText = new JLabel("Dati piatti:");
+    private JLabel cfgResMenuCartaText = new JLabel("Menù alla carta:");
+    private JLabel cfgResMenuText = new JLabel("Dati menu:");
+    private JTextArea cfgResBaseOut = new JTextArea();
+    private JTextArea cfgResDrinksOut = new JTextArea();
+    private JTextArea cfgResFoodsOut = new JTextArea();
+    private JTextArea cfgResRecipesOut = new JTextArea();
+    private JTextArea cfgResDishesOut = new JTextArea();
+    private JTextArea cfgResMenuOut = new JTextArea();
+    private JScrollPane cfgResBaseScroll = new JScrollPane(cfgResBaseOut);
+    private JScrollPane cfgResDrinksScroll = new JScrollPane(cfgResDrinksOut);
+    private JScrollPane cfgResFoodsScroll = new JScrollPane(cfgResFoodsOut);
+    private JScrollPane cfgResRecipesScroll = new JScrollPane(cfgResRecipesOut);
+    private JScrollPane cfgResDishesScroll = new JScrollPane(cfgResDishesOut);
+    private JScrollPane cfgResMenuScroll = new JScrollPane(cfgResMenuOut);
+    private JComboBox<String> cfgResDatiMenuBox = new JComboBox<>();
+    private JTextArea cfgResDatiMenuOut = new JTextArea();
+    private JScrollPane cfgResDatiMenuScroll = new JScrollPane(cfgResDatiMenuOut);
+    private JTextArea cfgResMenuCartaOut = new JTextArea();
+    private JScrollPane cfgResMenuCartaScroll = new JScrollPane(cfgResMenuCartaOut);
     //------------------------------------------------------------------------------------------
     //CONFIG_WRITING AND CLEAR
-    JButton cfgClearButton = new JButton("Clear All");
-    JButton cfgWriteButton = new JButton("Salva");
-    //============================================================================================
+    private JButton cfgClearButton = new JButton("Clear All");
+    private JButton cfgWriteButton = new JButton("Salva");
+//============================================================================================
 //============================================================================================
 //============================================================================================
     //EMPLOYEE
     //EMPLOYEE GENERAL
-    JTabbedPane empTabbedPane = new JTabbedPane();
-    JPanel empSeeBookingsPanel = new JPanel(new GridBagLayout());
-     JPanel empNewBookingPanel = new JPanel(new GridBagLayout());
+    private JTabbedPane empTabbedPane = new JTabbedPane();
+    private JPanel empSeeBookingsPanel = new JPanel(new GridBagLayout());
+    private JPanel empNewBookingPanel = new JPanel(new GridBagLayout());
     //-------------------------------------------------------------------------------------------
     //EMPLOY SEE BOOKINGS
-    JLabel empSeeBookText = new JLabel("Prenotazioni:");
-    JTextArea empSeeBookBookedDates = new JTextArea();
-    JLabel empSeeBookDateText = new JLabel("Data da cercare:");
-    JTextArea empSeeBookDateInput = new JTextArea();
-    JLabel empSeeBookNameText = new JLabel("Nome:");
-    JLabel empSeeBookNumText = new JLabel("Numero:");
-    JLabel empSeeBookWorkloadText = new JLabel("Workload:");
-    JTextArea empSeeBookNameAreaOut = new JTextArea();
-    JTextArea empSeeBookNumAreaOut = new JTextArea();
-    JTextArea empSeeBookWorkloadAreaOut = new JTextArea();
-    JLabel empSeeBookCapacityTotalText = new JLabel("Posti disponibile:");
-    JTextArea empSeeBookCapacityTotalOut = new JTextArea();
-    JLabel empSeeBookWorkloadTotalText = new JLabel("Workload disponibile:");
-    JTextArea empSeeBookWorkloadTotalOut = new JTextArea();
-    JButton empSeeBookSend = new JButton("Vedi prenotazioni");
-    JButton empSeeBookWrite = new JButton("Salva prenotazioni");
-    JButton empSeeBookClear = new JButton("Svuota prenotazioni di questa data");
-    JButton empSeeBookClearAll = new JButton("Svuota prenotazioni future");
-    
-    
+    private JLabel empSeeBookText = new JLabel("Prenotazioni:");
+    private JTextArea empSeeBookBookedDates = new JTextArea();
+    private JLabel empSeeBookDateText = new JLabel("Data da cercare:");
+    private JTextArea empSeeBookDateInput = new JTextArea();
+    private JLabel empSeeBookNameText = new JLabel("Nome:");
+    private JLabel empSeeBookNumText = new JLabel("Numero:");
+    private JLabel empSeeBookWorkloadText = new JLabel("Workload:");
+    private JTextArea empSeeBookNameAreaOut = new JTextArea();
+    private JTextArea empSeeBookNumAreaOut = new JTextArea();
+    private JTextArea empSeeBookWorkloadAreaOut = new JTextArea();
+    private JLabel empSeeBookCapacityTotalText = new JLabel("Posti disponibile:");
+    private JTextArea empSeeBookCapacityTotalOut = new JTextArea();
+    private JLabel empSeeBookWorkloadTotalText = new JLabel("Workload disponibile:");
+    private JTextArea empSeeBookWorkloadTotalOut = new JTextArea();
+    private JButton empSeeBookSend = new JButton("Vedi prenotazioni");
+    private JButton empSeeBookWrite = new JButton("Salva prenotazioni");
+    private JButton empSeeBookClear = new JButton("Svuota prenotazioni di questa data");
+    private JButton empSeeBookClearAll = new JButton("Svuota prenotazioni future");
+
     //-------------------------------------------------------------------------------------------
     //EMPLOY NEW BOOKING
-    JLabel empNewBookText = new JLabel("Nuova prenotazione:");
-    JLabel empNewBookDateText = new JLabel("Data:");
-    JLabel empNewBookNameText = new JLabel("Nome:");
-    JLabel empNewBookNumText = new JLabel("Numero:");
-    JLabel empNewBookOrderText = new JLabel("Lista ordine:");
+    private JLabel empNewBookText = new JLabel("Nuova prenotazione:");
+    private JLabel empNewBookDateText = new JLabel("Data:");
+    private JLabel empNewBookNameText = new JLabel("Nome:");
+    private JLabel empNewBookNumText = new JLabel("Numero:");
+    private JLabel empNewBookOrderText = new JLabel("Lista ordine:");
 
-    JTextArea empNewBookDateInput = new JTextArea();
-    JTextArea empNewBookNameInput = new JTextArea();
-    JTextArea empNewBookNumInput = new JTextArea();
-    JTextArea empNewBookOrderInput = new JTextArea();
+    private JTextArea empNewBookDateInput = new JTextArea();
+    private JTextArea empNewBookNameInput = new JTextArea();
+    private JTextArea empNewBookNumInput = new JTextArea();
+    private JTextArea empNewBookOrderInput = new JTextArea();
 
-    JComboBox empNewBookMenuBox = new JComboBox<>();
+    private JComboBox<String> empNewBookMenuBox = new JComboBox<>();
 
-    JButton empNewBookSend = new JButton("Inserisci");
+    private JButton empNewBookSend = new JButton("Inserisci");
 
-    //===============================================================================================
+//===============================================================================================
 //===============================================================================================
 //===============================================================================================
     //WAREHOUSE
     //WAREHOUSE LIST
-    JTabbedPane wareTabbedPane = new JTabbedPane();
-    JPanel wareListPanel = new JPanel(new GridBagLayout());
-    JLabel wareListText = new JLabel("Lista aggiornata al: ");
-    JTextArea wareListOut = new JTextArea();
-    JScrollPane wareListScroll = new JScrollPane(wareListOut);
-    JLabel wareListMagText = new JLabel("Magazzino al: ");
-    JTextArea wareListMagOut = new JTextArea();
-    JScrollPane wareListMagScroll = new JScrollPane(wareListMagOut);
-    JButton wareListSend = new JButton("Scrivi magazzino");
+    private JTabbedPane wareTabbedPane = new JTabbedPane();
+    private JPanel wareListPanel = new JPanel(new GridBagLayout());
+    private JLabel wareListText = new JLabel("Lista aggiornata al: ");
+    private JTextArea wareListOut = new JTextArea();
+    private JScrollPane wareListScroll = new JScrollPane(wareListOut);
+    private JLabel wareListMagText = new JLabel("Magazzino al: ");
+    private JTextArea wareListMagOut = new JTextArea();
+    private JScrollPane wareListMagScroll = new JScrollPane(wareListMagOut);
+    private JButton wareListSend = new JButton("Scrivi magazzino");
     //-------------------------------------------------------------------------------------------
     //WAREHOUSE RETURNLIST
-    JPanel wareReturnListPanel = new JPanel(new GridBagLayout());
-    JLabel wareReturnListOutText = new JLabel("Lista fine giornata: ");
-    JTextArea wareReturnListOut = new JTextArea();
-    JScrollPane wareReturnListOutScroll = new JScrollPane(wareReturnListOut);
-    JButton wareReturnListSend = new JButton("Conferma");
-    JLabel wareReturnListInText = new JLabel("Modifiche (ingrediente:delta): ");
-    JTextArea wareReturnListIn = new JTextArea();
-    JScrollPane wareReturnListInScroll = new JScrollPane(wareReturnListIn);
+    private JPanel wareReturnListPanel = new JPanel(new GridBagLayout());
+    private JLabel wareReturnListOutText = new JLabel("Lista fine giornata: ");
+    private JTextArea wareReturnListOut = new JTextArea();
+    private JScrollPane wareReturnListOutScroll = new JScrollPane(wareReturnListOut);
+    private JButton wareReturnListSend = new JButton("Conferma");
+    private JLabel wareReturnListInText = new JLabel("Modifiche (ingrediente:delta): ");
+    private JTextArea wareReturnListIn = new JTextArea();
+    private JScrollPane wareReturnListInScroll = new JScrollPane(wareReturnListIn);
 //===============================================================================================
 //===============================================================================================
-    Border border = BorderFactory.createLineBorder(Color.GRAY, 1);
+    //bordino per le caselle di testo
+    private  Border border = BorderFactory.createLineBorder(Color.GRAY, 1);
 
 
     public SimpleUI(SaveData saver, Login loginner, DataManagement dataManager) {
         this.saver = saver;
         this.loginner = loginner;
         this.dataManager = dataManager;
-        // Set up the UI components
+
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        setSize(1000, 1000);
+        setSize(800, 600);
+        setMinimumSize(new Dimension(800, 600));
         setVisible(true);
-        getContentPane().setBackground(Color.GRAY); //TODO cambiare lo sfondo che fa schifo
+
         setLayout(new BorderLayout());
     }
 
@@ -348,14 +329,14 @@ public class SimpleUI extends JFrame implements ErrorSetter, GUI
         cfgInit();
         empInit();
         wareInit(today);
-        // Set the initial state
+        //Set the initial state
         state = State.PASSWORD;
         updateUI();
     }
 
     private void passInit()
     {
-        
+        //posizionamento dei componenti
         c.gridx = 0;
         c.gridy = 0;
         passLoginPanel.add(passLoginTitle, c);
@@ -380,6 +361,8 @@ public class SimpleUI extends JFrame implements ErrorSetter, GUI
         c.gridx = 0;
         c.gridy = 4;
         passLoginPanel.add(passWriteButton,c);
+
+        //actionlistener che chiama i metodi dell'interfaccia per scrivere
         passWriteButton.addActionListener(e -> {
             dataManager.writeManager();
             dataManager.writeBookings();
@@ -422,35 +405,34 @@ public class SimpleUI extends JFrame implements ErrorSetter, GUI
         c.gridy = 5;
         passSavePanel.add(passSaveButton,c);
 
-
-       
         passLoginUserText.setLineWrap(true);
         passSaveUserText.setLineWrap(true);
         passLoginUserText.setBorder(border);
         passSaveUserText.setBorder(border);
+
         passTabbedPane.addTab("Login",passLoginPanel);
         passTabbedPane.addTab("Sign Up", passSavePanel);
         passSaveButton.addActionListener(e -> {
             if(loginner.saveUser(passSaveUserText.getText().trim(),Arrays.toString(passSavePasswordField.getPassword()).trim(),Arrays.toString(passSavePassword2Field.getPassword()).trim(),passManCheck.isSelected(),passEmpCheck.isSelected(),passWareCheck.isSelected()))
             {
-                passSaveUserText.setText(Model.CLEAR);
-                passSavePasswordField.setText(Model.CLEAR);
-                passSavePassword2Field.setText(Model.CLEAR);
+                passSaveUserText.setText(BLANK);
+                passSavePasswordField.setText(BLANK);
+                passSavePassword2Field.setText(BLANK);
             }
         });
         passLoginButton.addActionListener(e ->{
             if(loginner.login(passLoginUserText.getText().trim(), Arrays.toString(passLoginPasswordField.getPassword()).trim()))
             {
-                passLoginPasswordField.setText(Model.CLEAR);
-                passLoginUserText.setText(Model.CLEAR);
+                passLoginPasswordField.setText(BLANK);
+                passLoginUserText.setText(BLANK);
             }
         });
     }
     private void logInit() {
-        // Add the UI components to the login panel
+        // aggiunta dei componenti grafici
         c.gridx = 0;
         c.gridy = 0;
-        loginPanel.add(titleText, c);
+        loginPanel.add(roleText, c);
 
         c.gridx = 0;
         c.gridy = 1;
@@ -468,14 +450,13 @@ public class SimpleUI extends JFrame implements ErrorSetter, GUI
         c.gridy = 2;
         loginPanel.add(buttonBack14, c);
 
+        //action listener che controllano i permessi dell'utente quando accede ad un ruolo
         managerButton.addActionListener(e -> {
             if(loginner.checkPermission("manager"))
             {
                 state = State.MANAGER;
                 updateUI();
             }
-            else
-                errorSetter(Controller.NO_PERMISSION);
         });
         employeeButton.addActionListener(e -> {
             if(loginner.checkPermission("employee"))
@@ -483,8 +464,6 @@ public class SimpleUI extends JFrame implements ErrorSetter, GUI
                 state = State.EMPLOYEE;
                 updateUI();
             }
-            else
-                errorSetter(Controller.NO_PERMISSION);
         });
         warehouseWorkerButton.addActionListener(e -> {
             if(loginner.checkPermission("warehouse worker"))
@@ -492,9 +471,8 @@ public class SimpleUI extends JFrame implements ErrorSetter, GUI
                 state = State.WAREHOUSE_WORKER;
                 updateUI();
             }
-            else
-                errorSetter(Controller.NO_PERMISSION);
         });
+
         buttonBack14.addActionListener(backToLogin);
     }
 
@@ -561,20 +539,19 @@ public class SimpleUI extends JFrame implements ErrorSetter, GUI
         cfgResMenuCartaOut.setBorder(border);
         cfgBaseInputSurplus.setBorder(border);
 
-
-        cfgResBaseScroll.setPreferredSize(new Dimension(400, 70));
-        cfgResDrinksScroll.setPreferredSize(new Dimension(400, 100));
-        cfgResFoodsScroll.setPreferredSize(new Dimension(400, 100));
-        cfgResRecipesScroll.setPreferredSize(new Dimension(300, 100));
-        cfgResDishesScroll.setPreferredSize(new Dimension(300, 100));
-        cfgResMenuScroll.setPreferredSize(new Dimension(300, 100));
-        cfgResDatiMenuOut.setPreferredSize(new Dimension(300, 100));
-        cfgFoodsAreaScroll.setPreferredSize(new Dimension(300, 100));
-        cfgDrinksAreaScroll.setPreferredSize(new Dimension(300, 100));
-        cfgRecipeScroll.setPreferredSize(new Dimension(300, 100));
-        cfgDishAreaScroll.setPreferredSize(new Dimension(300, 100));
-        cfgMenuAreaScroll.setPreferredSize(new Dimension(300, 100));
-        cfgResMenuCartaScroll.setPreferredSize(new Dimension(400, 70));
+        cfgResBaseScroll.setPreferredSize(new Dimension(200, 100));
+        cfgResDrinksScroll.setPreferredSize(new Dimension(200, 100));
+        cfgResFoodsScroll.setPreferredSize(new Dimension(200, 100));
+        cfgResRecipesScroll.setPreferredSize(new Dimension(200, 100));
+        cfgResDishesScroll.setPreferredSize(new Dimension(200, 100));
+        cfgResMenuScroll.setPreferredSize(new Dimension(200, 100));
+        cfgResDatiMenuOut.setPreferredSize(new Dimension(200, 100));
+        cfgFoodsAreaScroll.setPreferredSize(new Dimension(200, 100));
+        cfgDrinksAreaScroll.setPreferredSize(new Dimension(200, 100));
+        cfgRecipeScroll.setPreferredSize(new Dimension(200, 100));
+        cfgDishAreaScroll.setPreferredSize(new Dimension(200, 100));
+        cfgMenuAreaScroll.setPreferredSize(new Dimension(200, 100));
+        cfgResMenuCartaScroll.setPreferredSize(new Dimension(200, 100));
 
         cfgResBaseScroll.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS);
         cfgResDrinksScroll.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS);
@@ -605,6 +582,7 @@ public class SimpleUI extends JFrame implements ErrorSetter, GUI
 
 
         cfgWriteButton.addActionListener(e -> dataManager.writeManager());
+       //red button che azzera i dati
         cfgClearButton.addActionListener(e -> dataManager.clearInfo());
         cfgClearButton.setBackground(Color.RED);
 
@@ -656,7 +634,7 @@ public class SimpleUI extends JFrame implements ErrorSetter, GUI
         cfgBasePanel.add(buttonBack1, c);
         c.gridx = 1;
         c.gridy = 5;
-        cfgBaseSendButton.addActionListener(e -> saver.saveConfig(cfgBaseInputCap.getText(),
+        cfgBaseSendButton.addActionListener(e -> saver.saveConfig(cfgBaseInputCap.getText(),       //actionlister manda i contenuti delle caselle al metodo dell'interfaccia
                 cfgBaseInputIndWork.getText(),
                 cfgBaseInputSurplus.getText(),
                 cfgBaseInputDate.getText().trim()));
@@ -676,7 +654,7 @@ public class SimpleUI extends JFrame implements ErrorSetter, GUI
         cfgDrinksFoodsPanel.add(cfgDrinksInput, c);
         c.gridx = 2;
         c.gridy = 0;
-        cfgDrinksSendButton.addActionListener(e -> saver.saveDrinks(cfgDrinksInput.getText()));
+        cfgDrinksSendButton.addActionListener(e -> saver.saveDrinks(cfgDrinksInput.getText()));       //actionlister manda i contenuti delle caselle al metodo dell'interfaccia
         cfgDrinksFoodsPanel.add(cfgDrinksSendButton, c);
         c.gridx = 0;
         c.gridy = 1;
@@ -686,7 +664,7 @@ public class SimpleUI extends JFrame implements ErrorSetter, GUI
         cfgDrinksFoodsPanel.add(cfgFoodsInput, c);
         c.gridx = 2;
         c.gridy = 1;
-        cfgFoodSendButton.addActionListener(e -> saver.saveFoods(cfgFoodsInput.getText()));
+        cfgFoodSendButton.addActionListener(e -> saver.saveFoods(cfgFoodsInput.getText()));       //actionlister manda i contenuti delle caselle al metodo dell'interfaccia
         cfgDrinksFoodsPanel.add(cfgFoodSendButton, c);
         c.gridx = 0;
         c.gridy = 2;
@@ -746,7 +724,7 @@ public class SimpleUI extends JFrame implements ErrorSetter, GUI
         c.gridx = 3;
         c.gridy = 6;
         cfgRecipesPanel.add(cfgRecipeSendButton, c);
-        cfgRecipeSendButton.addActionListener(e -> saver.saveRecipe(cfgRecipeNameInput.getText(),
+        cfgRecipeSendButton.addActionListener(e -> saver.saveRecipe(cfgRecipeNameInput.getText(),       //actionlister manda i contenuti delle caselle al metodo dell'interfaccia
                                                      cfgRecipeIngredientsInput.getText(),
                                                      cfgRecipePortionsInput.getText(),
                                                      cfgRecipeWorkLoadInput.getText()));
@@ -772,8 +750,9 @@ public class SimpleUI extends JFrame implements ErrorSetter, GUI
         c.gridx = 1;
         c.gridy = 4;
         cfgDishesPanel.add(cfgDishPermanentRadio, c);
-        cfgDishPermanentRadio.addActionListener(e -> {
-            if (DishPermaRadio) {
+
+        cfgDishPermanentRadio.addActionListener(e -> { //permette di deselezionare un radio, in modo che si permetta che un piatto non sia ne permanent ne seasonal,
+            if (DishPermaRadio) {                       // ma solo con un periodo di validità non periodico
                 DishPermaRadio = false;
                 cfgDishGroup.clearSelection();
             } else {
@@ -793,8 +772,8 @@ public class SimpleUI extends JFrame implements ErrorSetter, GUI
                 DishSeasRadio = true;
                 DishPermaRadio = false;
             }
-        });
-        c.gridx = 1;
+        });//permette di deselezionare un radio, in modo che si permetta che un piatto non sia ne permanent ne seasonal,
+        c.gridx = 1;                                         // ma solo con un periodo di validità non periodico
         c.gridy = 3;
         cfgDishesPanel.add(cfgDishSDateInput, c);
         c.gridx = 2;
@@ -812,7 +791,7 @@ public class SimpleUI extends JFrame implements ErrorSetter, GUI
         c.gridx = 2;
         c.gridy = 6;
         cfgDishesPanel.add(cfgDishSendButton, c);
-        cfgDishSendButton.addActionListener(e -> saver.saveDish(cfgDishNameInput.getText(),
+        cfgDishSendButton.addActionListener(e -> saver.saveDish(cfgDishNameInput.getText(),   //actionlister manda i contenuti delle caselle al metodo dell'interfaccia
                 Objects.requireNonNull(cfgDishComboBox.getSelectedItem()).toString().split("-")[0].trim(),
                 cfgDishSDateInput.getText(),
                 cfgDishEDateInput.getText(),
@@ -850,27 +829,27 @@ public class SimpleUI extends JFrame implements ErrorSetter, GUI
         c.gridx = 1;
         c.gridy = 4;
         cfgMenuPanel.add(cfgMenuPermanentRadio, c);
-        cfgMenuPermanentRadio.addActionListener(e -> {
+        cfgMenuPermanentRadio.addActionListener(e -> { //permette di deselezionare un radio, in modo che si permetta che un menù non sia ne permanent ne seasonal
             if (MenuPermaRadio) {
                 MenuPermaRadio = false;
                 cfgMenuGroup.clearSelection();
             } else {
                 MenuPermaRadio = true;
                 MenuSeasRadio = false;
-            }
+            }       // ma solo con un periodo di validità non periodico
         });
 
         c.gridx = 2;
         c.gridy = 4;
         cfgMenuPanel.add(cfgMenuSeasonalRadio, c);
-        cfgMenuSeasonalRadio.addActionListener(e -> {
+        cfgMenuSeasonalRadio.addActionListener(e -> {  //permette di deselezionare un radio, in modo che si permetta che un menù non sia ne permanent ne seasonal
             if (MenuSeasRadio) {
                 MenuSeasRadio = false;
                 cfgMenuGroup.clearSelection();
             } else {
                 MenuSeasRadio = true;
                 MenuPermaRadio = false;
-            }
+            }       // ma solo con un periodo di validità non periodico
         });
 
         c.gridx = 1;
@@ -891,7 +870,7 @@ public class SimpleUI extends JFrame implements ErrorSetter, GUI
         c.gridx = 2;
         c.gridy = 6;
         cfgMenuPanel.add(cfgMenuSendButton, c);
-        cfgMenuSendButton.addActionListener(e -> saver.saveMenu(cfgMenuNameInput.getText(),
+        cfgMenuSendButton.addActionListener(e -> saver.saveMenu(cfgMenuNameInput.getText(), //actionlister manda i contenuti delle caselle al metodo dell'interfaccia
                 cfgMenuDishesInput.getText(),
                 cfgMenuSDateInput.getText(),
                 cfgMenuEDateInput.getText(),
@@ -926,34 +905,33 @@ public class SimpleUI extends JFrame implements ErrorSetter, GUI
         c.gridx = 1;
         c.gridy = 4;
         cfgResPanel.add(cfgResRecipesScroll, c);
-        c.gridx = 0;
-        c.gridy = 5;
+        c.gridx = 2;
+        c.gridy = 1;
         cfgResPanel.add(cfgResDishesText, c);
-        c.gridx = 1;
-        c.gridy = 5;
+        c.gridx = 3;
+        c.gridy = 1;
         cfgResPanel.add(cfgResDishesScroll, c);
-        c.gridx = 0;
-        c.gridy = 6;
+        c.gridx = 2;
+        c.gridy = 2;
         cfgResPanel.add(cfgResMenuText, c);
-        c.gridx = 1;
-        c.gridy = 6;
+        c.gridx = 3;
+        c.gridy = 2;
         cfgResPanel.add(cfgResMenuScroll, c);
-        c.gridx = 0;
-        c.gridy = 7;
+        c.gridx = 2;
+        c.gridy = 3;
         cfgResPanel.add(cfgResMenuCartaText, c);
-        c.gridx = 1;
-        c.gridy = 7;
+        c.gridx = 3;
+        c.gridy = 3;
         cfgResPanel.add(cfgResMenuCartaScroll, c);
-        c.gridx = 0;
-        c.gridy = 8;
+        c.gridx = 2;
+        c.gridy = 4;
         cfgResPanel.add(cfgResDatiMenuBox, c);
-        cfgResDatiMenuBox.addActionListener(e ->
-                dataManager.writeMenuComp((String) cfgResDatiMenuBox.getSelectedItem()));
-        c.gridx = 1;
-        c.gridy = 8;
+        cfgResDatiMenuBox.addActionListener(e -> dataManager.writeMenuComp((String) cfgResDatiMenuBox.getSelectedItem())); //actionlister chiama il metodo dell'interfaccia che scrive i contenuti del menù selezionato
+        c.gridx = 3;
+        c.gridy = 4;
         cfgResPanel.add(cfgResDatiMenuScroll, c);
         c.gridx = 4;
-        c.gridy = 9;
+        c.gridy = 5;
         cfgResPanel.add(buttonBack6, c);
 
 
@@ -968,7 +946,7 @@ public class SimpleUI extends JFrame implements ErrorSetter, GUI
         endPadding.gridy = 3;
         cfgWriteClearPanel.add(buttonBack7, endPadding);
 
-        // Add the panels to the tabbed pane
+        // add i panel al tapped pane
         cfgTabbedPane.addTab("Specifiche", cfgBasePanel);
         cfgTabbedPane.addTab("Drinks&Foods", cfgDrinksFoodsPanel);
         cfgTabbedPane.addTab("Recipes", cfgRecipesPanel);
@@ -980,7 +958,6 @@ public class SimpleUI extends JFrame implements ErrorSetter, GUI
 
     private void empInit() {
         //SeeBooking
-
         titlePadding.gridx = 0;
         titlePadding.gridy = 0;
         empSeeBookingsPanel.add(empSeeBookText, titlePadding);
@@ -1045,6 +1022,7 @@ public class SimpleUI extends JFrame implements ErrorSetter, GUI
         c.gridx = 1;
         c.gridy = 8;
         empSeeBookingsPanel.add(empSeeBookClear, c);
+        //actionlistener per pulire le prenotazioni di questa data
         empSeeBookClear.addActionListener(e ->
                 {
                     if(dataManager.clearBookings(dataManager.inputToDate(empSeeBookDateInput.getText())))
@@ -1054,6 +1032,7 @@ public class SimpleUI extends JFrame implements ErrorSetter, GUI
         c.gridx = 2;
         c.gridy = 8;
         empSeeBookingsPanel.add(empSeeBookClearAll, c);
+        //actionlistener per pulire tutte le prenotazioni
         empSeeBookClearAll.addActionListener(e -> dataManager.clearBookings());
         // NewBooking prenotazioni
         titlePadding.gridx = 0;
@@ -1083,6 +1062,7 @@ public class SimpleUI extends JFrame implements ErrorSetter, GUI
         c.gridx = 1;
         c.gridy = 4;
         empNewBookingPanel.add(empNewBookMenuBox, c);
+        //actionlister che scrive nella casella vicina il menu selezionato
         empNewBookMenuBox.addActionListener(e ->
         {
             String selectedItem = (String) empNewBookMenuBox.getSelectedItem();
@@ -1094,7 +1074,7 @@ public class SimpleUI extends JFrame implements ErrorSetter, GUI
         c.gridx = 2;
         c.gridy = 6;
         empNewBookingPanel.add(empNewBookSend, c);
-        empNewBookSend.addActionListener(e ->
+        empNewBookSend.addActionListener(e ->  //salva i dati della booking tramite l'interfaccia
         {
             if(saver.saveBooking(empNewBookNameInput.getText().trim(),empNewBookDateInput.getText().trim(),Integer.parseInt(empNewBookNumInput.getText().trim()),empNewBookOrderInput.getText().trim()))
             {
@@ -1191,6 +1171,7 @@ public class SimpleUI extends JFrame implements ErrorSetter, GUI
         wareListPanel.add(buttonBack12, c);
         c.gridx = 1;
         c.gridy = 4;
+        //fa scrivere il registro attuale tramite interfaccia
         wareListSend.addActionListener(e-> dataManager.writeRegister());
         wareListPanel.add(wareListSend, c);
 
@@ -1212,6 +1193,7 @@ public class SimpleUI extends JFrame implements ErrorSetter, GUI
         wareReturnListPanel.add(buttonBack13, c);
         c.gridx = 1;
         c.gridy = 4;
+        // prende gli ingredienti specificati dall'utente che sono avanzati e li rimette in magazzino
         wareReturnListSend.addActionListener(e->
         {
             if (dataManager.warehouseChanges(wareReturnListIn.getText().trim()))
@@ -1226,12 +1208,14 @@ public class SimpleUI extends JFrame implements ErrorSetter, GUI
         wareTabbedPane.add("Lista fine giornata:", wareReturnListPanel);
     }
 
-    // Method to update the UI based on the current state
+    /**
+     * Metodo che aggiorna l'UI in base allo stato
+     */
     private void updateUI() {
-        // Clear the frame
+        // svuota il frame
         getContentPane().removeAll();
 
-        // Add the appropriate components based on the current state
+        // adda il tabbed pane appropriato
         switch (state)
         {
             case PASSWORD -> getContentPane().add(passTabbedPane);
@@ -1240,12 +1224,19 @@ public class SimpleUI extends JFrame implements ErrorSetter, GUI
             case EMPLOYEE -> getContentPane().add(empTabbedPane);
             case WAREHOUSE_WORKER -> getContentPane().add(wareTabbedPane);
         }
-
-        // Refresh the frame
         getContentPane().revalidate();
         getContentPane().repaint();
     }
 
+    /**
+     * Scrive nelle caselle di testo appropriate i dati ricevuti
+     * @param configState lista di stringhe contenenti le varie informazioni
+     *                    0 - stringa da inserire nel resoconto
+     *                    1 - capacità del ristorante
+     *                    2 - individual workload
+     *                    3 - data di oggi
+     *                    4 - incremento per gli ingredienti da comprare
+     */
     public void updateConfig(List<String> configState) {
         cfgResBaseOut.setText(configState.get(0));
         cfgBaseInputCap.setText(configState.get(1));
@@ -1255,20 +1246,20 @@ public class SimpleUI extends JFrame implements ErrorSetter, GUI
     }
 
     public void updateDrinks(String drinks) {
-        setDrinkList(drinks);
+        cfgDrinksAreaOut.setText(drinks);
         cfgResDrinksOut.setText(drinks);
     }
 
     public void updateFoods(String foods) {
-        setFoodsList(foods);
         cfgResFoodsOut.setText(foods);
+        cfgFoodsAreaOut.setText(foods);
     }
 
     public void updateRecipes(String[] recipes) {
-        cfgRecipeNameInput.setText(Model.CLEAR);
-        cfgRecipeIngredientsInput.setText(Model.CLEAR);
-        cfgRecipePortionsInput.setText(Model.CLEAR);
-        cfgRecipeWorkLoadInput.setText(Model.CLEAR);
+        cfgRecipeNameInput.setText(BLANK);
+        cfgRecipeIngredientsInput.setText(BLANK);
+        cfgRecipePortionsInput.setText(BLANK);
+        cfgRecipeWorkLoadInput.setText(BLANK);
         DefaultComboBoxModel<String> model;
         if(recipes.length==0)
         {
@@ -1276,7 +1267,7 @@ public class SimpleUI extends JFrame implements ErrorSetter, GUI
             model = new DefaultComboBoxModel<>(noRecipe);
             cfgDishComboBox.setModel(model);
             cfgResRecipesOut.setText(noRecipe[0]);
-            setRecipeList(Model.CLEAR);
+            cfgRecipeAreaOut.setText(noRecipe[0]);
         }
         else{
             model = new DefaultComboBoxModel<>(recipes);
@@ -1287,7 +1278,7 @@ public class SimpleUI extends JFrame implements ErrorSetter, GUI
                 compactedArray.append(s).append("\n");
             }
             cfgResRecipesOut.setText(compactedArray.toString().trim());
-            setRecipeList(compactedArray.toString().trim());
+            cfgRecipeAreaOut.setText(compactedArray.toString().trim());
         }
     }
     
@@ -1302,10 +1293,10 @@ public class SimpleUI extends JFrame implements ErrorSetter, GUI
             compactedArray.append(s).append("\n");
         }
         cfgResDishesOut.setText(compactedArray.toString().trim());
-        setDishList(compactedArray.toString().trim());
-        cfgDishNameInput.setText(Model.CLEAR);
-        cfgDishSDateInput.setText(Model.CLEAR);
-        cfgDishEDateInput.setText(Model.CLEAR);
+        cfgDishAreaOut.setText(compactedArray.toString().trim());
+        cfgDishNameInput.setText(BLANK);
+        cfgDishSDateInput.setText(BLANK);
+        cfgDishEDateInput.setText(BLANK);
     }
     
     public void updateMenuCarta(String menuCarta) {
@@ -1314,12 +1305,11 @@ public class SimpleUI extends JFrame implements ErrorSetter, GUI
     
     public void updateMenus(String menus) {
         cfgResMenuOut.setText(menus);
-        setMenuList(menus);
-        
-        cfgMenuNameInput.setText(Model.CLEAR);
-        cfgMenuDishesInput.setText(Model.CLEAR);
-        cfgMenuSDateInput.setText(Model.CLEAR);
-        cfgMenuEDateInput.setText(Model.CLEAR);
+        cfgMenuAreaOut.setText(menus);
+        cfgMenuNameInput.setText(BLANK);
+        cfgMenuDishesInput.setText(BLANK);
+        cfgMenuSDateInput.setText(BLANK);
+        cfgMenuEDateInput.setText(BLANK);
     }
     
     public void updateMenuBoxes(String[] menus) {

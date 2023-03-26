@@ -1,3 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <register>
+	<ingredient name="Naan" unit="Hg" quantity="1.0"></ingredient>
+	<ingredient name="acqua" unit="L" quantity="5.0"></ingredient>
+	<ingredient name="Pane" unit="Hg" quantity="5.0"></ingredient>
+	<ingredient name="pepperoni" unit="g" quantity="55.0"></ingredient>
+	<ingredient name="Succo" unit="L" quantity="1.0"></ingredient>
+	<ingredient name="Grissini" unit="Hg" quantity="3.0"></ingredient>
+	<ingredient name="vino" unit="L" quantity="3.0"></ingredient>
 </register>

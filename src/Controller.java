@@ -36,7 +36,7 @@ public class Controller implements SearchRecipe, SearchDish, Login, SaveData, Da
 	public static final int NO_PERMISSION = 23;
 	public static final int EMPTY_INPUT = 24;
 	public static final int WRONG_UNIT = 25;
-	
+
 	/**
 	 * Metodo d'inizializzazione
 	 */
@@ -53,7 +53,7 @@ public class Controller implements SearchRecipe, SearchDish, Login, SaveData, Da
 	 * Metodo che calcola e salva tutti i dati del magazziniere, ovvero:
 	 * lista della spesa, magazzino prima del pasto e magazzino dopo il pasto
 	 */
-	private void calculateWarehouse ()
+	private void calculateWarehouse()
 	{
 		Set<Ingredient> consumedSet = new HashSet<>(generateConsumedList());
 		Set<Ingredient> grocerySet = generateGroceryList(consumedSet);
@@ -66,7 +66,7 @@ public class Controller implements SearchRecipe, SearchDish, Login, SaveData, Da
 	/**
 	 * Inizializzazione del model tramite i reader
 	 */
-	private void loadModel ()
+	private void loadModel()
 	{
 		// Chiamo tutti i reader per leggere i dati salvati
 		ModelAttributes modelAttributes = reader.readConfig();
@@ -115,7 +115,7 @@ public class Controller implements SearchRecipe, SearchDish, Login, SaveData, Da
 	/**
 	 * Metodo che svuota la memoria
 	 */
-	public void clearInfo ()
+	public void clearInfo()
 	{
 		//clear dei drinks
 		model.getDrinksMap().clear();
@@ -162,7 +162,7 @@ public class Controller implements SearchRecipe, SearchDish, Login, SaveData, Da
 	 * @param input giorno in cui annullare le prenotazioni
 	 * @return true se la
 	 */
-	public boolean clearBookings (DateOur input)
+	public boolean clearBookings(DateOur input)
 	{
 		Object obj = model.getBookingMap().remove(input);
 		writeBookings();
@@ -172,7 +172,7 @@ public class Controller implements SearchRecipe, SearchDish, Login, SaveData, Da
 	/**
 	 * Cancella tutte le prenotazioni tranne quelle in data odierna
 	 */
-	public void clearBookings ()
+	public void clearBookings()
 	{
 		model.getBookingMap().keySet().removeIf(k -> !(k.equals(model.getToday())));
 		writeBookings();
@@ -181,7 +181,7 @@ public class Controller implements SearchRecipe, SearchDish, Login, SaveData, Da
 	/**
 	 * Salvataggio tramite writer di tutti i dati del manager
 	 */
-	public void writeManager ()
+	public void writeManager()
 	{
 		writer.writeDrinks(model.getDrinksMap());
 		writer.writeExtraFoods(model.getExtraFoodsMap());
@@ -194,7 +194,7 @@ public class Controller implements SearchRecipe, SearchDish, Login, SaveData, Da
 	/**
 	 * Metodo che legge e salva i config dalla GUI
 	 */
-	public void saveConfig (String inputCapacity, String inputWorkload, String inputPercent, String todayString)
+	public void saveConfig(String inputCapacity, String inputWorkload, String inputPercent, String todayString)
 	{
 		try
 		{
@@ -560,7 +560,7 @@ public class Controller implements SearchRecipe, SearchDish, Login, SaveData, Da
 		}
 		return null;
 	}
-	
+
 	/**
 	 * Metodo che trasforma una stringa in una ricetta
 	 * @param name ricetta in forma di stringa
@@ -604,7 +604,7 @@ public class Controller implements SearchRecipe, SearchDish, Login, SaveData, Da
 		
 		return out;
 	}
-	
+
 	/**
 	 * Metodo che serve per aggiornare i drinks nella GUI
 	 */
@@ -628,7 +628,7 @@ public class Controller implements SearchRecipe, SearchDish, Login, SaveData, Da
 		
 		gui.updateFoods(out.toString().trim());
 	}
-	
+
 	/**
 	 * Crea una stringa con i dati di un certo menu con nome menuName
 	 * @param menuName menu da trasformare in stringa
@@ -915,7 +915,7 @@ public class Controller implements SearchRecipe, SearchDish, Login, SaveData, Da
 		}
 		gui.updateBookedDates(out.toString().trim());
 	}
-	
+
 	/**
 	 * Metodo che chiama il writer per le prenotazioni
 	 */
@@ -931,7 +931,7 @@ public class Controller implements SearchRecipe, SearchDish, Login, SaveData, Da
 	{
 		writer.writeRegister(model.getRegistroBeforeMeal());
 	}
-	
+
 	/**
 	 * Metodo che converte set d'ingredienti in stringhe
 	 * @param set set da convertire
@@ -1198,7 +1198,7 @@ public class Controller implements SearchRecipe, SearchDish, Login, SaveData, Da
 		}
 		return consumedSet;
 	}
-	
+
 	/**
 	 * Metodo che genera la lista della spesa in base agli ingredienti
 	 * consumati oggi e quelli disponibili in magazzino
@@ -1209,7 +1209,7 @@ public class Controller implements SearchRecipe, SearchDish, Login, SaveData, Da
 	{
 		Set<Ingredient> registroBeforeMeal = new HashSet<>(model.getRegistroBeforeMeal());
 		Set<Ingredient> consumedCopy = new HashSet<>();
-		
+
 		for (Ingredient consIngr : consumedSet)//faccio una copia in modo da non modificare l'originale
 			consumedCopy.add(new Ingredient(consIngr.getName(), consIngr.getUnit(), consIngr.getQuantity()));
 		
@@ -1248,7 +1248,7 @@ public class Controller implements SearchRecipe, SearchDish, Login, SaveData, Da
 		Set<Ingredient> registroBeforeMeal = new HashSet<>();
 		for (Ingredient regIngr : model.getRegistroBeforeMeal()) //faccio una copia per non modificare l'originale
 			registroBeforeMeal.add(new Ingredient(regIngr.getName(), regIngr.getUnit(), regIngr.getQuantity()));
-		
+
 		for (Ingredient grocery : groceryList)
 		{
 			if (registroBeforeMeal.contains(grocery))
@@ -1294,7 +1294,7 @@ public class Controller implements SearchRecipe, SearchDish, Login, SaveData, Da
 		}
 		model.setRegistroAfterMeal(registroAfterMeal);
 	}
-	
+
 	/**
 	 * Metodo che salva un nuovo utente tramite i dati della GUI
 	 * @param name          nome dell'utente

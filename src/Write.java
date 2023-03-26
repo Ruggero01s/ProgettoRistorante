@@ -10,8 +10,8 @@ public interface Write
     
     void writeExtraFoods(Map<String, Double> extraFoodsMap);
     
-    void writeRecipes(Set<Recipe> recipesSet); // non usiamo cose più generali per evitare possibili problemi collaterali nel reader
-    
+    void writeRecipes(Set<Recipe> recipesSet); // non usiamo cose più generali per evitare possibili problemi collaterali nell'integrità dei dati
+
     void writeDishes(Set<Dish> dishesSet);
     
     void writeThematicMenu(Set<ThematicMenu> thematicMenusSet);

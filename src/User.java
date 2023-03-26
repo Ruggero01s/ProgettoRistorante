@@ -70,7 +70,7 @@ public class User
     }
     
     /**
-     * hasho la password utilizzando SHA-256 ed il sale che viene passato
+     * Hasho la password utilizzando SHA-256 e il sale che viene passato
      *
      * @param pass password da hashare
      * @param salt il sale
@@ -112,7 +112,7 @@ public class User
     /**
      * override dell'equals
      * @param obj oggetto da controllare
-     * @return true se i nomi sono uguali e sono entrambi dello stesso tipo, false altrimenti
+     * @return true se i nomi sono uguali e sono entrambi della stessa classe, false altrimenti
      */
     public boolean equals(Object obj) {
         if (obj == this)
