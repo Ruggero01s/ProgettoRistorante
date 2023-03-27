@@ -1324,19 +1324,18 @@ public class Controller implements SearchRecipe, SearchDish, Login, SaveData, Da
 	{
 		Set<Ingredient> registroBeforeMeal = new HashSet<>(model.getRegistroBeforeMeal());
 		Set<Ingredient> registroAfterMeal = new HashSet<>();
-		
-		for (Ingredient consumedIngr : consumedList)
+
+		for (Ingredient beforeIngr : registroBeforeMeal)
 		{
-			for (Ingredient beforeIngr : registroBeforeMeal)
-			{
-				if (beforeIngr.equals(consumedIngr))
-				{
-					double q = beforeIngr.getQuantity() - consumedIngr.getQuantity(); //calcolo quanta quantità mi è rimasta
-					if (q > 0)
-						registroAfterMeal.add(new Ingredient(beforeIngr.getName(), beforeIngr.getUnit(), q)); //se è maggiore di 0 la salvo
+			double q = beforeIngr.getQuantity();
+			for (Ingredient consumedIngr : consumedList) {
+				if (beforeIngr.equals(consumedIngr)) {
+					q -= consumedIngr.getQuantity(); //calcolo quanta quantità mi è rimasta
 					break;
 				}
 			}
+			if (q > 0)
+				registroAfterMeal.add(new Ingredient(beforeIngr.getName(), beforeIngr.getUnit(), q)); //se è maggiore di 0 la salvo
 		}
 		model.setRegistroAfterMeal(registroAfterMeal);
 	}
