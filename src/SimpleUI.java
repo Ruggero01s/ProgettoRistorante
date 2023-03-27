@@ -1243,18 +1243,30 @@ public class SimpleUI extends JFrame implements ErrorSetter, GUI
         cfgBaseInputDate.setText(configState.get(3));
         cfgBaseInputSurplus.setText(configState.get(4));
     }
-
+    
+    /**
+     * Aggiorna le caselle di testo relative ai drinks
+     * @param drinks stringa con tutti i drink
+     */
     public void updateDrinks(String drinks) {
         cfgDrinksAreaOut.setText(drinks);
         cfgResDrinksOut.setText(drinks);
     }
-
+    
+    /**
+     * Aggiorna le caselle di testo relative agli extraFoods
+     * @param foods stringa con tutti gli extraFoods
+     */
     public void updateFoods(String foods) {
         cfgResFoodsOut.setText(foods);
         cfgFoodsAreaOut.setText(foods);
     }
-
-    public void updateRecipes(String[] recipes) {
+    
+    /**
+     * Aggiorna le caselle di testo relative alle recipes
+     * @param recipes array con tutte le recipes
+     */
+    public void updateRecipes(String[] recipes) { //array perchè deve essere usato per la comboBox
         cfgRecipeNameInput.setText(BLANK);
         cfgRecipeIngredientsInput.setText(BLANK);
         cfgRecipePortionsInput.setText(BLANK);
@@ -1272,7 +1284,7 @@ public class SimpleUI extends JFrame implements ErrorSetter, GUI
             model = new DefaultComboBoxModel<>(recipes);
             cfgDishComboBox.setModel(model);
 
-            StringBuilder compactedArray = new StringBuilder();
+            StringBuilder compactedArray = new StringBuilder(); //compatta l'array in una stringa unica
             for (String s : recipes) {
                 compactedArray.append(s).append("\n");
             }
@@ -1281,13 +1293,16 @@ public class SimpleUI extends JFrame implements ErrorSetter, GUI
         }
     }
     
-    
-    public void updateDishes(String[] dishes) {
+    /**
+     * Aggiorna le caselle di testo relative ai piatti
+     * @param dishes array con tutti i piatti
+     */
+    public void updateDishes(String[] dishes) { //array perchè deve essere usato per la comboBox
         DefaultComboBoxModel<String> model = new DefaultComboBoxModel<>(dishes);
         cfgMenuComboBox.setModel(model);
     
         StringBuilder compactedArray = new StringBuilder();
-        for (String s : dishes)
+        for (String s : dishes)  //compatta l'array in una stringa unica
         {
             compactedArray.append(s).append("\n");
         }
@@ -1298,10 +1313,18 @@ public class SimpleUI extends JFrame implements ErrorSetter, GUI
         cfgDishEDateInput.setText(BLANK);
     }
     
+    /**
+     * Aggiorna la casella del menù con i piatti disponibili oggi
+     * @param menuCarta stringa con tutti i piatti disponibili
+     */
     public void updateMenuCarta(String menuCarta) {
         cfgResMenuCartaOut.setText(menuCarta);
     }
     
+    /**
+     * Aggiorna le caselle dei menù
+     * @param menus stringa con tutti i menu
+     */
     public void updateMenus(String menus) {
         cfgResMenuOut.setText(menus);
         cfgMenuAreaOut.setText(menus);
@@ -1311,6 +1334,10 @@ public class SimpleUI extends JFrame implements ErrorSetter, GUI
         cfgMenuEDateInput.setText(BLANK);
     }
     
+    /**
+     * aggiorna i model delle comboBox dei menu
+     * @param menus array con il nome per ogni menu
+     */
     public void updateMenuBoxes(String[] menus) {
         DefaultComboBoxModel<String> model = new DefaultComboBoxModel<>(menus);
         empNewBookMenuBox.setModel(model);
@@ -1318,7 +1345,7 @@ public class SimpleUI extends JFrame implements ErrorSetter, GUI
     }
     
     /**
-     * Cambio lo satto della GUI dopo il login
+     * Cambio lo stato della GUI dopo il login
      */
     public void login()
     {
@@ -1376,7 +1403,11 @@ public class SimpleUI extends JFrame implements ErrorSetter, GUI
         empSeeBookCapacityTotalOut.setText(capacity);
         empSeeBookWorkloadTotalOut.setText(workload);
     }
-
+    
+    /**
+     * Aggiorna la casella delle date prenotate
+     * @param dates date prenotate
+     */
     public void updateBookedDates(String dates)
     {
         empSeeBookBookedDates.setText(dates);
@@ -1391,6 +1422,11 @@ public class SimpleUI extends JFrame implements ErrorSetter, GUI
         cfgResDatiMenuOut.setText(menu);
     }
     
+    
+    /**
+     * Gestisce i vari errori con una finestra pop Up
+     * @param code codice dell'errore
+     */
     public void errorSetter(int code)
     {
         switch (code)

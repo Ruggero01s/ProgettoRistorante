@@ -654,7 +654,7 @@ public class Controller implements SearchRecipe, SearchDish, Login, SaveData, Da
 	}
 	
 	/**
-	 * @return una stringa con un nome per ogni menu per riga
+	 * @return un array con un nome per ogni menu per indice
 	 */
 	private String[] makeMenuList ()
 	{
