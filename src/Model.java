@@ -3,7 +3,6 @@ import java.util.*;
 public class Model
 {
 	public static final double INCREASE20 = 1.20;
-	public static final String CLEAR = "";
 	private int capacity, workPersonLoad, increment;
 	private double workloadRestaurant;
 	private DateOur today;

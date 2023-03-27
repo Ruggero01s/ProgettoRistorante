@@ -20,9 +20,9 @@ public class SimpleUI extends JFrame implements ErrorSetter, GUI
     }
 
     //interfacce usate
-    private SaveData saver;
-    private Login loginner;
-    private DataManagement dataManager;
+    private final SaveData saver;
+    private final Login loginner;
+    private final DataManagement dataManager;
 
     // variabile per lo stato
     private State state;
@@ -35,264 +35,263 @@ public class SimpleUI extends JFrame implements ErrorSetter, GUI
 
    //Inizio variabili "grafiche"
     //GENERAL
-    private JButton managerButton = new JButton("Manager");
-    private JButton employeeButton = new JButton("Employee");
-    private JButton warehouseWorkerButton = new JButton("Warehouse Worker");
-    private JPanel loginPanel = new JPanel(new GridBagLayout());
+    private final JButton managerButton = new JButton("Manager");
+    private final JButton employeeButton = new JButton("Employee");
+    private final JButton warehouseWorkerButton = new JButton("Warehouse Worker");
+    private final JPanel loginPanel = new JPanel(new GridBagLayout());
 
-    private JLabel roleText = new JLabel("Scegli il tuo ruolo");
+    private final JLabel roleText = new JLabel("Scegli il tuo ruolo");
 
-    private GridBagConstraints c = new GridBagConstraints();
-    private GridBagConstraints titlePadding = new GridBagConstraints();
-    private GridBagConstraints endPadding = new GridBagConstraints();
+    private final GridBagConstraints c = new GridBagConstraints();
+    private final GridBagConstraints titlePadding = new GridBagConstraints();
+    private final GridBagConstraints endPadding = new GridBagConstraints();
 
     //I vari bottoni "Back", servono uno per panel perchè non si può aggiungere lo stesso oggetto ad un tabbed pane in più tab diversi
-    private JButton buttonBack1 = new JButton("Back");
-    private JButton buttonBack2 = new JButton("Back");
-    private JButton buttonBack3 = new JButton("Back");
-    private JButton buttonBack4 = new JButton("Back");
-    private JButton buttonBack5 = new JButton("Back");
-    private JButton buttonBack6 = new JButton("Back");
-    private JButton buttonBack7 = new JButton("Back");
-    private JButton buttonBack8 = new JButton("Back");
-    private JButton buttonBack9 = new JButton("Back");
-    private JButton buttonBack10 = new JButton("Back");
-    private JButton buttonBack11 = new JButton("Back");
-    private JButton buttonBack12 = new JButton("Back");
-    private JButton buttonBack13 = new JButton("Back");
-    private JButton buttonBack14 = new JButton("Back");
+    private final JButton buttonBack1 = new JButton("Back");
+    private final JButton buttonBack2 = new JButton("Back");
+    private final JButton buttonBack3 = new JButton("Back");
+    private final JButton buttonBack4 = new JButton("Back");
+    private final JButton buttonBack5 = new JButton("Back");
+    private final JButton buttonBack6 = new JButton("Back");
+    private final JButton buttonBack7 = new JButton("Back");
+    private final JButton buttonBack8 = new JButton("Back");
+    private final JButton buttonBack9 = new JButton("Back");
+    private final JButton buttonBack10 = new JButton("Back");
+    private final JButton buttonBack11 = new JButton("Back");
+    private final JButton buttonBack12 = new JButton("Back");
+    private final JButton buttonBack13 = new JButton("Back");
+    private final JButton buttonBack14 = new JButton("Back");
     
     //------------------------------------------------------------------------------------------
     //PASSWORD
-    private JTabbedPane passTabbedPane = new JTabbedPane();
-    private JPanel passLoginPanel = new JPanel(new GridBagLayout());
-    private JPanel passSavePanel = new JPanel(new GridBagLayout());
-    private JLabel passLoginTitle= new JLabel("Inserisci username e password per accedere");
-    private JLabel passLoginUserLabel = new JLabel("Inserisci username: ");
-    private JButton passExitButton = new JButton("Esci");
-    private JButton passWriteButton = new JButton("Salva tutto");
-    private JTextArea passLoginUserText = new JTextArea();
-    private JLabel passLoginPasswordLabel = new JLabel("Inserisci password: ");
-    private JPasswordField passLoginPasswordField = new JPasswordField();
-    private JButton passLoginButton = new JButton("Login");
-    private JLabel passSaveTitle= new JLabel("Creazione nuovo utente");
-    private JLabel passSaveUsernameLabel = new JLabel("Inserisci username: ");
-    private JTextArea passSaveUserText = new JTextArea();
-    private JLabel passSavePasswordLabel = new JLabel("Inserisci password: ");
-    private JPasswordField passSavePasswordField = new JPasswordField();
-    private JLabel passSavePassword2Label = new JLabel("Conferma password: ");
-    private JPasswordField passSavePassword2Field = new JPasswordField();
+    private final JTabbedPane passTabbedPane = new JTabbedPane();
+    private final JPanel passLoginPanel = new JPanel(new GridBagLayout());
+    private final JPanel passSavePanel = new JPanel(new GridBagLayout());
+    private final JLabel passLoginTitle= new JLabel("Inserisci username e password per accedere");
+    private final JLabel passLoginUserLabel = new JLabel("Inserisci username: ");
+    private final JButton passExitButton = new JButton("Esci");
+    private final JButton passWriteButton = new JButton("Salva tutto");
+    private final JTextArea passLoginUserText = new JTextArea();
+    private final JLabel passLoginPasswordLabel = new JLabel("Inserisci password: ");
+    private final JPasswordField passLoginPasswordField = new JPasswordField();
+    private final JButton passLoginButton = new JButton("Login");
+    private final JLabel passSaveTitle= new JLabel("Creazione nuovo utente");
+    private final JLabel passSaveUsernameLabel = new JLabel("Inserisci username: ");
+    private final JTextArea passSaveUserText = new JTextArea();
+    private final JLabel passSavePasswordLabel = new JLabel("Inserisci password: ");
+    private final JPasswordField passSavePasswordField = new JPasswordField();
+    private final JLabel passSavePassword2Label = new JLabel("Conferma password: ");
+    private final JPasswordField passSavePassword2Field = new JPasswordField();
 
-    private JCheckBox passManCheck = new JCheckBox("Manager");
-    private JCheckBox passEmpCheck = new JCheckBox("Employee");
-    private JCheckBox passWareCheck = new JCheckBox("Warehouse Worker");
+    private final JCheckBox passManCheck = new JCheckBox("Manager");
+    private final JCheckBox passEmpCheck = new JCheckBox("Employee");
+    private final JCheckBox passWareCheck = new JCheckBox("Warehouse Worker");
 
-    private JButton passSaveButton = new JButton("Salva");
+    private final JButton passSaveButton = new JButton("Salva");
     
     
     //------------------------------------------------------------------------------------------
     //CONFIG BASE
-    private JTabbedPane cfgTabbedPane = new JTabbedPane();
-    private JPanel cfgBasePanel = new JPanel(new GridBagLayout());
-    private JPanel cfgDrinksFoodsPanel = new JPanel(new GridBagLayout());
-    private JPanel cfgRecipesPanel = new JPanel(new GridBagLayout());
-    private JPanel cfgDishesPanel = new JPanel(new GridBagLayout());
-    private JPanel cfgMenuPanel = new JPanel(new GridBagLayout());
-    private JPanel cfgResPanel = new JPanel(new GridBagLayout());
-    private JPanel cfgWriteClearPanel = new JPanel(new GridBagLayout());
+    private final JTabbedPane cfgTabbedPane = new JTabbedPane();
+    private final JPanel cfgBasePanel = new JPanel(new GridBagLayout());
+    private final JPanel cfgDrinksFoodsPanel = new JPanel(new GridBagLayout());
+    private final JPanel cfgRecipesPanel = new JPanel(new GridBagLayout());
+    private final JPanel cfgDishesPanel = new JPanel(new GridBagLayout());
+    private final JPanel cfgMenuPanel = new JPanel(new GridBagLayout());
+    private final JPanel cfgResPanel = new JPanel(new GridBagLayout());
+    private final JPanel cfgWriteClearPanel = new JPanel(new GridBagLayout());
     //CONFIG_BASE
-    private JLabel cfgBaseText = new JLabel("Inserisci dati ristorante:");
-    private JLabel cfgBaseCapacityText = new JLabel("Posti a sedere:");
-    private JLabel cfgBaseIndiviualWorkloadAreaText = new JLabel("Carico lavoro max:");
-    private JLabel cfgBaseDateText = new JLabel("Inserisci data odierna:");
-    private JLabel cfgBaseSurplusText = new JLabel("Surplus da comprare (%):");
-    private JButton cfgBaseSendButton = new JButton("Conferma");
-    private JButton cfgBaseNextDayButton = new JButton("Prossimo giorno");
-    private JTextArea cfgBaseInputCap = new JTextArea();
-    private JTextArea cfgBaseInputIndWork = new JTextArea();
-    private JTextArea cfgBaseInputDate = new JTextArea();
-    private JTextArea cfgBaseInputSurplus = new JTextArea();
+    private final JLabel cfgBaseText = new JLabel("Inserisci dati ristorante:");
+    private final JLabel cfgBaseCapacityText = new JLabel("Posti a sedere:");
+    private final JLabel cfgBaseIndiviualWorkloadAreaText = new JLabel("Carico lavoro max:");
+    private final JLabel cfgBaseDateText = new JLabel("Inserisci data odierna:");
+    private final JLabel cfgBaseSurplusText = new JLabel("Surplus da comprare (%):");
+    private final JButton cfgBaseSendButton = new JButton("Conferma");
+    private final JButton cfgBaseNextDayButton = new JButton("Prossimo giorno");
+    private final JTextArea cfgBaseInputCap = new JTextArea();
+    private final JTextArea cfgBaseInputIndWork = new JTextArea();
+    private final JTextArea cfgBaseInputDate = new JTextArea();
+    private final JTextArea cfgBaseInputSurplus = new JTextArea();
 
     //------------------------------------------------------------------------------------------
     //CONFIG_DRINKS
-    private JLabel cfgDrinksText = new JLabel("Inserisci dati bevanda: (nome : quantità (L))");
-    private JLabel cfgDrinksTextOut = new JLabel("Elenco dati bevande: (nome : quantità (L))");
-    private JTextArea cfgDrinksAreaOut = new JTextArea();
-    private JScrollPane cfgDrinksAreaScroll = new JScrollPane(cfgDrinksAreaOut);
-    private JButton cfgDrinksSendButton = new JButton("Inserisci");
-    private JTextArea cfgDrinksInput = new JTextArea();
+    private final JLabel cfgDrinksText = new JLabel("Inserisci dati bevanda: (nome : quantità (L))");
+    private final JLabel cfgDrinksTextOut = new JLabel("Elenco dati bevande: (nome : quantità (L))");
+    private final JTextArea cfgDrinksAreaOut = new JTextArea();
+    private final JScrollPane cfgDrinksAreaScroll = new JScrollPane(cfgDrinksAreaOut);
+    private final JButton cfgDrinksSendButton = new JButton("Inserisci");
+    private final JTextArea cfgDrinksInput = new JTextArea();
     //------------------------------------------------------------------------------------------
     //CONFIG_EXTRAFOODS
-    private String foodsList;
-    private JLabel cfgFoodText = new JLabel("Inserisci dati generi alimentari extra: (nome : quantità (Hg)");
-    private JButton cfgFoodSendButton = new JButton("Inserisci");
-    private JTextArea cfgFoodsInput = new JTextArea();
-    private JLabel cfgFoodsTextOut = new JLabel("Elenco dati cibi extra: (nome : quantità (Hg))");
-    private JTextArea cfgFoodsAreaOut = new JTextArea();
-    private JScrollPane cfgFoodsAreaScroll = new JScrollPane(cfgFoodsAreaOut);
+    private final JLabel cfgFoodText = new JLabel("Inserisci dati generi alimentari extra: (nome : quantità (Hg)");
+    private final JButton cfgFoodSendButton = new JButton("Inserisci");
+    private final JTextArea cfgFoodsInput = new JTextArea();
+    private final JLabel cfgFoodsTextOut = new JLabel("Elenco dati cibi extra: (nome : quantità (Hg))");
+    private final JTextArea cfgFoodsAreaOut = new JTextArea();
+    private final JScrollPane cfgFoodsAreaScroll = new JScrollPane(cfgFoodsAreaOut);
     //------------------------------------------------------------------------------------------
     //CONFIG_RECIPES
-    private JLabel cfgRecipeTextTitle = new JLabel("Inserisci dati ricetta");
-    private JLabel cfgRecipeTextName = new JLabel("Inserisci nome: ");
-    private JTextArea cfgRecipeNameInput = new JTextArea();
-    private JLabel cfgRecipeTextPortions = new JLabel("Inserisci porzioni: ");
-    private JTextArea cfgRecipePortionsInput = new JTextArea();
-    private JLabel cfgRecipeTextIngredients = new JLabel("Inserisci ingredienti (ingredienti:quantità:unità): ");
-    private JTextArea cfgRecipeIngredientsInput = new JTextArea();
-    private JLabel cfgRecipeTextWorkLoad = new JLabel("Inserisci workload/person: ");
-    private JTextArea cfgRecipeWorkLoadInput = new JTextArea();
-    private JLabel cfgRecipeTextOut = new JLabel("Elenco ricette: ");
-    private JTextArea cfgRecipeAreaOut = new JTextArea();
-    private JButton cfgRecipeSendButton = new JButton("Conferma ricetta");
-    private JScrollPane cfgRecipeScroll = new JScrollPane(cfgRecipeAreaOut);
+    private final JLabel cfgRecipeTextTitle = new JLabel("Inserisci dati ricetta");
+    private final JLabel cfgRecipeTextName = new JLabel("Inserisci nome: ");
+    private final JTextArea cfgRecipeNameInput = new JTextArea();
+    private final JLabel cfgRecipeTextPortions = new JLabel("Inserisci porzioni: ");
+    private final JTextArea cfgRecipePortionsInput = new JTextArea();
+    private final JLabel cfgRecipeTextIngredients = new JLabel("Inserisci ingredienti (ingredienti:quantità:unità): ");
+    private final JTextArea cfgRecipeIngredientsInput = new JTextArea();
+    private final JLabel cfgRecipeTextWorkLoad = new JLabel("Inserisci workload/person: ");
+    private final JTextArea cfgRecipeWorkLoadInput = new JTextArea();
+    private final JLabel cfgRecipeTextOut = new JLabel("Elenco ricette: ");
+    private final JTextArea cfgRecipeAreaOut = new JTextArea();
+    private final JButton cfgRecipeSendButton = new JButton("Conferma ricetta");
+    private final JScrollPane cfgRecipeScroll = new JScrollPane(cfgRecipeAreaOut);
 
     //------------------------------------------------------------------------------------------
     //CONFIG_DISHES
-    private JLabel cfgDishTextTitle = new JLabel("Inserisci dati piatto");
-    private JLabel cfgDishTextName = new JLabel("Inserisci nome: ");
-    private JLabel cfgDishTextOut = new JLabel("Elenco piatti inseriti: ");
-    private JLabel cfgDishTextRecipe = new JLabel("Seleziona ricetta: ");
-    private JLabel cfgDishTextDate = new JLabel("Inserisci data di inizio e fine: ");
-    private JTextArea cfgDishAreaOut = new JTextArea();
-    private JScrollPane cfgDishAreaScroll = new JScrollPane(cfgDishAreaOut);
-    private JButton cfgDishSendButton = new JButton("Conferma piatto");
+    private final JLabel cfgDishTextTitle = new JLabel("Inserisci dati piatto");
+    private final JLabel cfgDishTextName = new JLabel("Inserisci nome: ");
+    private final JLabel cfgDishTextOut = new JLabel("Elenco piatti inseriti: ");
+    private final JLabel cfgDishTextRecipe = new JLabel("Seleziona ricetta: ");
+    private final JLabel cfgDishTextDate = new JLabel("Inserisci data di inizio e fine: ");
+    private final JTextArea cfgDishAreaOut = new JTextArea();
+    private final JScrollPane cfgDishAreaScroll = new JScrollPane(cfgDishAreaOut);
+    private final JButton cfgDishSendButton = new JButton("Conferma piatto");
 
-    private JRadioButton cfgDishPermanentRadio = new JRadioButton("Permanente");
-    private JRadioButton cfgDishSeasonalRadio = new JRadioButton("Stagionale");
-    private ButtonGroup cfgDishGroup = new ButtonGroup();
+    private final JRadioButton cfgDishPermanentRadio = new JRadioButton("Permanente");
+    private final JRadioButton cfgDishSeasonalRadio = new JRadioButton("Stagionale");
+    private final ButtonGroup cfgDishGroup = new ButtonGroup();
 
-    private JTextArea cfgDishNameInput = new JTextArea();
+    private final JTextArea cfgDishNameInput = new JTextArea();
 
-    private JComboBox<String> cfgDishComboBox = new JComboBox<>();
-    private JTextArea cfgDishSDateInput = new JTextArea();
-    private JTextArea cfgDishEDateInput = new JTextArea();
+    private final JComboBox<String> cfgDishComboBox = new JComboBox<>();
+    private final JTextArea cfgDishSDateInput = new JTextArea();
+    private final JTextArea cfgDishEDateInput = new JTextArea();
     
-    private JLabel cfgMenuTextTitle = new JLabel("Inserisci dati menu");
-    private JLabel cfgMenuTextName = new JLabel("Inserisci nome: ");
-    private JLabel cfgMenuTextOut = new JLabel("Elenco menu inseriti: ");
-    private JTextArea cfgMenuAreaOut = new JTextArea();
-    private JScrollPane cfgMenuAreaScroll = new JScrollPane(cfgMenuAreaOut);
-    private JLabel cfgMenuTextDish = new JLabel("Seleziona od inserisci piatti: ");
-    private JLabel cfgMenuTextDate = new JLabel("Inserisci data di inizio e fine: ");
-    private JButton cfgMenuSendButton = new JButton("Conferma menu");
+    private final JLabel cfgMenuTextTitle = new JLabel("Inserisci dati menu");
+    private final JLabel cfgMenuTextName = new JLabel("Inserisci nome: ");
+    private final JLabel cfgMenuTextOut = new JLabel("Elenco menu inseriti: ");
+    private final JTextArea cfgMenuAreaOut = new JTextArea();
+    private final JScrollPane cfgMenuAreaScroll = new JScrollPane(cfgMenuAreaOut);
+    private final JLabel cfgMenuTextDish = new JLabel("Seleziona od inserisci piatti: ");
+    private final JLabel cfgMenuTextDate = new JLabel("Inserisci data di inizio e fine: ");
+    private final JButton cfgMenuSendButton = new JButton("Conferma menu");
 
     //------------------------------------------------------------------------------------------
     //CONFIG_MENUS
-    private JRadioButton cfgMenuPermanentRadio = new JRadioButton("Permanente");
-    private JRadioButton cfgMenuSeasonalRadio = new JRadioButton("Stagionale");
-    private ButtonGroup cfgMenuGroup = new ButtonGroup();
+    private final JRadioButton cfgMenuPermanentRadio = new JRadioButton("Permanente");
+    private final JRadioButton cfgMenuSeasonalRadio = new JRadioButton("Stagionale");
+    private final ButtonGroup cfgMenuGroup = new ButtonGroup();
 
-    private JTextArea cfgMenuNameInput = new JTextArea();
-    private JTextArea cfgMenuDishesInput = new JTextArea();
-    private JTextArea cfgMenuSDateInput = new JTextArea();
-    private JTextArea cfgMenuEDateInput = new JTextArea();
-    private JComboBox<String> cfgMenuComboBox = new JComboBox<>();
+    private final JTextArea cfgMenuNameInput = new JTextArea();
+    private final JTextArea cfgMenuDishesInput = new JTextArea();
+    private final JTextArea cfgMenuSDateInput = new JTextArea();
+    private final JTextArea cfgMenuEDateInput = new JTextArea();
+    private final JComboBox<String> cfgMenuComboBox = new JComboBox<>();
 
     //------------------------------------------------------------------------------------------
     //CONFIG_RESOCONTO
-    private JLabel cfgResText = new JLabel("Resoconto:");
-    private JLabel cfgResBaseText = new JLabel("Dati ristorante:");
-    private JLabel cfgResDrinksText = new JLabel("Dati bevande:");
-    private JLabel cfgResFoodsText = new JLabel("Dati cibi extra:");
-    private JLabel cfgResRecipesText = new JLabel("Dati ricette:");
-    private JLabel cfgResDishesText = new JLabel("Dati piatti:");
-    private JLabel cfgResMenuCartaText = new JLabel("Menù alla carta:");
-    private JLabel cfgResMenuText = new JLabel("Dati menu:");
-    private JTextArea cfgResBaseOut = new JTextArea();
-    private JTextArea cfgResDrinksOut = new JTextArea();
-    private JTextArea cfgResFoodsOut = new JTextArea();
-    private JTextArea cfgResRecipesOut = new JTextArea();
-    private JTextArea cfgResDishesOut = new JTextArea();
-    private JTextArea cfgResMenuOut = new JTextArea();
-    private JScrollPane cfgResBaseScroll = new JScrollPane(cfgResBaseOut);
-    private JScrollPane cfgResDrinksScroll = new JScrollPane(cfgResDrinksOut);
-    private JScrollPane cfgResFoodsScroll = new JScrollPane(cfgResFoodsOut);
-    private JScrollPane cfgResRecipesScroll = new JScrollPane(cfgResRecipesOut);
-    private JScrollPane cfgResDishesScroll = new JScrollPane(cfgResDishesOut);
-    private JScrollPane cfgResMenuScroll = new JScrollPane(cfgResMenuOut);
-    private JComboBox<String> cfgResDatiMenuBox = new JComboBox<>();
-    private JTextArea cfgResDatiMenuOut = new JTextArea();
-    private JScrollPane cfgResDatiMenuScroll = new JScrollPane(cfgResDatiMenuOut);
-    private JTextArea cfgResMenuCartaOut = new JTextArea();
-    private JScrollPane cfgResMenuCartaScroll = new JScrollPane(cfgResMenuCartaOut);
+    private final JLabel cfgResText = new JLabel("Resoconto:");
+    private final JLabel cfgResBaseText = new JLabel("Dati ristorante:");
+    private final JLabel cfgResDrinksText = new JLabel("Dati bevande:");
+    private final JLabel cfgResFoodsText = new JLabel("Dati cibi extra:");
+    private final JLabel cfgResRecipesText = new JLabel("Dati ricette:");
+    private final JLabel cfgResDishesText = new JLabel("Dati piatti:");
+    private final JLabel cfgResMenuCartaText = new JLabel("Menù alla carta:");
+    private final JLabel cfgResMenuText = new JLabel("Dati menu:");
+    private final JTextArea cfgResBaseOut = new JTextArea();
+    private final JTextArea cfgResDrinksOut = new JTextArea();
+    private final JTextArea cfgResFoodsOut = new JTextArea();
+    private final JTextArea cfgResRecipesOut = new JTextArea();
+    private final JTextArea cfgResDishesOut = new JTextArea();
+    private final JTextArea cfgResMenuOut = new JTextArea();
+    private final JScrollPane cfgResBaseScroll = new JScrollPane(cfgResBaseOut);
+    private final JScrollPane cfgResDrinksScroll = new JScrollPane(cfgResDrinksOut);
+    private final JScrollPane cfgResFoodsScroll = new JScrollPane(cfgResFoodsOut);
+    private final JScrollPane cfgResRecipesScroll = new JScrollPane(cfgResRecipesOut);
+    private final JScrollPane cfgResDishesScroll = new JScrollPane(cfgResDishesOut);
+    private final JScrollPane cfgResMenuScroll = new JScrollPane(cfgResMenuOut);
+    private final JComboBox<String> cfgResDatiMenuBox = new JComboBox<>();
+    private final JTextArea cfgResDatiMenuOut = new JTextArea();
+    private final JScrollPane cfgResDatiMenuScroll = new JScrollPane(cfgResDatiMenuOut);
+    private final JTextArea cfgResMenuCartaOut = new JTextArea();
+    private final JScrollPane cfgResMenuCartaScroll = new JScrollPane(cfgResMenuCartaOut);
     //------------------------------------------------------------------------------------------
     //CONFIG_WRITING AND CLEAR
-    private JButton cfgClearButton = new JButton("Clear All");
-    private JButton cfgWriteButton = new JButton("Salva");
+    private final JButton cfgClearButton = new JButton("Clear All");
+    private final JButton cfgWriteButton = new JButton("Salva");
 //============================================================================================
 //============================================================================================
 //============================================================================================
     //EMPLOYEE
     //EMPLOYEE GENERAL
-    private JTabbedPane empTabbedPane = new JTabbedPane();
-    private JPanel empSeeBookingsPanel = new JPanel(new GridBagLayout());
-    private JPanel empNewBookingPanel = new JPanel(new GridBagLayout());
+    private final JTabbedPane empTabbedPane = new JTabbedPane();
+    private final JPanel empSeeBookingsPanel = new JPanel(new GridBagLayout());
+    private final JPanel empNewBookingPanel = new JPanel(new GridBagLayout());
     //-------------------------------------------------------------------------------------------
     //EMPLOY SEE BOOKINGS
-    private JLabel empSeeBookText = new JLabel("Prenotazioni:");
-    private JTextArea empSeeBookBookedDates = new JTextArea();
-    private JLabel empSeeBookDateText = new JLabel("Data da cercare:");
-    private JTextArea empSeeBookDateInput = new JTextArea();
-    private JLabel empSeeBookNameText = new JLabel("Nome:");
-    private JLabel empSeeBookNumText = new JLabel("Numero:");
-    private JLabel empSeeBookWorkloadText = new JLabel("Workload:");
-    private JTextArea empSeeBookNameAreaOut = new JTextArea();
-    private JTextArea empSeeBookNumAreaOut = new JTextArea();
-    private JTextArea empSeeBookWorkloadAreaOut = new JTextArea();
-    private JLabel empSeeBookCapacityTotalText = new JLabel("Posti disponibile:");
-    private JTextArea empSeeBookCapacityTotalOut = new JTextArea();
-    private JLabel empSeeBookWorkloadTotalText = new JLabel("Workload disponibile:");
-    private JTextArea empSeeBookWorkloadTotalOut = new JTextArea();
-    private JButton empSeeBookSend = new JButton("Vedi prenotazioni");
-    private JButton empSeeBookWrite = new JButton("Salva prenotazioni");
-    private JButton empSeeBookClear = new JButton("Svuota prenotazioni di questa data");
-    private JButton empSeeBookClearAll = new JButton("Svuota prenotazioni future");
+    private final JLabel empSeeBookText = new JLabel("Prenotazioni:");
+    private final JTextArea empSeeBookBookedDates = new JTextArea();
+    private final JLabel empSeeBookDateText = new JLabel("Data da cercare:");
+    private final JTextArea empSeeBookDateInput = new JTextArea();
+    private final JLabel empSeeBookNameText = new JLabel("Nome:");
+    private final JLabel empSeeBookNumText = new JLabel("Numero:");
+    private final JLabel empSeeBookWorkloadText = new JLabel("Workload:");
+    private final JTextArea empSeeBookNameAreaOut = new JTextArea();
+    private final JTextArea empSeeBookNumAreaOut = new JTextArea();
+    private final JTextArea empSeeBookWorkloadAreaOut = new JTextArea();
+    private final JLabel empSeeBookCapacityTotalText = new JLabel("Posti disponibile:");
+    private final JTextArea empSeeBookCapacityTotalOut = new JTextArea();
+    private final JLabel empSeeBookWorkloadTotalText = new JLabel("Workload disponibile:");
+    private final JTextArea empSeeBookWorkloadTotalOut = new JTextArea();
+    private final JButton empSeeBookSend = new JButton("Vedi prenotazioni");
+    private final JButton empSeeBookWrite = new JButton("Salva prenotazioni");
+    private final JButton empSeeBookClear = new JButton("Svuota prenotazioni di questa data");
+    private final JButton empSeeBookClearAll = new JButton("Svuota prenotazioni future");
 
     //-------------------------------------------------------------------------------------------
     //EMPLOY NEW BOOKING
-    private JLabel empNewBookText = new JLabel("Nuova prenotazione:");
-    private JLabel empNewBookDateText = new JLabel("Data:");
-    private JLabel empNewBookNameText = new JLabel("Nome:");
-    private JLabel empNewBookNumText = new JLabel("Numero:");
-    private JLabel empNewBookOrderText = new JLabel("Lista ordine:");
+    private final JLabel empNewBookText = new JLabel("Nuova prenotazione:");
+    private final JLabel empNewBookDateText = new JLabel("Data:");
+    private final JLabel empNewBookNameText = new JLabel("Nome:");
+    private final JLabel empNewBookNumText = new JLabel("Numero:");
+    private final JLabel empNewBookOrderText = new JLabel("Lista ordine:");
 
-    private JTextArea empNewBookDateInput = new JTextArea();
-    private JTextArea empNewBookNameInput = new JTextArea();
-    private JTextArea empNewBookNumInput = new JTextArea();
-    private JTextArea empNewBookOrderInput = new JTextArea();
+    private final JTextArea empNewBookDateInput = new JTextArea();
+    private final JTextArea empNewBookNameInput = new JTextArea();
+    private final JTextArea empNewBookNumInput = new JTextArea();
+    private final JTextArea empNewBookOrderInput = new JTextArea();
 
-    private JComboBox<String> empNewBookMenuBox = new JComboBox<>();
+    private final JComboBox<String> empNewBookMenuBox = new JComboBox<>();
 
-    private JButton empNewBookSend = new JButton("Inserisci");
+    private final JButton empNewBookSend = new JButton("Inserisci");
 
 //===============================================================================================
 //===============================================================================================
 //===============================================================================================
     //WAREHOUSE
     //WAREHOUSE LIST
-    private JTabbedPane wareTabbedPane = new JTabbedPane();
-    private JPanel wareListPanel = new JPanel(new GridBagLayout());
-    private JLabel wareListText = new JLabel("Lista aggiornata al: ");
-    private JTextArea wareListOut = new JTextArea();
-    private JScrollPane wareListScroll = new JScrollPane(wareListOut);
-    private JLabel wareListMagText = new JLabel("Magazzino al: ");
-    private JTextArea wareListMagOut = new JTextArea();
-    private JScrollPane wareListMagScroll = new JScrollPane(wareListMagOut);
-    private JButton wareListSend = new JButton("Scrivi magazzino");
+    private final JTabbedPane wareTabbedPane = new JTabbedPane();
+    private final JPanel wareListPanel = new JPanel(new GridBagLayout());
+    private final JLabel wareListText = new JLabel("Lista aggiornata al: ");
+    private final JTextArea wareListOut = new JTextArea();
+    private final JScrollPane wareListScroll = new JScrollPane(wareListOut);
+    private final JLabel wareListMagText = new JLabel("Magazzino al: ");
+    private final JTextArea wareListMagOut = new JTextArea();
+    private final JScrollPane wareListMagScroll = new JScrollPane(wareListMagOut);
+    private final JButton wareListSend = new JButton("Scrivi magazzino");
     //-------------------------------------------------------------------------------------------
     //WAREHOUSE RETURNLIST
-    private JPanel wareReturnListPanel = new JPanel(new GridBagLayout());
-    private JLabel wareReturnListOutText = new JLabel("Lista fine giornata: ");
-    private JTextArea wareReturnListOut = new JTextArea();
-    private JScrollPane wareReturnListOutScroll = new JScrollPane(wareReturnListOut);
-    private JButton wareReturnListSend = new JButton("Conferma");
-    private JLabel wareReturnListInText = new JLabel("Modifiche (ingrediente:delta): ");
-    private JTextArea wareReturnListIn = new JTextArea();
-    private JScrollPane wareReturnListInScroll = new JScrollPane(wareReturnListIn);
+    private final JPanel wareReturnListPanel = new JPanel(new GridBagLayout());
+    private final JLabel wareReturnListOutText = new JLabel("Lista fine giornata: ");
+    private final JTextArea wareReturnListOut = new JTextArea();
+    private final JScrollPane wareReturnListOutScroll = new JScrollPane(wareReturnListOut);
+    private final JButton wareReturnListSend = new JButton("Conferma");
+    private final JLabel wareReturnListInText = new JLabel("Modifiche (ingrediente:delta): ");
+    private final JTextArea wareReturnListIn = new JTextArea();
+    private final JScrollPane wareReturnListInScroll = new JScrollPane(wareReturnListIn);
 //===============================================================================================
 //===============================================================================================
     //bordino per le caselle di testo
-    private  Border border = BorderFactory.createLineBorder(Color.GRAY, 1);
+    private final Border border = BorderFactory.createLineBorder(Color.GRAY, 1);
 
 
     public SimpleUI(SaveData saver, Login loginner, DataManagement dataManager) {

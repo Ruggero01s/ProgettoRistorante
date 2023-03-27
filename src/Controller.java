@@ -46,18 +46,20 @@ public class Controller implements SearchRecipe, SearchDish, Login, SaveData, Da
 		erSet = (ErrorSetter) gui;
 		loadModel();
 		gui.init(model.getToday().getStringDate());
-		calculateWarehouse();
+		calculateWarehouse(true);
 	}
 	
 	/**
 	 * Metodo che calcola e salva tutti i dati del magazziniere, ovvero:
 	 * lista della spesa, magazzino prima del pasto e magazzino dopo il pasto
+	 * @param load true se il magazzino è gia generato e non deve essere calcolato, false altrimenti
 	 */
-	private void calculateWarehouse()
+	private void calculateWarehouse(boolean load)
 	{
 		Set<Ingredient> consumedSet = new HashSet<>(generateConsumedList());
 		Set<Ingredient> grocerySet = generateGroceryList(consumedSet);
-		generateRegistroBeforeMeal(grocerySet);
+		if(!load)
+			generateRegistroBeforeMeal(grocerySet);
 		generateRegistroAfterMeal(consumedSet);
 		gui.updateWare(setToString(grocerySet), setToString(model.getRegistroBeforeMeal()));
 		gui.updateWareReturnList(setToString(model.getRegistroAfterMeal()));
@@ -221,7 +223,7 @@ public class Controller implements SearchRecipe, SearchDish, Login, SaveData, Da
 					model.setToday(today);
 					model.setIncrement(percent);
 					updateConfig();
-					calculateWarehouse();
+					calculateWarehouse(true);
 				}
 			}
 		}
@@ -1075,7 +1077,7 @@ public class Controller implements SearchRecipe, SearchDish, Login, SaveData, Da
 		
 		//aggiorno e calcolo magazzino e lista della spesa
 		model.setRegistroBeforeMeal(model.getRegistroAfterMeal());
-		calculateWarehouse();
+		calculateWarehouse(false);
 	}
 	
 	/**
@@ -1157,7 +1159,6 @@ public class Controller implements SearchRecipe, SearchDish, Login, SaveData, Da
 					else
 						foods.add(i); //aggiungo i foods in caso non ci siano già
 				}
-				
 				for (Map.Entry<Dish, Integer> dish : booking.getOrder().entrySet()) //calcolo quanti piatti di ogni tipo devo cucinare oggi
 				{
 					if (allDish.containsKey(dish.getKey()))
@@ -1192,7 +1193,7 @@ public class Controller implements SearchRecipe, SearchDish, Login, SaveData, Da
 			for (Ingredient consumedStock : consumedSet)
 				consumedStock.setQuantity(consumedStock.getQuantity() * (100 + model.getIncrement()) / 100); //calcolo dell'incremento dell'X%
 			
-			//aggiungo foods and drinks agli ingredienti cosnumati
+			//aggiungo foods and drinks agli ingredienti consumati
 			consumedSet.addAll(drinks);
 			consumedSet.addAll(foods);
 		}
@@ -1227,8 +1228,8 @@ public class Controller implements SearchRecipe, SearchDish, Login, SaveData, Da
 						{
 							consumedIngr.setQuantity(q);
 							groceryList.add(consumedIngr);
-							break;
 						}
+						break;
 					}
 				}
 			}
