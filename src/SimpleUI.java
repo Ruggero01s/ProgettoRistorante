@@ -285,7 +285,7 @@ public class SimpleUI extends JFrame implements ErrorSetter, GUI
     private final JTextArea wareReturnListOut = new JTextArea();
     private final JScrollPane wareReturnListOutScroll = new JScrollPane(wareReturnListOut);
     private final JButton wareReturnListSend = new JButton("Conferma");
-    private final JLabel wareReturnListInText = new JLabel("Modifiche (ingrediente:delta): ");
+    private final JLabel wareReturnListInText = new JLabel("Modifiche (ingrediente:delta:unità di misura): ");
     private final JTextArea wareReturnListIn = new JTextArea();
     private final JScrollPane wareReturnListInScroll = new JScrollPane(wareReturnListIn);
 //===============================================================================================

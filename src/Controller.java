@@ -390,6 +390,30 @@ public class Controller implements SearchRecipe, SearchDish, Login, SaveData, Da
 	}
 	
 	/**
+	 * Converto e checko la validità delle unità in caso di extra foods
+	 * @param unit     unita d'ingresso
+	 * @param quantity quantità da convertire
+	 * @return quantità convertita in Hg
+	 */
+	private double checkUnitExtraFoods (String unit, Double quantity)
+	{
+		if (!(unit.equalsIgnoreCase("hg"))) //converto solo se l'unità non è in Hg
+		{
+			switch (unit.toLowerCase())
+			{
+				case "kg" -> quantity *= 10.0;
+				case "dag" -> quantity /= 10.0;
+				case "g" -> quantity /= 100.0;
+				case "dg" -> quantity /= 1000.0;
+				case "cg" -> quantity /= 10000.0;
+				case "mg"-> quantity /= 100000.0;
+				default -> throw new RuntimeException(""); //in caso di unità non riconosciuta lancio un errore
+			}
+		}
+		return quantity;
+	}
+	
+	/**
 	 * Leggo e salvo i piatti
 	 */
 	public void saveDish (String inputName, String inputRecipe, String inputStartDate, String inputEndDate, boolean perm, boolean seasonal)
@@ -413,21 +437,36 @@ public class Controller implements SearchRecipe, SearchDish, Login, SaveData, Da
 				inputEndDate = "31/12/1444";
 			}
 			boolean found = false;
+			boolean valid = true;
 			for (Recipe r : model.getRecipesSet())
 			{
 				if (r.getId().equals(inputRecipe))
 				{
-					if (model.getDishesSet().add(new Dish(inputName, r, inputStartDate, inputEndDate, seasonal, perm))) //associo il piatto alla ricetta
+					Dish temp = new Dish(inputName, r, inputStartDate, inputEndDate, seasonal, perm);
+					for (ThematicMenu thematicMenu: model.getThematicMenusSet())
 					{
-						gui.updateDishes(convertToStringVector(model.getDishesSetConverted()));
-						found = true;
-						break;
+						if (thematicMenu.getName().equals(temp.getName())) //controllo che non esistano un piatto ed un menu con lo stesso nome
+						{
+							valid = false;
+							break;
+						}
 					}
-					else //nel caso un menu esiste già con lo stesso nome (add torna false se non riesce ad aggiungerlo alla lista)
-						erSet.errorSetter(EXISTING_NAME);
+					if (valid)
+					{
+						if (model.getDishesSet().add(temp))
+						{
+							gui.updateDishes(convertToStringVector(model.getDishesSetConverted())); //aggiorno la GUI
+							found = true;
+						}
+						else
+							erSet.errorSetter(EXISTING_NAME);
+					}
+					else
+						erSet.errorSetter(NAME_SAME_AS_DISH);
+					break;
 				}
 			}
-			if (!found)
+			if (!found && valid)
 				erSet.errorSetter(NO_RECIPE);
 			menuCartaToday(); //aggiorno il menu
 		}
@@ -954,12 +993,11 @@ public class Controller implements SearchRecipe, SearchDish, Login, SaveData, Da
 	 */
 	public boolean warehouseChanges (String text)
 	{
-		if (text.isBlank()) //controllo che il testo non sia valido
+		if (text.isBlank()) //controllo che il testo sia valido
 		{
 			erSet.errorSetter(INVALID_FORMAT);
 			return false;
 		}
-		
 		
 		Set<Ingredient> ingredients = new HashSet<>();
 		
@@ -981,12 +1019,19 @@ public class Controller implements SearchRecipe, SearchDish, Login, SaveData, Da
 			
 			String name = t[0], unit = t[2];
 			double quantity = Double.parseDouble(t[1]);
-			quantity = checkUnit(unit, quantity); //converto la quantità e controllo la validità dell'unità di misura
-			
-			if (unit.toLowerCase().contains("g")) //ho convertito tutto in grammi e litri
-				unit = "g";
+			if(model.getExtraFoodsMap().containsKey(name))
+			{
+				quantity = checkUnitExtraFoods(unit,quantity);
+				unit="Hg";
+			}
 			else
-				unit = "L";
+			{
+				quantity = checkUnit(unit, quantity); //converto la quantità e controllo la validità dell'unità di misura
+				if (unit.toLowerCase().contains("g")) //ho convertito tutto in grammi e litri
+					unit = "g";
+				else
+					unit = "L";
+			}
 			
 			if (!ingredients.add(new Ingredient(name, unit, quantity))) //aggiungo l'ingrediente alla lista
 			{
