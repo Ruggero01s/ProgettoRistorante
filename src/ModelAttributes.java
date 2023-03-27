@@ -1,15 +1,18 @@
+/**
+ * Classe di passaggio che il reader può usare per inizializzare il model
+ */
 public class ModelAttributes
 {
     int capacity;
     int workloadPerson;
     DateOur today;
-    int maxWorkloadIncrement;
+    int increment;
 
-    public ModelAttributes(int capacity, int workloadPerson, DateOur today, int maxWorkloadIncrement) {
+    public ModelAttributes(int capacity, int workloadPerson, DateOur today, int increment) {
         this.capacity = capacity;
         this.workloadPerson = workloadPerson;
         this.today = today;
-        this.maxWorkloadIncrement = maxWorkloadIncrement;
+        this.increment = increment;
     }
 
     public ModelAttributes() {}
@@ -38,11 +41,11 @@ public class ModelAttributes
         this.today = today;
     }
 
-    public int getMaxWorkloadIncrement() {
-        return maxWorkloadIncrement;
+    public int getIncrement() {
+        return increment;
     }
 
-    public void setMaxWorkloadIncrement(int maxWorkloadIncrement) {
-        this.maxWorkloadIncrement = maxWorkloadIncrement;
+    public void setIncrement(int increment) {
+        this.increment = increment;
     }
 }

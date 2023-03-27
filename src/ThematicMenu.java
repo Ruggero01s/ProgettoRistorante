@@ -1,3 +1,4 @@
+import java.util.Calendar;
 import java.util.Set;
 
 public class ThematicMenu implements ConvertToString
@@ -112,7 +113,14 @@ public class ThematicMenu implements ConvertToString
 	 */
 	public String convertToString()
 	{
-		StringBuilder out = new StringBuilder(this.name + " - [" + this.startPeriod.getStringDate() + " || " + this.endPeriod.getStringDate() + "] - (");
+		String s;
+		if(permanent)  s = this.name+" - [PERM] - (";
+		else if(seasonal) {
+			String startDate = startPeriod.getDate().get(Calendar.DAY_OF_MONTH) + "/" + (startPeriod.getDate().get(Calendar.MONTH)+1);
+			String endDate = endPeriod.getDate().get(Calendar.DAY_OF_MONTH) +"/"+ (endPeriod.getDate().get(Calendar.MONTH)+1);
+			s = this.name+" - ["+startDate+" || "+endDate+" ] - [SEAS] - (";
+		}else s = this.name+" - ["+this.startPeriod.getStringDate()+" || "+this.endPeriod.getStringDate()+" ] - (";
+		StringBuilder out = new StringBuilder(s);
 		for (Dish dish:this.dishes)
 			out.append(dish.getName()).append(", ");
 		return out.append(")").toString();

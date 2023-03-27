@@ -103,7 +103,7 @@ public class SimpleUI extends JFrame implements ErrorSetter, GUI
     //CONFIG_BASE
     private final JLabel cfgBaseText = new JLabel("Inserisci dati ristorante:");
     private final JLabel cfgBaseCapacityText = new JLabel("Posti a sedere:");
-    private final JLabel cfgBaseIndiviualWorkloadAreaText = new JLabel("Carico lavoro max:");
+    private final JLabel cfgBaseIndividualWorkloadAreaText = new JLabel("Carico lavoro individuale max:");
     private final JLabel cfgBaseDateText = new JLabel("Inserisci data odierna:");
     private final JLabel cfgBaseSurplusText = new JLabel("Surplus da comprare (%):");
     private final JButton cfgBaseSendButton = new JButton("Conferma");
@@ -612,7 +612,7 @@ public class SimpleUI extends JFrame implements ErrorSetter, GUI
         cfgBasePanel.add(cfgBaseInputCap, c);
         c.gridx = 0;
         c.gridy = 2;
-        cfgBasePanel.add(cfgBaseIndiviualWorkloadAreaText, c);
+        cfgBasePanel.add(cfgBaseIndividualWorkloadAreaText, c);
         c.gridx = 1;
         c.gridy = 2;
         cfgBasePanel.add(cfgBaseInputIndWork, c);

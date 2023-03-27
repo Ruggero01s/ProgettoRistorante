@@ -75,7 +75,7 @@ public class Controller implements SearchRecipe, SearchDish, Login, SaveData, Da
 		model.setCapacity(modelAttributes.getCapacity());
 		model.setWorkPersonLoad(modelAttributes.getWorkloadPerson());
 		model.setToday(modelAttributes.getToday());
-		model.setIncrement(modelAttributes.getMaxWorkloadIncrement());
+		model.setIncrement(modelAttributes.getIncrement());
 		model.setUsers(reader.readPeople());
 		model.setDrinksMap(reader.readDrinks());
 		model.setExtraFoodsMap(reader.readExtraFoods());

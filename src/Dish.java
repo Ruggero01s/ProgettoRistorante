@@ -1,3 +1,5 @@
+import java.util.Calendar;
+
 public class Dish implements ConvertToString
 {
     private final String name; //nome del piatto
@@ -92,6 +94,11 @@ public class Dish implements ConvertToString
      */
     public String convertToString()
     {
-        return this.name+" - ["+this.startPeriod.getStringDate()+" || "+this.endPeriod.getStringDate()+" ] - ("+this.recipe.getId()+")";
+        if(permanent) return this.name+" - [PERM] - ("+this.recipe.getId()+")";
+        else if(seasonal) {
+            String startDate = startPeriod.getDate().get(Calendar.DAY_OF_MONTH) +"/"+ (startPeriod.getDate().get(Calendar.MONTH)+1);
+            String endDate = endPeriod.getDate().get(Calendar.DAY_OF_MONTH) +"/"+ (endPeriod.getDate().get(Calendar.MONTH)+1);
+            return this.name+" - ["+startDate+" || "+endDate+" ] - [SEAS] - ("+this.recipe.getId()+")";
+        }else return this.name+" - ["+this.startPeriod.getStringDate()+" || "+this.endPeriod.getStringDate()+" ] - ("+this.recipe.getId()+")";
     }
 }

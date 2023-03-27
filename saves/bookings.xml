@@ -1,15 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
 <bookings>
 	<booking date="02/06/2023">
-		<book name="test1" number="5" workload="24">
+		<book name="test1" number="1" workload="1">
 			<order dish="Pepperoni" quantity="1"></order></book></booking>
 	<booking date="05/06/2023">
-		<book name="test2" number="5" workload="24">
+		<book name="test2" number="1" workload="1">
 			<order dish="Pepperoni" quantity="1"></order></book></booking>
 	<booking date="12/08/2023">
-		<book name="test3" number="5" workload="24">
+		<book name="test3" number="1" workload="1">
 			<order dish="Pepperoni" quantity="1"></order></book></booking>
 	<booking date="03/06/2023">
-		<book name="test4" number="5" workload="24">
+		<book name="test4" number="1" workload="1">
 			<order dish="Pepperoni" quantity="1"></order></book></booking>
 </bookings>

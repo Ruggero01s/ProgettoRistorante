@@ -77,7 +77,7 @@ public class Reader implements Read
 						modelAttributes.setCapacity(Integer.parseInt(xmlr.getAttributeValue(0)));
 						modelAttributes.setWorkloadPerson((int) Double.parseDouble(xmlr.getAttributeValue(1)));
 						today = xmlr.getAttributeValue(2).split("/");
-						modelAttributes.setMaxWorkloadIncrement(Integer.parseInt(xmlr.getAttributeValue(3)));
+						modelAttributes.setIncrement(Integer.parseInt(xmlr.getAttributeValue(3)));
 						modelAttributes.setToday(new DateOur(today[0], today[1], today[2]));
 					}
 				}
