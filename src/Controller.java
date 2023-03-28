@@ -168,6 +168,7 @@ public class Controller implements SearchRecipe, SearchDish, Login, SaveData, Da
 		writer.writePeople(model.getUsers());
 	}
 	
+	
 	/**
 	 * Cancella le prenotazioni in uno specifico giorno
 	 * @param input giorno in cui annullare le prenotazioni
