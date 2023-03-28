@@ -36,6 +36,7 @@ public class Controller implements SearchRecipe, SearchDish, Login, SaveData, Da
 	public static final int NO_PERMISSION = 23;
 	public static final int EMPTY_INPUT = 24;
 	public static final int WRONG_UNIT = 25;
+	public static final int TOO_LOW_CONFIG = 26;
 
 	/**
 	 * Metodo d'inizializzazione
@@ -170,7 +171,6 @@ public class Controller implements SearchRecipe, SearchDish, Login, SaveData, Da
 		gui.logout();
 	}
 
-
 	/**
 	 * Cancella le prenotazioni in uno specifico giorno
 	 * @param input giorno in cui annullare le prenotazioni
@@ -215,35 +215,65 @@ public class Controller implements SearchRecipe, SearchDish, Login, SaveData, Da
 			int capacity = Integer.parseInt(inputCapacity); //converto i parametri numerici
 			int workload = Integer.parseInt(inputWorkload);
 			int percent = Integer.parseInt(inputPercent);
-			
-			if (!checkDate(todayString)) //check per correttezza della data
+			if(checkValidityOfSetting(capacity,workload))
 			{
-				erSet.errorSetter(INVALID_DATE);
-			}
-			else
-			{
-				DateOur today = inputToDate(todayString);
-				if (capacity <= 0 || workload <= 0) //check parametri numerici
-					erSet.errorSetter(MIN_ZERO);
-				else if (percent > 10)
-					erSet.errorSetter(SURPLUS_TOO_GREAT);
+				if (!checkDate(todayString)) //check per correttezza della data
+				{
+					erSet.errorSetter(INVALID_DATE);
+				}
 				else
 				{
-					//salvo tutti i dati e aggiorno la GUI
-					model.setCapacity(capacity);
-					model.setWorkPersonLoad(workload);
-					model.setToday(today);
-					model.setIncrement(percent);
-					updateConfig();
-					calculateWarehouse(true);
+					DateOur today = inputToDate(todayString);
+					if (capacity <= 0 || workload <= 0) //check parametri numerici
+						erSet.errorSetter(MIN_ZERO);
+					else if (percent > 10)
+						erSet.errorSetter(SURPLUS_TOO_GREAT);
+					else
+					{
+						//salvo tutti i dati e aggiorno la GUI
+						model.setCapacity(capacity);
+						model.setWorkPersonLoad(workload);
+						model.setToday(today);
+						model.setIncrement(percent);
+						calculateWarehouse(true);
+					}
 				}
 			}
+			else
+				erSet.errorSetter(TOO_LOW_CONFIG);
+				
+			updateConfig();
 		}
 		catch (NumberFormatException e)
 		{
 			erSet.errorSetter(INVALID_FORMAT);
 		}
 	}
+	
+	/**
+	 * Metodo che controllo se i nuovi parametri inseriti mantengono valide le prenotazioni già effettuate
+	 * @param capacity capacità modificata
+	 * @param workload workload modificato
+	 * @return true se i parametri mantengono l'integrità delle prenotazioni, false altrimenti
+	 */
+	private boolean checkValidityOfSetting (int capacity, int workload)
+	{
+		int usedCapacity, usedWorkload;
+		for (Map.Entry<DateOur, List<Booking>> books : model.getBookingMap().entrySet()) //scorro tutte le prenotazioni
+		{
+			usedCapacity =0;
+			usedWorkload=0;
+			for (Booking booking: books.getValue()) //scorro tutte le prenotazioni di un giorno
+			{
+				usedWorkload+=booking.getWorkload();
+				usedCapacity+=booking.getNumber();
+			}
+			if(capacity<usedCapacity || workload*capacity*Model.INCREASE20<usedWorkload) //controllo la validità dei parametri per ogni giorno prenotato
+				return false;
+		}
+		return true;
+	}
+	
 	
 	/**
 	 * Metodo che legge e salva i drinks
@@ -371,7 +401,7 @@ public class Controller implements SearchRecipe, SearchDish, Login, SaveData, Da
 					erSet.errorSetter(EXISTING_NAME);
 			}
 		}
-		catch (NumberFormatException e)
+		catch (RuntimeException e)
 		{
 			erSet.errorSetter(INVALID_FORMAT);
 		}
