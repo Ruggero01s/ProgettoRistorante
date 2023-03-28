@@ -180,6 +180,8 @@ public class Controller implements SearchRecipe, SearchDish, Login, SaveData, Da
 	public boolean clearBookings(DateOur input)
 	{
 		Object remKey;
+		if (!model.getBookingMap().containsKey(input))
+			return true;
 		if(!input.equals(model.getToday())) {
 			remKey = model.getBookingMap().remove(input);
 			writeBookings();
@@ -286,14 +288,14 @@ public class Controller implements SearchRecipe, SearchDish, Login, SaveData, Da
 		try
 		{
 			if (!input.contains(":")) //controllo il formato della stringa
-				throw new NumberFormatException("");
+				throw new Exception("");
 			
 			String[] inputSplit = input.split(":");
 			
 			if (inputSplit[0].isBlank())
-				throw new NumberFormatException(""); //nome non valido
+				throw new Exception(""); //nome non valido
 			if (inputSplit.length < 2)
-				throw new NumberFormatException("");
+				throw new Exception("");
 			
 			double quantity = Double.parseDouble(inputSplit[1]);
 			if(inputSplit[2].toLowerCase().contains("g"))
@@ -325,14 +327,14 @@ public class Controller implements SearchRecipe, SearchDish, Login, SaveData, Da
 		try
 		{
 			if (!input.contains(":")) //controllo il formato della stringa
-				throw new NumberFormatException("");
+				throw new Exception("");
 			
 			String[] inputSplit = input.split(":");
 			
 			if (inputSplit.length < 2) //controllo il formato della stringa
-				throw new NumberFormatException("");
+				throw new Exception("");
 			if (inputSplit[0].isBlank()) //controllo la validità del nome
-				throw new NumberFormatException("");
+				throw new Exception("");
 			double quantity = Double.parseDouble(inputSplit[1]);
 			quantity = checkUnitExtraFoods(inputSplit[2],quantity);
 			if (quantity <= 0) //controllo che la quantità sia > 0
