@@ -470,7 +470,7 @@ public class Controller implements SearchRecipe, SearchDish, Login, SaveData, Da
 		try
 		{
 			if (inputName.isBlank()) //controllo validità del nome
-				throw new RuntimeException("");
+				throw new NumberFormatException();
 			
 			if (!perm) // se non è permanente controllo le date
 			{
@@ -521,6 +521,9 @@ public class Controller implements SearchRecipe, SearchDish, Login, SaveData, Da
 		}
 		catch (RuntimeException e)
 		{
+			erSet.errorSetter(INVALID_DATE);
+		}catch (Exception e)
+		{
 			erSet.errorSetter(INVALID_FORMAT);
 		}
 	}
@@ -533,7 +536,7 @@ public class Controller implements SearchRecipe, SearchDish, Login, SaveData, Da
 		try
 		{
 			if (inputName.isBlank()) //controllo validità del nome
-				throw new RuntimeException("");
+				throw new NumberFormatException();
 			
 			String[] inputList = inputs.split("\n");
 			
@@ -605,6 +608,9 @@ public class Controller implements SearchRecipe, SearchDish, Login, SaveData, Da
 			}
 		}
 		catch (RuntimeException e)
+		{
+			erSet.errorSetter(INVALID_DATE);
+		}catch (Exception e)
 		{
 			erSet.errorSetter(INSUFFICENT_DISH);
 		}

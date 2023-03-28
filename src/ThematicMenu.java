@@ -11,7 +11,7 @@ public class ThematicMenu implements ConvertToString
 	private final boolean permanent; //true se permanente
 	private double workThematicMenuLoad; //workLoad del menu
 	
-	public ThematicMenu(String name, String startPeriod, String endPeriod, Set<Dish> dishes, boolean seasonal, boolean permanent)
+	public ThematicMenu(String name, String startPeriod, String endPeriod, Set<Dish> dishes, boolean seasonal, boolean permanent) throws  RuntimeException
 	{
 		this.name = name;
 		String[] startPezzi = startPeriod.split("/");
@@ -22,6 +22,14 @@ public class ThematicMenu implements ConvertToString
 		calcWorkThematicMenuLoad(); //calcola in automatico il workThematicMenuLoad
 		this.seasonal=seasonal;
 		this.permanent=permanent;
+		
+		if(!permanent)
+			if(this.startPeriod.equals(this.endPeriod)) //se le date sono uguali lancio un errore
+				throw new RuntimeException();
+		
+		if(!seasonal && !permanent)
+			if(this.startPeriod.getDate().after(this.endPeriod.getDate())) //se le date sono al contrario lancio un errore
+				throw new RuntimeException();
 	}
 	
 	public String getName()

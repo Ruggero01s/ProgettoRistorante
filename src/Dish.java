@@ -9,7 +9,7 @@ public class Dish implements ConvertToString
     private final boolean seasonal;// se un piatto è stagionale o no
     private final boolean permanent; // se un piatto è permanente o no
 
-    public Dish(String name, Recipe recipe, String startPeriod, String endPeriod, boolean seasonal, boolean permanent)
+    public Dish(String name, Recipe recipe, String startPeriod, String endPeriod, boolean seasonal, boolean permanent) throws RuntimeException
     {
         this.name = name;
 
@@ -21,8 +21,16 @@ public class Dish implements ConvertToString
         this.recipe = recipe;
         this.seasonal = seasonal;
         this.permanent = permanent;
+    
+        if(!permanent)
+            if(this.startPeriod.equals(this.endPeriod)) //se le date sono uguali lancio un errore
+                throw new RuntimeException();
+        
+        if(!seasonal && !permanent)
+            if(this.startPeriod.getDate().after(this.endPeriod.getDate())) //se le date sono al contrario lancio un errore
+                throw new RuntimeException();
     }
-
+    
     public String getName() {
         return name;
     }
