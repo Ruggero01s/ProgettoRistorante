@@ -1458,7 +1458,7 @@ public class SimpleUI extends JFrame implements ErrorSetter, GUI
             case 11 -> JOptionPane.showMessageDialog(getContentPane(), "Quantità di un elemento non valida", "Err", JOptionPane.ERROR_MESSAGE);
             case 12 -> JOptionPane.showMessageDialog(getContentPane(), "Menù o piatto non disponibile in questa data", "Err", JOptionPane.ERROR_MESSAGE);
             case 13 -> JOptionPane.showMessageDialog(getContentPane(), "Nome già in uso", "Err", JOptionPane.ERROR_MESSAGE);
-            case 14 -> JOptionPane.showMessageDialog(getContentPane(), "Surplus troppo grande, max 10%", "Err", JOptionPane.ERROR_MESSAGE);
+            case 14 -> JOptionPane.showMessageDialog(getContentPane(), "Surplus errato, max 10%, min 0", "Err", JOptionPane.ERROR_MESSAGE);
             case 15 -> JOptionPane.showMessageDialog(getContentPane(), "Ingrediente non trovato", "Err", JOptionPane.ERROR_MESSAGE);
             case 16 -> JOptionPane.showMessageDialog(getContentPane(), "Quantità non valida", "Err", JOptionPane.ERROR_MESSAGE);
             case 17 -> JOptionPane.showMessageDialog(getContentPane(), "Non è possibile prenotare per questa data", "Err", JOptionPane.ERROR_MESSAGE);
@@ -1471,6 +1471,7 @@ public class SimpleUI extends JFrame implements ErrorSetter, GUI
             case 24 -> JOptionPane.showMessageDialog(getContentPane(), "L'input è vuoto", "Err", JOptionPane.ERROR_MESSAGE);
             case 25 -> JOptionPane.showMessageDialog(getContentPane(), "Unità di misura errata", "Err", JOptionPane.ERROR_MESSAGE);
             case 26 -> JOptionPane.showMessageDialog(getContentPane(), "Capacità o Workload troppo bassi per le prenotazioni salvate", "Err", JOptionPane.ERROR_MESSAGE);
+            case 27 -> JOptionPane.showMessageDialog(getContentPane(), "Ingrediente doppio", "Err", JOptionPane.ERROR_MESSAGE);
             default -> JOptionPane.showMessageDialog(getContentPane(), "Errore", "Err", JOptionPane.ERROR_MESSAGE);
         }
         getContentPane().repaint();

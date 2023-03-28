@@ -24,7 +24,7 @@ public class Controller implements SearchRecipe, SearchDish, Login, SaveData, Da
 	public static final int NO_QUANTITY = 11;
 	public static final int OUT_OF_DATE = 12;
 	public static final int EXISTING_NAME = 13;
-	public static final int SURPLUS_TOO_GREAT = 14;
+	public static final int WRONG_SURPLUS = 14;
 	public static final int NO_INGREDIENT = 15;
 	public static final int INVALID_QUANTITY = 16;
 	public static final int NOT_TODAY = 17;
@@ -37,6 +37,7 @@ public class Controller implements SearchRecipe, SearchDish, Login, SaveData, Da
 	public static final int EMPTY_INPUT = 24;
 	public static final int WRONG_UNIT = 25;
 	public static final int TOO_LOW_CONFIG = 26;
+	public static final int DOUBLE_INGREDIENT = 27;
 
 	/**
 	 * Metodo d'inizializzazione
@@ -226,8 +227,8 @@ public class Controller implements SearchRecipe, SearchDish, Login, SaveData, Da
 					DateOur today = inputToDate(todayString);
 					if (capacity <= 0 || workload <= 0) //check parametri numerici
 						erSet.errorSetter(MIN_ZERO);
-					else if (percent > 10)
-						erSet.errorSetter(SURPLUS_TOO_GREAT);
+					else if (percent > 10 || percent<0)
+						erSet.errorSetter(WRONG_SURPLUS);
 					else
 					{
 						//salvo tutti i dati e aggiorno la GUI
@@ -241,7 +242,6 @@ public class Controller implements SearchRecipe, SearchDish, Login, SaveData, Da
 			}
 			else
 				erSet.errorSetter(TOO_LOW_CONFIG);
-				
 			updateConfig();
 		}
 		catch (NumberFormatException e)
@@ -387,12 +387,16 @@ public class Controller implements SearchRecipe, SearchDish, Login, SaveData, Da
 					err = true;
 					break;
 				}
-
+				//converto tutti in g o L
 				if (words[2].toLowerCase().contains("g"))
 					unit = "g";
 				else
 					unit = "L";
-				ingredientQuantitySet.add(new Ingredient(words[0].toLowerCase(), unit, quantity)); //converto tutti in g o L
+				if(!ingredientQuantitySet.add(new Ingredient(words[0].toLowerCase(), unit, quantity)))
+				{
+					erSet.errorSetter(DOUBLE_INGREDIENT);
+					throw new Exception("");
+				}
 			}
 			
 			int portions = Integer.parseInt(inputPortions);
@@ -413,6 +417,10 @@ public class Controller implements SearchRecipe, SearchDish, Login, SaveData, Da
 		catch (RuntimeException e)
 		{
 			erSet.errorSetter(INVALID_FORMAT);
+		}
+		catch (Exception e)
+		{
+			erSet.errorSetter(DOUBLE_INGREDIENT);
 		}
 	}
 	
