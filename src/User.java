@@ -9,7 +9,7 @@ public class User
     private final boolean manager;
     private final boolean employee;
     private final boolean storageWorker;
-    private String name;
+    private final String name;
     private String password;
     
     public User(String name, String password, boolean manager, boolean employee, boolean storageWorker)
@@ -40,10 +40,6 @@ public class User
     
     public String getName() {
         return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
     }
     
     /**
