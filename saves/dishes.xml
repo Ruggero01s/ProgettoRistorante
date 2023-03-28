@@ -10,6 +10,8 @@
 		<recipe id="polpette"></recipe></dish>
 	<dish name="Cotoletta alla Milanese" startDate="02/03/2023" endDate="31/07/2023" seasonal="true" permanent="false">
 		<recipe id="Cotoletta inpannata"></recipe></dish>
+	<dish name="Ragu di carne" startDate="01/01/1444" endDate="31/12/1444" seasonal="false" permanent="true">
+		<recipe id="ragù"></recipe></dish>
 	<dish name="Pasta Tonnata" startDate="01/01/1444" endDate="31/12/1444" seasonal="false" permanent="true">
 		<recipe id="pastaTonno"></recipe></dish>
 </dishes>

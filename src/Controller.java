@@ -293,6 +293,8 @@ public class Controller implements SearchRecipe, SearchDish, Login, SaveData, Da
 				throw new NumberFormatException("");
 			
 			double quantity = Double.parseDouble(inputSplit[1]);
+			if(inputSplit[2].toLowerCase().contains("g"))
+				throw new RuntimeException("");
 			quantity = checkUnit(inputSplit[2], quantity); //conversione dell'unità
 			if (quantity <= 0) //quantità non valida
 				erSet.errorSetter(MIN_ZERO);
@@ -390,7 +392,7 @@ public class Controller implements SearchRecipe, SearchDish, Login, SaveData, Da
 					unit = "g";
 				else
 					unit = "L";
-				ingredientQuantitySet.add(new Ingredient(words[0], unit, quantity)); //converto tutti in g o L
+				ingredientQuantitySet.add(new Ingredient(words[0].toLowerCase(), unit, quantity)); //converto tutti in g o L
 			}
 			
 			int portions = Integer.parseInt(inputPortions);
@@ -489,12 +491,12 @@ public class Controller implements SearchRecipe, SearchDish, Login, SaveData, Da
 			boolean valid = true;
 			for (Recipe r : model.getRecipesSet())
 			{
-				if (r.getId().equals(inputRecipe))
+				if (r.getId().equalsIgnoreCase(inputRecipe))
 				{
 					Dish temp = new Dish(inputName, r, inputStartDate, inputEndDate, seasonal, perm);
 					for (ThematicMenu thematicMenu: model.getThematicMenusSet())
 					{
-						if (thematicMenu.getName().equals(temp.getName())) //controllo che non esistano un piatto ed un menu con lo stesso nome
+						if (thematicMenu.getName().equalsIgnoreCase(temp.getName())) //controllo che non esistano un piatto ed un menu con lo stesso nome
 						{
 							valid = false;
 							break;
@@ -563,7 +565,7 @@ public class Controller implements SearchRecipe, SearchDish, Login, SaveData, Da
 				{
 					for (Dish d : model.getDishesSet())
 					{
-						if (d.getName().equals(s))
+						if (d.getName().equalsIgnoreCase(s))
 						{
 							dishesForMenu.add(d); //aggiungo i piatti al menu
 							found = true;
@@ -584,7 +586,7 @@ public class Controller implements SearchRecipe, SearchDish, Login, SaveData, Da
 					boolean valid = true;
 					for (Dish dish : model.getDishesSet())
 					{
-						if (dish.getName().equals(temp.getName())) //controllo che non esistano un piatto ed un menu con lo stesso nome
+						if (dish.getName().equalsIgnoreCase(temp.getName())) //controllo che non esistano un piatto ed un menu con lo stesso nome
 						{
 							valid = false;
 							break;
@@ -651,7 +653,7 @@ public class Controller implements SearchRecipe, SearchDish, Login, SaveData, Da
 	{
 		for (Dish dish : model.getDishesSet())
 		{
-			if (dish.getName().equals(name))
+			if (dish.getName().equalsIgnoreCase(name))
 				return dish;
 		}
 		return null;
@@ -666,7 +668,7 @@ public class Controller implements SearchRecipe, SearchDish, Login, SaveData, Da
 	{
 		for (Recipe recipe : model.getRecipesSet())
 		{
-			if (recipe.getId().equals(name))
+			if (recipe.getId().equalsIgnoreCase(name))
 				return recipe;
 		}
 		return null;
@@ -734,7 +736,7 @@ public class Controller implements SearchRecipe, SearchDish, Login, SaveData, Da
 		StringBuilder out = new StringBuilder();
 		for (ThematicMenu menu : model.getThematicMenusSet())
 		{
-			if (menu.getName().equals(menuName))
+			if (menu.getName().equalsIgnoreCase(menuName))
 			{
 				out.append(menuName).append(" w.").append(menu.getWorkThematicMenuLoad()).append("\n");
 				for (Dish d : menu.getDishes())
@@ -812,7 +814,7 @@ public class Controller implements SearchRecipe, SearchDish, Login, SaveData, Da
 				}
 				for (ThematicMenu menu : model.getThematicMenusSet()) //cerca se il nome scritto è tra i menu tematici
 				{
-					if (name.equals(menu.getName()))
+					if (name.equalsIgnoreCase(menu.getName()))
 					{
 						if (menu.isValid(date)) //controllo della data di disponibilità
 						{
@@ -839,7 +841,7 @@ public class Controller implements SearchRecipe, SearchDish, Login, SaveData, Da
 				{
 					for (Dish dish : model.getDishesSet())
 					{
-						if (name.equals(dish.getName()))
+						if (name.equalsIgnoreCase(dish.getName()))
 						{
 							if (dish.isValid(date))
 							{
