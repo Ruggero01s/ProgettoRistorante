@@ -52,7 +52,7 @@ public class Ingredient implements ConvertToString
 			return false;
 		
 		Ingredient ingredient = (Ingredient) obj;
-		return this.name.equals(ingredient.getName());
+		return this.name.equalsIgnoreCase(ingredient.getName());
 	}
 	
 	/**

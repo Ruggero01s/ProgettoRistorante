@@ -28,7 +28,7 @@ public class Controller implements SearchRecipe, SearchDish, Login, SaveData, Da
 	public static final int NO_INGREDIENT = 15;
 	public static final int INVALID_QUANTITY = 16;
 	public static final int NOT_TODAY = 17;
-	public static final int WORKLOAD_TOO_HIGHT = 18;
+	public static final int WORKLOAD_TOO_HIGH = 18;
 	public static final int ORDER_FOR_TOO_LITTLE = 19;
 	public static final int INVALID_PASSWORD = 20;
 	public static final int INVALID_USERNAME = 21;
@@ -283,29 +283,33 @@ public class Controller implements SearchRecipe, SearchDish, Login, SaveData, Da
 		try
 		{
 			if (!input.contains(":")) //controllo il formato della stringa
-				throw new RuntimeException("");
+				throw new NumberFormatException("");
 			
 			String[] inputSplit = input.split(":");
 			
 			if (inputSplit[0].isBlank())
-				throw new RuntimeException(""); //nome non valido
+				throw new NumberFormatException(""); //nome non valido
 			if (inputSplit.length < 2)
-				throw new RuntimeException("");
+				throw new NumberFormatException("");
 			
 			double quantity = Double.parseDouble(inputSplit[1]);
-			
+			quantity = checkUnit(inputSplit[2], quantity); //conversione dell'unità
 			if (quantity <= 0) //quantità non valida
 				erSet.errorSetter(MIN_ZERO);
-			else
-			{
-				model.getDrinksMap().put(inputSplit[0], quantity);
+			else {
+				model.getDrinksMap().put(inputSplit[0].toLowerCase(), quantity);
 				updateDrinkList();
 			}
 		}
 		catch (RuntimeException e)
 		{
+			erSet.errorSetter(WRONG_UNIT);
+		}
+		catch (Exception e)
+		{
 			erSet.errorSetter(INVALID_FORMAT);
 		}
+
 	}
 	
 	/**
@@ -316,25 +320,29 @@ public class Controller implements SearchRecipe, SearchDish, Login, SaveData, Da
 		try
 		{
 			if (!input.contains(":")) //controllo il formato della stringa
-				throw new RuntimeException("");
+				throw new NumberFormatException("");
 			
 			String[] inputSplit = input.split(":");
 			
 			if (inputSplit.length < 2) //controllo il formato della stringa
-				throw new RuntimeException("");
+				throw new NumberFormatException("");
 			if (inputSplit[0].isBlank()) //controllo la validità del nome
-				throw new RuntimeException("");
+				throw new NumberFormatException("");
 			double quantity = Double.parseDouble(inputSplit[1]);
-			
+			quantity = checkUnitExtraFoods(inputSplit[2],quantity);
 			if (quantity <= 0) //controllo che la quantità sia > 0
 				erSet.errorSetter(MIN_ZERO);
 			else
 			{
-				model.getExtraFoodsMap().put(inputSplit[0], quantity);
+				model.getExtraFoodsMap().put(inputSplit[0].toLowerCase(), quantity);
 				updateFoodList();
 			}
 		}
 		catch (RuntimeException e)
+		{
+			erSet.errorSetter(WRONG_UNIT);
+		}
+		catch (Exception e)
 		{
 			erSet.errorSetter(INVALID_FORMAT);
 		}
@@ -354,6 +362,7 @@ public class Controller implements SearchRecipe, SearchDish, Login, SaveData, Da
 				throw new RuntimeException("");
 			
 			boolean err = false;
+			double quantity;
 			for (String line : lines)
 			{
 				if (!line.contains(":")) //controllo validità della stringa
@@ -367,16 +376,16 @@ public class Controller implements SearchRecipe, SearchDish, Login, SaveData, Da
 				if (words.length < 3) //controllo lunghezza stringa
 					throw new RuntimeException("");
 				
-				double quantity = Double.parseDouble(words[1]);
+				quantity = Double.parseDouble(words[1]);
 				quantity = checkUnit(words[2], quantity);
 				String unit;
-				
+
 				if (quantity <= 0) //controllo che la quantità sia > 0
 				{
 					err = true;
 					break;
 				}
-				
+
 				if (words[2].toLowerCase().contains("g"))
 					unit = "g";
 				else
@@ -386,19 +395,17 @@ public class Controller implements SearchRecipe, SearchDish, Login, SaveData, Da
 			
 			int portions = Integer.parseInt(inputPortions);
 			double workLoad = Double.parseDouble(inputWorkload);
-			if (workLoad >= model.getWorkPersonLoad())
-				erSet.errorSetter(WORKLOAD_TOO_HIGHT);
-			
-			if (portions <= 0 || workLoad <= 0 || err)
-				erSet.errorSetter(MIN_ZERO);
-			else
-			{
-				if (model.getRecipesSet().add(new Recipe(inputName, ingredientQuantitySet, portions, workLoad)))
-				{
-					gui.updateRecipes(convertToStringVector(model.getRecipeSetConverted()));
+			if (workLoad >= model.getWorkPersonLoad()) //se il workload è impossibilmente alto da soddisfare
+				erSet.errorSetter(WORKLOAD_TOO_HIGH);
+			else {
+				if (portions <= 0 || workLoad <= 0 || err)
+					erSet.errorSetter(MIN_ZERO);
+				else {
+					if (model.getRecipesSet().add(new Recipe(inputName, ingredientQuantitySet, portions, workLoad))) {
+						gui.updateRecipes(convertToStringVector(model.getRecipeSetConverted()));
+					} else
+						erSet.errorSetter(EXISTING_NAME);
 				}
-				else
-					erSet.errorSetter(EXISTING_NAME);
 			}
 		}
 		catch (RuntimeException e)

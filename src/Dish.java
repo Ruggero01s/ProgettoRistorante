@@ -60,7 +60,7 @@ public class Dish implements ConvertToString
 
         Dish dish = (Dish) obj;
 
-        return this.name.equals(dish.getName());
+        return this.name.equalsIgnoreCase(dish.getName());
     }
 
     @Override
@@ -98,7 +98,7 @@ public class Dish implements ConvertToString
         else if(seasonal) {
             String startDate = startPeriod.getDate().get(Calendar.DAY_OF_MONTH) +"/"+ (startPeriod.getDate().get(Calendar.MONTH)+1);
             String endDate = endPeriod.getDate().get(Calendar.DAY_OF_MONTH) +"/"+ (endPeriod.getDate().get(Calendar.MONTH)+1);
-            return this.name+" - ["+startDate+" || "+endDate+" ] - [SEAS] - ("+this.recipe.getId()+")";
-        }else return this.name+" - ["+this.startPeriod.getStringDate()+" || "+this.endPeriod.getStringDate()+" ] - ("+this.recipe.getId()+")";
+            return this.name+" - ["+startDate+" || "+endDate+"] - [SEAS] - ("+this.recipe.getId()+")";
+        }else return this.name+" - ["+this.startPeriod.getStringDate()+" || "+this.endPeriod.getStringDate()+"] - ("+this.recipe.getId()+")";
     }
 }

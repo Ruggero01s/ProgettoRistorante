@@ -1075,13 +1075,20 @@ public class SimpleUI extends JFrame implements ErrorSetter, GUI
         empNewBookingPanel.add(empNewBookSend, c);
         empNewBookSend.addActionListener(e ->  //salva i dati della booking tramite l'interfaccia
         {
-            if(saver.saveBooking(empNewBookNameInput.getText().trim(),empNewBookDateInput.getText().trim(),Integer.parseInt(empNewBookNumInput.getText().trim()),empNewBookOrderInput.getText().trim()))
-            {
-                empNewBookNameInput.setText("");
-                empNewBookDateInput.setText("");
-                empNewBookNumInput.setText("");
-                empNewBookOrderInput.setText("");
+            try {
+                int num = Integer.parseInt(empNewBookNumInput.getText().trim());
+                if(saver.saveBooking(empNewBookNameInput.getText().trim(),empNewBookDateInput.getText().trim(),num,empNewBookOrderInput.getText().trim()))
+                {
+                    empNewBookNameInput.setText("");
+                    empNewBookDateInput.setText("");
+                    empNewBookNumInput.setText("");
+                    empNewBookOrderInput.setText("");
+                }
             }
+           catch (NumberFormatException exc)
+           {
+               errorSetter(1);
+           }
         });
 
         c.gridx = 0;

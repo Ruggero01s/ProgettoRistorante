@@ -80,7 +80,7 @@ public class ThematicMenu implements ConvertToString
 
 		ThematicMenu menu = (ThematicMenu) obj;
 
-		return this.name.equals(menu.getName());
+		return this.name.equalsIgnoreCase(menu.getName());
 	}
 
 	@Override
@@ -118,8 +118,8 @@ public class ThematicMenu implements ConvertToString
 		else if(seasonal) {
 			String startDate = startPeriod.getDate().get(Calendar.DAY_OF_MONTH) + "/" + (startPeriod.getDate().get(Calendar.MONTH)+1);
 			String endDate = endPeriod.getDate().get(Calendar.DAY_OF_MONTH) +"/"+ (endPeriod.getDate().get(Calendar.MONTH)+1);
-			s = this.name+" - ["+startDate+" || "+endDate+" ] - [SEAS] - (";
-		}else s = this.name+" - ["+this.startPeriod.getStringDate()+" || "+this.endPeriod.getStringDate()+" ] - (";
+			s = this.name+" - ["+startDate+" || "+endDate+"] - [SEAS] - (";
+		}else s = this.name+" - ["+this.startPeriod.getStringDate()+" || "+this.endPeriod.getStringDate()+"] - (";
 		StringBuilder out = new StringBuilder(s);
 		for (Dish dish:this.dishes)
 			out.append(dish.getName()).append(", ");

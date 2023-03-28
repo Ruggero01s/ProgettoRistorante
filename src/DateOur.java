@@ -1,6 +1,7 @@
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
+import java.util.Date;
 
 public class DateOur
 {
@@ -14,7 +15,8 @@ public class DateOur
 	public DateOur(String day, String month, String year)
 	{
 		SimpleDateFormat format = new SimpleDateFormat("dd/MM/yyyy");
-		java.util.Date dateFormat;
+		format.setLenient(false);
+		Date dateFormat;
 		try
 		{
 			dateFormat = format.parse(day.concat("/".concat(month).concat("/").concat(year)));

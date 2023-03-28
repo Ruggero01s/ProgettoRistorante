@@ -45,7 +45,7 @@ public class  Recipe implements ConvertToString
             return false;
 
         Recipe recipe = (Recipe) obj;
-        return this.id.equals((recipe.id));
+        return this.id.equalsIgnoreCase((recipe.id));
     }
 
     @Override
