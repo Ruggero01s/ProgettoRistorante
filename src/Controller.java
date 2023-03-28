@@ -123,12 +123,12 @@ public class Controller implements SearchRecipe, SearchDish, Login, SaveData, Da
 		model.getDrinksMap().clear();
 		writer.writeDrinks(model.getDrinksMap());
 		updateDrinkList();
-		
+
 		//clear dei  foods
 		model.getExtraFoodsMap().clear();
 		writer.writeExtraFoods(model.getExtraFoodsMap());
 		updateFoodList();
-		
+
 		//clear dei config
 		model.setCapacity(0);
 		model.setWorkPersonLoad(0);
@@ -137,18 +137,18 @@ public class Controller implements SearchRecipe, SearchDish, Login, SaveData, Da
 		writer.writeConfigBase(model.getCapacity(), model.getWorkPersonLoad(), model.getToday(), model.getIncrement());
 		String[] data = {"0", "0", "0", "01/01/1444", "5"};
 		gui.updateConfig(List.of(data));
-		
+
 		//clear delle recipe
 		model.getRecipesSet().clear();
 		writer.writeRecipes(model.getRecipesSet());
 		gui.updateRecipes(convertToStringVector(model.getRecipeSetConverted()));
-		
+
 		//clear dei dish
 		model.getDishesSet().clear();
 		writer.writeDishes(model.getDishesSet());
 		gui.updateDishes(convertToStringVector(model.getDishesSetConverted()));
 		menuCartaToday();
-		
+
 		//clear dei menu
 		model.getThematicMenusSet().clear();
 		writer.writeThematicMenu(model.getThematicMenusSet());
@@ -162,13 +162,15 @@ public class Controller implements SearchRecipe, SearchDish, Login, SaveData, Da
 		//clear del magazzino
 		model.getRegistroBeforeMeal().clear();
 		writeRegister();
-		
+		gui.updateWare("","");
+
 		//clear degli user
 		model.getUsers().clear();
 		writer.writePeople(model.getUsers());
+		gui.logout();
 	}
-	
-	
+
+
 	/**
 	 * Cancella le prenotazioni in uno specifico giorno
 	 * @param input giorno in cui annullare le prenotazioni

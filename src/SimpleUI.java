@@ -1421,6 +1421,12 @@ public class SimpleUI extends JFrame implements ErrorSetter, GUI
     {
         cfgResDatiMenuOut.setText(menu);
     }
+
+    public void logout()
+    {
+        state = State.PASSWORD;
+        updateUI();
+    }
     
     
     /**

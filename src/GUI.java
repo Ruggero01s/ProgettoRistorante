@@ -18,4 +18,5 @@ public interface GUI
 		void updateBooking (String name, String number, String work, String capacity, String workload);
 		void updateBookedDates(String dates);
 		void selectedMenu(String toString);
+		void logout();
 }
