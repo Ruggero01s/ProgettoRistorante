@@ -1,8 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <bookings>
-	<booking date="02/06/2023">
-		<book name="test1" number="1" workload="1">
-			<order dish="Pepperoni" quantity="1"></order></book></booking>
 	<booking date="05/06/2023">
 		<book name="test2" number="1" workload="1">
 			<order dish="Pepperoni" quantity="1"></order></book></booking>

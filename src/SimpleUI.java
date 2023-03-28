@@ -1026,6 +1026,7 @@ public class SimpleUI extends JFrame implements ErrorSetter, GUI
                 {
                     if(dataManager.clearBookings(dataManager.inputToDate(empSeeBookDateInput.getText())))
                         empSeeBookDateInput.setText("");
+                    else errorSetter(28);
                 }
         );
         c.gridx = 2;
@@ -1472,6 +1473,7 @@ public class SimpleUI extends JFrame implements ErrorSetter, GUI
             case 25 -> JOptionPane.showMessageDialog(getContentPane(), "Unità di misura errata", "Err", JOptionPane.ERROR_MESSAGE);
             case 26 -> JOptionPane.showMessageDialog(getContentPane(), "Capacità o Workload troppo bassi per le prenotazioni salvate", "Err", JOptionPane.ERROR_MESSAGE);
             case 27 -> JOptionPane.showMessageDialog(getContentPane(), "Ingrediente doppio", "Err", JOptionPane.ERROR_MESSAGE);
+            case 28 -> JOptionPane.showMessageDialog(getContentPane(), "Data non cancellabile", "Err", JOptionPane.ERROR_MESSAGE);
             default -> JOptionPane.showMessageDialog(getContentPane(), "Errore", "Err", JOptionPane.ERROR_MESSAGE);
         }
         getContentPane().repaint();

@@ -179,9 +179,12 @@ public class Controller implements SearchRecipe, SearchDish, Login, SaveData, Da
 	 */
 	public boolean clearBookings(DateOur input)
 	{
-		Object obj = model.getBookingMap().remove(input);
-		writeBookings();
-		return !(obj == null);
+		Object remKey;
+		if(!input.equals(model.getToday())) {
+			remKey = model.getBookingMap().remove(input);
+			writeBookings();
+			return !(remKey == null);
+		} else return false;
 	}
 	
 	/**
