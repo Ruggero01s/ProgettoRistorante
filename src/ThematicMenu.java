@@ -6,7 +6,7 @@ public class ThematicMenu implements ConvertToString
 	private final String name; //nome del menu tematico
 	private final DateOur startPeriod; //inizio periodo di validità
 	private final DateOur endPeriod; //fine periodo di validità
-	private Set <Dish> dishes; //elenco dei piatti contenuti nel menu
+	private final Set <Dish> dishes; //elenco dei piatti contenuti nel menu
 	private final boolean seasonal; //true se stagionale
 	private final boolean permanent; //true se permanente
 	private double workThematicMenuLoad; //workLoad del menu

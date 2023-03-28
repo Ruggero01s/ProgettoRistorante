@@ -1,9 +1,10 @@
-import java.text.*;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.Calendar;
 
 public class DateOur
 {
-	private Calendar date = Calendar.getInstance();
+	private final Calendar date = Calendar.getInstance();
 	
 	public Calendar getDate()
 	{

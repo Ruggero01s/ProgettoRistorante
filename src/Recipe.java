@@ -1,9 +1,10 @@
-import java.util.*;
+import java.util.HashSet;
+import java.util.Set;
 
 public class  Recipe implements ConvertToString
 {
     private final String id; //nome della ricetta
-    private Set<Ingredient> ingredients; //elenco d'ingredienti
+    private final Set<Ingredient> ingredients; //elenco d'ingredienti
     private final int portions; //numero di porzioni
     private final double workLoadPortion; //workload della ricetta per porzione
 
