@@ -5,7 +5,7 @@ public class Booking
     private final String name; //nome della prenotazione
     private final int number; //coperti della prenotazione
     private final int workload; //workload totale
-    private Map<Dish,Integer> order; //insieme dei piatti ordinati con la relativa quantità
+    private final Map<Dish,Integer> order; //insieme dei piatti ordinati con la relativa quantità
 
 
     public Booking(String name, int number, int workload, Map<Dish, Integer> order) {
