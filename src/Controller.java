@@ -123,12 +123,10 @@ public class Controller implements SearchRecipe, SearchDish, Login, SaveData, Da
 	{
 		//clear dei drinks
 		model.getDrinksMap().clear();
-		writer.writeDrinks(model.getDrinksMap());
 		updateDrinkList();
 
 		//clear dei  foods
 		model.getExtraFoodsMap().clear();
-		writer.writeExtraFoods(model.getExtraFoodsMap());
 		updateFoodList();
 
 		//clear dei config
@@ -136,40 +134,48 @@ public class Controller implements SearchRecipe, SearchDish, Login, SaveData, Da
 		model.setWorkPersonLoad(0);
 		model.setIncrement(5);
 		model.setToday(new DateOur("01", "01", "1444"));
-		writer.writeConfigBase(model.getCapacity(), model.getWorkPersonLoad(), model.getToday(), model.getIncrement());
+
 		String[] data = {"0", "0", "0", "01/01/1444", "5"};
 		gui.updateConfig(List.of(data));
 
 		//clear delle recipe
 		model.getRecipesSet().clear();
-		writer.writeRecipes(model.getRecipesSet());
+
 		gui.updateRecipes(convertToStringVector(model.getRecipeSetConverted()));
 
 		//clear dei dish
 		model.getDishesSet().clear();
-		writer.writeDishes(model.getDishesSet());
+
 		gui.updateDishes(convertToStringVector(model.getDishesSetConverted()));
 		menuCartaToday();
 
 		//clear dei menu
 		model.getThematicMenusSet().clear();
-		writer.writeThematicMenu(model.getThematicMenusSet());
+
 		gui.updateMenus(convertToString(model.getThematicMenuSetConverted()));
 		gui.updateMenuBoxes(makeMenuList());
 		
 		//clear delle prenotazioni
 		model.getBookingMap().clear();
-		writeBookings();
-		
+
 		//clear del magazzino
 		model.getRegistroBeforeMeal().clear();
-		writeRegister();
 		gui.updateWare("","");
 
 		//clear degli user
 		model.getUsers().clear();
-		writer.writePeople(model.getUsers());
+
 		gui.logout();
+
+		boolean ok;
+		ok = writer.writePeople(model.getUsers());
+		ok = ok && writeManager();
+		ok = ok && writeBookings();
+		ok = ok && writeRegister();
+		if(ok)
+			gui.confirmClear();
+		else
+			erSet.errorSetter(ERROR_IN_WRITING);
 	}
 
 	/**
@@ -633,16 +639,16 @@ public class Controller implements SearchRecipe, SearchDish, Login, SaveData, Da
 	
 	/**
 	 * Controllo se una data è valida
-	 * @param s data da controllare
+	 * @param date data da controllare
 	 * @return true se valida, false altrimenti
 	 */
-	public static boolean checkDate (String s)
+	public boolean checkDate (String date)
 	{
-		if (s.isBlank()) //se è vuota non è valida
+		if (date.isBlank()) //se è vuota non è valida
 			return false;
-		if (!s.contains("/")) //se non contiene / non è valida
+		if (!date.contains("/")) //se non contiene / non è valida
 			return false;
-		String[] pezzi = s.split("/");
+		String[] pezzi = date.split("/");
 		if (pezzi.length < 3) //se non ha 3 elementi non è valida
 			return false;
 		if (Integer.parseInt(pezzi[2]) <= 0) //se anno minore di 0 errore
@@ -761,7 +767,16 @@ public class Controller implements SearchRecipe, SearchDish, Login, SaveData, Da
 		}
 		gui.selectedMenu(out.toString());
 	}
-	
+
+	/**
+	 * Salvo il magazzino
+	 * @return true se il salvataggio è riuscito, false altrimenti
+	 */
+	public boolean writeRegister()
+	{
+		return writer.writeRegister(model.getRegistroBeforeMeal());
+	}
+
 	/**
 	 * @return un array con un nome per ogni menu per indice
 	 */
@@ -929,7 +944,15 @@ public class Controller implements SearchRecipe, SearchDish, Login, SaveData, Da
 		else
 			erSet.errorSetter(NO_BOOKINGS); //non ci sono prenotazioni per quel giorno
 	}
-	
+
+	/**
+	 * Salvo le prenotazioni
+	 * @return true se il salvataggio è riuscito, false altrimenti
+	 */
+	public boolean writeBookings() {
+		return writer.writeBookings(model.getBookingMap());
+	}
+
 	/**
 	 * Metodo che crea una prenotazione dai dati in GUI
 	 * @param name        nome della prenotazione
@@ -953,7 +976,7 @@ public class Controller implements SearchRecipe, SearchDish, Login, SaveData, Da
 					{
 						for (Map.Entry<Dish, Integer> dish : order.entrySet())
 							workload += dish.getKey().getRecipe().getWorkLoadPortion() * dish.getValue(); //calcolo il workload di questo giorno
-						
+
 						return manageBooking(name, date, number, workload, order); //se la prenotazione viene salvata ritorno true
 					}
 					else
@@ -1027,21 +1050,6 @@ public class Controller implements SearchRecipe, SearchDish, Login, SaveData, Da
 		gui.updateBookedDates(out.toString().trim());
 	}
 
-	/**
-	 * Metodo che chiama il writer per le prenotazioni
-	 */
-	public void writeBookings ()
-	{
-		writer.writeBookings(model.getBookingMap());
-	}
-	
-	/**
-	 * Metodo che chiama il writer per il magazzino
-	 */
-	public void writeRegister ()
-	{
-		writer.writeRegister(model.getRegistroBeforeMeal());
-	}
 
 	/**
 	 * Metodo che converte set d'ingredienti in stringhe

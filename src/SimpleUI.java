@@ -115,18 +115,18 @@ public class SimpleUI extends JFrame implements ErrorSetter, GUI
 
     //------------------------------------------------------------------------------------------
     //CONFIG_DRINKS
-    private final JLabel cfgDrinksText = new JLabel("Inserisci dati bevanda: (nome : quantità (L))");
-    private final JLabel cfgDrinksTextOut = new JLabel("Elenco dati bevande: (nome : quantità (L))");
+    private final JLabel cfgDrinksText = new JLabel("Inserisci dati bevanda: (nome:quantità:unità): ");
+    private final JLabel cfgDrinksTextOut = new JLabel("Elenco dati bevande: (nome:quantità:unità): ");
     private final JTextArea cfgDrinksAreaOut = new JTextArea();
     private final JScrollPane cfgDrinksAreaScroll = new JScrollPane(cfgDrinksAreaOut);
     private final JButton cfgDrinksSendButton = new JButton("Inserisci");
     private final JTextArea cfgDrinksInput = new JTextArea();
     //------------------------------------------------------------------------------------------
     //CONFIG_EXTRAFOODS
-    private final JLabel cfgFoodText = new JLabel("Inserisci dati generi alimentari extra: (nome : quantità (Hg)");
+    private final JLabel cfgFoodText = new JLabel("Inserisci dati generi alimentari extra: (nome:quantità:unità): ");
     private final JButton cfgFoodSendButton = new JButton("Inserisci");
     private final JTextArea cfgFoodsInput = new JTextArea();
-    private final JLabel cfgFoodsTextOut = new JLabel("Elenco dati cibi extra: (nome : quantità (Hg))");
+    private final JLabel cfgFoodsTextOut = new JLabel("Elenco dati cibi extra: (nome:quantità:unità): ");
     private final JTextArea cfgFoodsAreaOut = new JTextArea();
     private final JScrollPane cfgFoodsAreaScroll = new JScrollPane(cfgFoodsAreaOut);
     //------------------------------------------------------------------------------------------
@@ -363,9 +363,12 @@ public class SimpleUI extends JFrame implements ErrorSetter, GUI
 
         //actionlistener che chiama i metodi dell'interfaccia per scrivere
         passWriteButton.addActionListener(e -> {
-            dataManager.writeManager();
-            dataManager.writeBookings();
-            dataManager.writeRegister();
+            boolean ok;
+            ok = dataManager.writeManager();
+            ok = ok && dataManager.writeBookings();
+            ok = ok && dataManager.writeRegister();
+            if (ok) confirmSave();
+            else errorSetter(Controller.ERROR_IN_WRITING); //errore in writer
         });
 
         passExitButton.addActionListener(e -> System.exit(1));
@@ -580,7 +583,10 @@ public class SimpleUI extends JFrame implements ErrorSetter, GUI
         cfgResMenuCartaOut.setEditable(false);
 
 
-        cfgWriteButton.addActionListener(e -> dataManager.writeManager());
+        cfgWriteButton.addActionListener(e -> {
+            if (dataManager.writeManager()) confirmSave();
+            else errorSetter(Controller.ERROR_IN_WRITING);
+        });
        //red button che azzera i dati
         cfgClearButton.addActionListener(e -> dataManager.clearInfo());
         cfgClearButton.setBackground(Color.RED);
@@ -653,7 +659,7 @@ public class SimpleUI extends JFrame implements ErrorSetter, GUI
         cfgDrinksFoodsPanel.add(cfgDrinksInput, c);
         c.gridx = 2;
         c.gridy = 0;
-        cfgDrinksSendButton.addActionListener(e -> saver.saveDrinks(cfgDrinksInput.getText()));       //actionlister manda i contenuti delle caselle al metodo dell'interfaccia
+        cfgDrinksSendButton.addActionListener(e -> saver.saveDrinks(cfgDrinksInput.getText())); //actionlister manda i contenuti delle caselle al metodo dell'interfaccia
         cfgDrinksFoodsPanel.add(cfgDrinksSendButton, c);
         c.gridx = 0;
         c.gridy = 1;
@@ -1007,7 +1013,7 @@ public class SimpleUI extends JFrame implements ErrorSetter, GUI
         empSeeBookingsPanel.add(empSeeBookSend, c);
         empSeeBookSend.addActionListener(e -> {
             String s = empSeeBookDateInput.getText().trim();
-            if (Controller.checkDate(s)) {
+            if (dataManager.checkDate(s)) {
                 dataManager.seeBookings(dataManager.inputToDate(s));
             } else {
                 errorSetter(Controller.INVALID_DATE);
@@ -1016,7 +1022,10 @@ public class SimpleUI extends JFrame implements ErrorSetter, GUI
         c.gridx = 2;
         c.gridy = 7;
         empSeeBookingsPanel.add(empSeeBookWrite, c);
-        empSeeBookWrite.addActionListener(e -> dataManager.writeBookings());
+        empSeeBookWrite.addActionListener(e -> {
+            if (dataManager.writeBookings()) confirmSave();
+            else errorSetter(Controller.ERROR_IN_WRITING);
+        });
 
         c.gridx = 1;
         c.gridy = 8;
@@ -1026,7 +1035,7 @@ public class SimpleUI extends JFrame implements ErrorSetter, GUI
                 {
                     if(dataManager.clearBookings(dataManager.inputToDate(empSeeBookDateInput.getText())))
                         empSeeBookDateInput.setText("");
-                    else errorSetter(28);
+                    else errorSetter(Controller.CANNOT_DELETE);
                 }
         );
         c.gridx = 2;
@@ -1076,20 +1085,13 @@ public class SimpleUI extends JFrame implements ErrorSetter, GUI
         empNewBookingPanel.add(empNewBookSend, c);
         empNewBookSend.addActionListener(e ->  //salva i dati della booking tramite l'interfaccia
         {
-            try {
-                int num = Integer.parseInt(empNewBookNumInput.getText().trim());
-                if(saver.saveBooking(empNewBookNameInput.getText().trim(),empNewBookDateInput.getText().trim(),num,empNewBookOrderInput.getText().trim()))
+            if(saver.saveBooking(empNewBookNameInput.getText().trim(),empNewBookDateInput.getText().trim(), empNewBookNumInput.getText().trim(), empNewBookOrderInput.getText().trim()))
                 {
                     empNewBookNameInput.setText("");
                     empNewBookDateInput.setText("");
                     empNewBookNumInput.setText("");
                     empNewBookOrderInput.setText("");
                 }
-            }
-           catch (NumberFormatException exc)
-           {
-               errorSetter(1);
-           }
         });
 
         c.gridx = 0;
@@ -1179,7 +1181,10 @@ public class SimpleUI extends JFrame implements ErrorSetter, GUI
         c.gridx = 1;
         c.gridy = 4;
         //fa scrivere il registro attuale tramite interfaccia
-        wareListSend.addActionListener(e-> dataManager.writeRegister());
+        wareListSend.addActionListener(e-> {
+            if (dataManager.writeRegister()) confirmSave();
+            else errorSetter(Controller.ERROR_IN_WRITING);
+        });
         wareListPanel.add(wareListSend, c);
 
         //RETURNLIST PANEL
@@ -1257,6 +1262,7 @@ public class SimpleUI extends JFrame implements ErrorSetter, GUI
      * @param drinks stringa con tutti i drink
      */
     public void updateDrinks(String drinks) {
+        cfgDrinksInput.setText("");
         cfgDrinksAreaOut.setText(drinks);
         cfgResDrinksOut.setText(drinks);
     }
@@ -1266,6 +1272,7 @@ public class SimpleUI extends JFrame implements ErrorSetter, GUI
      * @param foods stringa con tutti gli extraFoods
      */
     public void updateFoods(String foods) {
+        cfgFoodsInput.setText("");
         cfgResFoodsOut.setText(foods);
         cfgFoodsAreaOut.setText(foods);
     }

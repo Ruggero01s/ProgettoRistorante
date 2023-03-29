@@ -26,4 +26,5 @@ public interface DataManagement
 	boolean clearBookings(DateOur date);
 	
 	void clearBookings();
+	boolean checkDate(String date);
 }

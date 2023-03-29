@@ -18,12 +18,7 @@ public class Writer implements Write
 	public static final String BOOKINGS_NAME_FILE = "bookings.xml";
 	public static final String REGISTER_NAME_FILE = "register.xml";
 	
-	
-	private static final String SALUTO = "\nOutput generato correttamente, arrivederci";
-	private static final String ERRORE = "\nErrore nel writer: ";
-
-	
-	public void writePeople(Set<User> people)
+	public boolean writePeople(Set<User> people)
 	{
 		XMLOutputFactory xmlof;
 		XMLStreamWriter xmlw;
@@ -50,16 +45,15 @@ public class Writer implements Write
 			xmlw.writeEndDocument(); // scrittura della fine del documento
 			xmlw.flush(); // svuota il buffer e procede alla scrittura
 			xmlw.close(); // chiusura del documento e delle risorse impiegate
-			System.out.println(SALUTO);
+			return true;
 		}
 		catch (Exception e)
 		{
-			System.out.println(ERRORE);
-			System.out.println(e.getMessage());
+			return false;
 		}
 	}
 	
-	public void writeConfigBase(int capacity, int workPersonLoad, DateOur today, int increment)
+	public boolean writeConfigBase(int capacity, int workPersonLoad, DateOur today, int increment)
 	{
 		
 		XMLOutputFactory xmlof;
@@ -83,16 +77,15 @@ public class Writer implements Write
 			xmlw.writeEndDocument(); // scrittura della fine del documento
 			xmlw.flush(); // svuota il buffer e procede alla scrittura
 			xmlw.close(); // chiusura del documento e delle risorse impiegate
-			System.out.println(SALUTO);
+			return true;
 		}
 		catch (Exception e)
 		{
-			System.out.println(ERRORE);
-			System.out.println(e.getMessage());
+			return false;
 		}
 	}
 	
-	public void writeDrinks(Map<String, Double> drinks)
+	public boolean writeDrinks(Map<String, Double> drinks)
 	{
 		XMLOutputFactory xmlof;
 		XMLStreamWriter xmlw ;
@@ -117,16 +110,16 @@ public class Writer implements Write
 			xmlw.writeEndDocument(); // scrittura della fine del documento
 			xmlw.flush(); // svuota il buffer e procede alla scrittura
 			xmlw.close(); // chiusura del documento e delle risorse impiegate
-			System.out.println(SALUTO);
+			return true;
 		}
 		catch (Exception e)
 		{
-			System.out.println(ERRORE);
-			System.out.println(e.getMessage());
+			return false;
+
 		}
 	}
 	
-	public void writeExtraFoods(Map<String, Double> foods)
+	public boolean writeExtraFoods(Map<String, Double> foods)
 	{
 		XMLOutputFactory xmlof ;
 		XMLStreamWriter xmlw ;
@@ -151,16 +144,16 @@ public class Writer implements Write
 			xmlw.writeEndDocument(); // scrittura della fine del documento
 			xmlw.flush(); // svuota il buffer e procede alla scrittura
 			xmlw.close(); // chiusura del documento e delle risorse impiegate
-			System.out.println(SALUTO);
+			return true;
 		}
 		catch (Exception e)
 		{
-			System.out.println(ERRORE);
-			System.out.println(e.getMessage());
+			return false;
+
 		}
 	}
 
-	public void writeRecipes(Set <Recipe> recipes)
+	public boolean writeRecipes(Set <Recipe> recipes)
 	{
 		XMLOutputFactory xmlof ;
 		XMLStreamWriter xmlw ;
@@ -194,16 +187,16 @@ public class Writer implements Write
 			xmlw.writeEndDocument(); // scrittura della fine del documento
 			xmlw.flush(); // svuota il buffer e procede alla scrittura
 			xmlw.close(); // chiusura del documento e delle risorse impiegate
-			System.out.println(SALUTO);
+			return true;
 		}
 		catch (Exception e)
 		{
-			System.out.println(ERRORE);
-			System.out.println(e.getMessage());
+			return false;
+
 		}
 	}
 
-	public void writeDishes(Set<Dish> dishes)
+	public boolean writeDishes(Set<Dish> dishes)
 	{
 		XMLOutputFactory xmlof ;
 		XMLStreamWriter xmlw;
@@ -235,16 +228,16 @@ public class Writer implements Write
 			xmlw.writeEndDocument(); // scrittura della fine del documento
 			xmlw.flush(); // svuota il buffer e procede alla scrittura
 			xmlw.close(); // chiusura del documento e delle risorse impiegate
-			System.out.println(SALUTO);
+			return true;
 		}
 		catch (Exception e)
 		{
-			System.out.println(ERRORE);
-			System.out.println(e.getMessage());
+			return false;
+
 		}
 	}
 	
-	public void writeThematicMenu(Set<ThematicMenu> menus)
+	public boolean writeThematicMenu(Set<ThematicMenu> menus)
 	{
 		XMLOutputFactory xmlof;
 		XMLStreamWriter xmlw ;
@@ -279,16 +272,16 @@ public class Writer implements Write
 			xmlw.writeEndDocument(); // scrittura della fine del documento
 			xmlw.flush(); // svuota il buffer e procede alla scrittura
 			xmlw.close(); // chiusura del documento e delle risorse impiegate
-			System.out.println(SALUTO);
+			return true;
 		}
 		catch (Exception e)
 		{
-			System.out.println(ERRORE);
-			System.out.println(e.getMessage());
+			return false;
+
 		}
 	}
 
-	public void writeBookings(Map <DateOur,List<Booking>> bookings)
+	public boolean writeBookings(Map <DateOur,List<Booking>> bookings)
 	{
 		XMLOutputFactory xmlof ;
 		XMLStreamWriter xmlw ;
@@ -329,16 +322,16 @@ public class Writer implements Write
 			xmlw.writeEndDocument(); // scrittura della fine del documento
 			xmlw.flush(); // svuota il buffer e procede alla scrittura
 			xmlw.close(); // chiusura del documento e delle risorse impiegate
-			System.out.println(SALUTO);
+			return true;
 		}
 		catch (Exception e)
 		{
-			System.out.println(ERRORE);
-			System.out.println(e.getMessage());
+			return false;
+
 		}
 	}
 	
-	public void writeRegister(Set<Ingredient> register)
+	public boolean writeRegister(Set<Ingredient> register)
 	{
 		XMLOutputFactory xmlof;
 		XMLStreamWriter xmlw ;
@@ -363,12 +356,12 @@ public class Writer implements Write
 			xmlw.writeEndDocument(); // scrittura della fine del documento
 			xmlw.flush(); // svuota il buffer e procede alla scrittura
 			xmlw.close(); // chiusura del documento e delle risorse impiegate
-			System.out.println(SALUTO);
+			return true;
 		}
 		catch (Exception e)
 		{
-			System.out.println(ERRORE);
-			System.out.println(e.getMessage());
+			return false;
+
 		}
 	}
 }
