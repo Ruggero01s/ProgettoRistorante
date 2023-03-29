@@ -1070,7 +1070,6 @@ public class Controller implements SearchRecipe, SearchDish, Login, SaveData, Da
 		gui.updateBookedDates(out.toString().trim());
 	}
 
-
 	/**
 	 * Metodo che converte set d'ingredienti in stringhe
 	 * @param set set da convertire
