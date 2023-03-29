@@ -1442,8 +1442,23 @@ public class SimpleUI extends JFrame implements ErrorSetter, GUI
         state = State.PASSWORD;
         updateUI();
     }
-    
-    
+
+    /**
+     * messaggio di conferma
+     */
+    public void confirmSave()
+    {
+        JOptionPane.showMessageDialog(getContentPane(), "Scrittura riuscita", "Conferma", JOptionPane.INFORMATION_MESSAGE);
+    }
+
+    /**
+     * messaggio di conferma
+     */
+    public void confirmClear()
+    {
+        JOptionPane.showMessageDialog(getContentPane(), "Reset riuscito", "Conferma", JOptionPane.INFORMATION_MESSAGE);
+    }
+
     /**
      * Gestisce i vari errori con una finestra pop Up
      * @param code codice dell'errore
@@ -1481,6 +1496,7 @@ public class SimpleUI extends JFrame implements ErrorSetter, GUI
             case 26 -> JOptionPane.showMessageDialog(getContentPane(), "Capacità o Workload troppo bassi per le prenotazioni salvate", "Err", JOptionPane.ERROR_MESSAGE);
             case 27 -> JOptionPane.showMessageDialog(getContentPane(), "Ingrediente doppio", "Err", JOptionPane.ERROR_MESSAGE);
             case 28 -> JOptionPane.showMessageDialog(getContentPane(), "Data non cancellabile", "Err", JOptionPane.ERROR_MESSAGE);
+            case 29 -> JOptionPane.showMessageDialog(getContentPane(), "Errore di scrittura nel writer", "Err", JOptionPane.ERROR_MESSAGE);
             default -> JOptionPane.showMessageDialog(getContentPane(), "Errore", "Err", JOptionPane.ERROR_MESSAGE);
         }
         getContentPane().repaint();

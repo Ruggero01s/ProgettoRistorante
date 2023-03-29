@@ -19,4 +19,6 @@ public interface GUI
 		void updateBookedDates(String dates);
 		void selectedMenu(String toString);
 		void logout();
+		void confirmSave();
+		void confirmClear();
 }

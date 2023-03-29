@@ -6,5 +6,5 @@ public interface SaveData
 	void saveRecipe(String inputName, String inputIngredients, String inputPortions, String inputWorkload);
 	void saveDish(String inputName, String inputRecipe, String inputStartDate, String inputEndDate, boolean perm, boolean seasonal);
 	void saveMenu(String inputName, String inputs, String inputStartDate, String inputEndDate, boolean permanent, boolean seasonal);
-	boolean saveBooking(String name, String dateString, int number, String orderString);
+	boolean saveBooking(String name, String dateString, String number, String orderString);
 }

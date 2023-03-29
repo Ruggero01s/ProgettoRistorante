@@ -5,17 +5,17 @@ public interface DataManagement
 	
 	void clearInfo();
 	
-	void writeManager();
+	boolean writeManager();
 	
 	void writeMenuComp(String selectedItem);
-	
-	void writeRegister();
-	
+
+	boolean writeRegister();
+
 	DateOur inputToDate(String s);
 	
 	void seeBookings(DateOur date);
-	
-	void writeBookings();
+
+	boolean writeBookings();
 	
 	void nextDay();
 	

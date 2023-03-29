@@ -38,6 +38,8 @@ public class Controller implements SearchRecipe, SearchDish, Login, SaveData, Da
 	public static final int WRONG_UNIT = 25;
 	public static final int TOO_LOW_CONFIG = 26;
 	public static final int DOUBLE_INGREDIENT = 27;
+	public static final int CANNOT_DELETE = 28;
+	public static final int ERROR_IN_WRITING = 29;
 
 	/**
 	 * Metodo d'inizializzazione
@@ -207,14 +209,15 @@ public class Controller implements SearchRecipe, SearchDish, Login, SaveData, Da
 	/**
 	 * Salvataggio tramite writer di tutti i dati del manager
 	 */
-	public void writeManager()
+	public boolean writeManager()
 	{
-		writer.writeDrinks(model.getDrinksMap());
-		writer.writeExtraFoods(model.getExtraFoodsMap());
-		writer.writeConfigBase(model.getCapacity(), model.getWorkPersonLoad(), model.getToday(), model.getIncrement());
-		writer.writeRecipes(model.getRecipesSet());
-		writer.writeDishes(model.getDishesSet());
-		writer.writeThematicMenu(model.getThematicMenusSet());
+		boolean ok;
+		ok = writer.writeDrinks(model.getDrinksMap());
+		ok = ok && writer.writeExtraFoods(model.getExtraFoodsMap());
+		ok = ok && writer.writeConfigBase(model.getCapacity(), model.getWorkPersonLoad(), model.getToday(), model.getIncrement());
+		ok = ok && writer.writeRecipes(model.getRecipesSet());
+		ok = ok && writer.writeDishes(model.getDishesSet());
+		return ok && writer.writeThematicMenu(model.getThematicMenusSet());
 	}
 	
 	/**
@@ -285,7 +288,6 @@ public class Controller implements SearchRecipe, SearchDish, Login, SaveData, Da
 		return true;
 	}
 	
-	
 	/**
 	 * Metodo che legge e salva i drinks
 	 */
@@ -293,26 +295,34 @@ public class Controller implements SearchRecipe, SearchDish, Login, SaveData, Da
 	{
 		try
 		{
-			if (!input.contains(":")) //controllo il formato della stringa
+			if(input.trim().isBlank())
 				throw new Exception("");
-			
-			String[] inputSplit = input.split(":");
-			
-			if (inputSplit[0].isBlank())
-				throw new Exception(""); //nome non valido
-			if (inputSplit.length < 2)
-				throw new Exception("");
-			
-			double quantity = Double.parseDouble(inputSplit[1]);
-			if(inputSplit[2].toLowerCase().contains("g"))
-				throw new RuntimeException("");
-			quantity = checkUnit(inputSplit[2], quantity); //conversione dell'unità
-			if (quantity <= 0) //quantità non valida
-				erSet.errorSetter(MIN_ZERO);
-			else {
-				model.getDrinksMap().put(inputSplit[0].toLowerCase(), quantity);
-				updateDrinkList();
+
+			Map<String,Double> drinks = new HashMap<>();
+
+			for (String line :input.split("\n"))
+			{
+				if (!line.contains(":")) //controllo il formato della stringa
+					throw new Exception("");
+
+				String[] inputSplit = line.split(":");
+
+				if (inputSplit[0].isBlank())
+					throw new Exception(""); //nome non valido
+				if (inputSplit.length < 2)
+					throw new Exception("");
+
+				double quantity = Double.parseDouble(inputSplit[1]);
+				if (inputSplit[2].toLowerCase().contains("g"))
+					throw new RuntimeException("");
+				quantity = checkUnit(inputSplit[2], quantity); //conversione dell'unità
+				if (quantity <= 0) //quantità non valida
+					erSet.errorSetter(MIN_ZERO);
+				else
+					drinks.put(inputSplit[0].toLowerCase(), quantity);
 			}
+			model.getDrinksMap().putAll(drinks);
+			updateDrinkList();
 		}
 		catch (RuntimeException e)
 		{
@@ -322,7 +332,6 @@ public class Controller implements SearchRecipe, SearchDish, Login, SaveData, Da
 		{
 			erSet.errorSetter(INVALID_FORMAT);
 		}
-
 	}
 	
 	/**
@@ -332,24 +341,31 @@ public class Controller implements SearchRecipe, SearchDish, Login, SaveData, Da
 	{
 		try
 		{
-			if (!input.contains(":")) //controllo il formato della stringa
+			if(input.trim().isBlank())
 				throw new Exception("");
-			
-			String[] inputSplit = input.split(":");
-			
-			if (inputSplit.length < 2) //controllo il formato della stringa
-				throw new Exception("");
-			if (inputSplit[0].isBlank()) //controllo la validità del nome
-				throw new Exception("");
-			double quantity = Double.parseDouble(inputSplit[1]);
-			quantity = checkUnitExtraFoods(inputSplit[2],quantity);
-			if (quantity <= 0) //controllo che la quantità sia > 0
-				erSet.errorSetter(MIN_ZERO);
-			else
+
+			Map<String,Double> foods = new HashMap<>();
+
+			for (String line :input.split("\n"))
 			{
-				model.getExtraFoodsMap().put(inputSplit[0].toLowerCase(), quantity);
-				updateFoodList();
+				if (!line.contains(":")) //controllo il formato della stringa
+					throw new Exception("");
+
+				String[] inputSplit = line.split(":");
+
+				if (inputSplit.length < 2) //controllo il formato della stringa
+					throw new Exception("");
+				if (inputSplit[0].isBlank()) //controllo la validità del nome
+					throw new Exception("");
+				double quantity = Double.parseDouble(inputSplit[1]);
+				quantity = checkUnitExtraFoods(inputSplit[2], quantity);
+				if (quantity <= 0) //controllo che la quantità sia > 0
+					erSet.errorSetter(MIN_ZERO);
+				else
+					foods.put(inputSplit[0].toLowerCase(), quantity);
 			}
+			model.getExtraFoodsMap().putAll(foods);
+			updateFoodList();
 		}
 		catch (RuntimeException e)
 		{
@@ -957,14 +973,15 @@ public class Controller implements SearchRecipe, SearchDish, Login, SaveData, Da
 	 * Metodo che crea una prenotazione dai dati in GUI
 	 * @param name        nome della prenotazione
 	 * @param dateString  data sotto forma di stringa
-	 * @param number      numero di coperti
+	 * @param numberString      numero di coperti
 	 * @param orderString ordini sotto forma di stringa
 	 * @return true se la prenotazione è stata salvata, false altrimenti
 	 */
-	public boolean saveBooking (String name, String dateString, int number, String orderString)
+	public boolean saveBooking (String name, String dateString, String numberString, String orderString)
 	{
 		try
 		{
+			int number = Integer.parseInt(numberString);
 			DateOur date = inputToDate(dateString);
 			if (date != null && date.getDate().after(model.getToday().getDate())) //controllo che la data abbia un senso
 			{
@@ -1454,7 +1471,8 @@ public class Controller implements SearchRecipe, SearchDish, Login, SaveData, Da
 						User user = new User(name, password, manager, employee, storageWorker); //salvo l'utente
 						user.hashAndSaltPassword(); //hasho la password
 						model.getUsers().add(user);
-						writer.writePeople(model.getUsers()); //salvo la lista aggiornata
+						if(writer.writePeople(model.getUsers())) gui.confirmSave(); // salvo la nuova lista
+						else	erSet.errorSetter(ERROR_IN_WRITING);
 						return true;
 					}
 					else
