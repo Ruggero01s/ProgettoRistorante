@@ -303,6 +303,7 @@ public class SimpleUI extends JFrame implements ErrorSetter, GUI
         setSize(800, 600);
         setMinimumSize(new Dimension(800, 600));
         setVisible(true);
+        setTitle("Ristorante");
 
         setLayout(new BorderLayout());
     }
@@ -1456,7 +1457,7 @@ public class SimpleUI extends JFrame implements ErrorSetter, GUI
      */
     public void confirmClear()
     {
-        JOptionPane.showMessageDialog(getContentPane(), "Reset riuscito", "Conferma", JOptionPane.INFORMATION_MESSAGE);
+        JOptionPane.showMessageDialog(getContentPane(), "Cancellazione riuscite", "Conferma", JOptionPane.INFORMATION_MESSAGE);
     }
 
     /**

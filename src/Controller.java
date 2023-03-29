@@ -192,7 +192,9 @@ public class Controller implements SearchRecipe, SearchDish, Login, SaveData, Da
 			return true;
 		if(!input.equals(model.getToday())) {
 			remKey = model.getBookingMap().remove(input);
-			writeBookings();
+			if(writeBookings()) gui.confirmClear();
+			else erSet.errorSetter(ERROR_IN_WRITING);
+			updateBookedDates();
 			return !(remKey == null);
 		} else return false;
 	}
@@ -203,7 +205,8 @@ public class Controller implements SearchRecipe, SearchDish, Login, SaveData, Da
 	public void clearBookings()
 	{
 		model.getBookingMap().keySet().removeIf(k -> !(k.equals(model.getToday())));
-		writeBookings();
+		if(writeBookings()) gui.confirmSave();
+		else erSet.errorSetter(ERROR_IN_WRITING);
 	}
 	
 	/**
