@@ -1192,7 +1192,9 @@ public class Controller implements SearchRecipe, SearchDish, Login, SaveData, Da
 					else
 					{
 						if (deltaIngredient.getQuantity() >= 0 && deltaIngredient.getQuantity() <= regIngr.getQuantity())
-							register.add(deltaIngredient);
+							if(deltaIngredient.getUnit().equals(regIngr.getUnit()))
+								register.add(deltaIngredient);
+							else throw new RuntimeException(Integer.toString(WRONG_UNIT));
 						else
 							throw new RuntimeException(Integer.toString(INVALID_QUANTITY));
 					}

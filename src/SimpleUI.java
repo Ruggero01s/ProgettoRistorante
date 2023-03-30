@@ -121,6 +121,7 @@ public class SimpleUI extends JFrame implements ErrorSetter, GUI
     private final JScrollPane cfgDrinksAreaScroll = new JScrollPane(cfgDrinksAreaOut);
     private final JButton cfgDrinksSendButton = new JButton("Inserisci");
     private final JTextArea cfgDrinksInput = new JTextArea();
+    private final JScrollPane cfgDrinksScroll = new JScrollPane(cfgDrinksAreaOut);
     //------------------------------------------------------------------------------------------
     //CONFIG_EXTRAFOODS
     private final JLabel cfgFoodText = new JLabel("Inserisci dati generi alimentari extra: (nome:quantità:unità): ");
@@ -129,6 +130,7 @@ public class SimpleUI extends JFrame implements ErrorSetter, GUI
     private final JLabel cfgFoodsTextOut = new JLabel("Elenco dati cibi extra: (nome:quantità:unità): ");
     private final JTextArea cfgFoodsAreaOut = new JTextArea();
     private final JScrollPane cfgFoodsAreaScroll = new JScrollPane(cfgFoodsAreaOut);
+    private final JScrollPane cfgFoodsScroll = new JScrollPane(cfgFoodsAreaOut);
     //------------------------------------------------------------------------------------------
     //CONFIG_RECIPES
     private final JLabel cfgRecipeTextTitle = new JLabel("Inserisci dati ricetta");
@@ -542,6 +544,8 @@ public class SimpleUI extends JFrame implements ErrorSetter, GUI
         cfgResMenuCartaOut.setBorder(border);
         cfgBaseInputSurplus.setBorder(border);
 
+        cfgDrinksScroll.setPreferredSize(new Dimension(200, 100));
+        cfgFoodsScroll.setPreferredSize(new Dimension(200, 100));
         cfgResBaseScroll.setPreferredSize(new Dimension(200, 100));
         cfgResDrinksScroll.setPreferredSize(new Dimension(200, 100));
         cfgResFoodsScroll.setPreferredSize(new Dimension(200, 100));
@@ -556,6 +560,11 @@ public class SimpleUI extends JFrame implements ErrorSetter, GUI
         cfgMenuAreaScroll.setPreferredSize(new Dimension(200, 100));
         cfgResMenuCartaScroll.setPreferredSize(new Dimension(200, 100));
 
+
+
+        cfgDrinksScroll.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS);
+        cfgFoodsScroll.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS);
+        cfgResBaseScroll.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS);
         cfgResBaseScroll.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS);
         cfgResDrinksScroll.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS);
         cfgResFoodsScroll.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS);
@@ -678,14 +687,14 @@ public class SimpleUI extends JFrame implements ErrorSetter, GUI
         cfgDrinksAreaOut.setMaximumSize(new Dimension(20, 100));
         c.gridx = 1;
         c.gridy = 2;
-        cfgDrinksFoodsPanel.add(cfgDrinksAreaOut, c);
+        cfgDrinksFoodsPanel.add(cfgDrinksScroll, c);
         c.gridx = 0;
         c.gridy = 3;
         cfgDrinksFoodsPanel.add(cfgFoodsTextOut, c);
         cfgFoodsAreaOut.setMaximumSize(new Dimension(20, 100));
         c.gridx = 1;
         c.gridy = 3;
-        cfgDrinksFoodsPanel.add(cfgFoodsAreaOut, c);
+        cfgDrinksFoodsPanel.add(cfgFoodsScroll, c);
         c.gridx = 0;
         c.gridy = 4;
         cfgDrinksFoodsPanel.add(buttonBack2, c);
