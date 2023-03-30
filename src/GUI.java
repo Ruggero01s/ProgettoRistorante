@@ -21,4 +21,5 @@ public interface GUI
 		void logout();
 		void confirmSave();
 		void confirmClear();
+		void updateToday(String today);
 }

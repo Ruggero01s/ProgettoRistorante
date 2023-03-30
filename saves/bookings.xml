@@ -1,12 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <bookings>
-	<booking date="05/06/2023">
-		<book name="test2" number="1" workload="1">
-			<order dish="Pepperoni" quantity="1"></order></book></booking>
-	<booking date="12/08/2023">
-		<book name="test3" number="1" workload="1">
-			<order dish="Pepperoni" quantity="1"></order></book></booking>
-	<booking date="03/06/2023">
-		<book name="testra" number="1" workload="1">
-			<order dish="Ragu di carne" quantity="1"></order></book></booking>
+	<booking date="20/05/2023">
+		<book name="Mario Rossi" number="4" workload="3">
+			<order dish="myDishPermanent" quantity="3"></order>
+			<order dish="myDishSeasonal" quantity="2"></order>
+			<order dish="myDish" quantity="3"></order></book></booking>
 </bookings>

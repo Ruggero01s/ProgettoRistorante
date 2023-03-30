@@ -159,6 +159,7 @@ public class Controller implements SearchRecipe, SearchDish, Login, SaveData, Da
 		
 		//clear delle prenotazioni
 		model.getBookingMap().clear();
+		updateBookedDates();
 
 		//clear del magazzino
 		model.getRegistroBeforeMeal().clear();
@@ -253,7 +254,8 @@ public class Controller implements SearchRecipe, SearchDish, Login, SaveData, Da
 						model.setWorkPersonLoad(workload);
 						model.setToday(today);
 						model.setIncrement(percent);
-						calculateWarehouse(true);
+						calculateWarehouse(false);
+						gui.updateToday(todayString);
 					}
 				}
 			}

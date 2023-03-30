@@ -1,6 +1,4 @@
 <?xml version="1.0" encoding="utf-8"?>
 <users>
-	<user name="Trugix" password="pelr9NxwKGXArwWn1ErruFvwKlzZPpzNDIYebP5WVrg=:odVVevCOLkH94TI/WR+9TQ==" manager="true" employee="true" storageWorker="true"></user>
-	<user name="test" password="0sx9GmRFC0m5/0Roz3BS9MbPTg0tkH7LN45nvAUoTkc=:Je/vS6jgfSImUn9gZ2u5Yw==" manager="true" employee="true" storageWorker="true">	</user>
-	<user name="admin" password="dxpIC9TGTOm9GECOBsHUnc4zW+yaz82hajRL/wnTgMU=:3MvNRsnACykaVvkWZZYc2g==" manager="true" employee="true" storageWorker="true"></user>
+	<user name="a" password="AtRp79IolRWV+W3iGyCMm167e38NqakdFGt2JCuiyRk=:jGnkhjDee76GXWp/VwqofQ==" manager="true" employee="true" storageWorker="true"></user>
 </users>

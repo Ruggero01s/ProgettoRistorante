@@ -1353,11 +1353,13 @@ public class SimpleUI extends JFrame implements ErrorSetter, GUI
     /**
      * aggiorna i model delle comboBox dei menu
      * @param menus array con il nome per ogni menu
+     * si fanno due model altrimenti sembra che vengano riconosciute come la stessa cosa
      */
     public void updateMenuBoxes(String[] menus) {
-        DefaultComboBoxModel<String> model = new DefaultComboBoxModel<>(menus);
-        empNewBookMenuBox.setModel(model);
-        cfgResDatiMenuBox.setModel(model);
+        DefaultComboBoxModel<String> model1 = new DefaultComboBoxModel<>(menus);
+        DefaultComboBoxModel<String> model2 = new DefaultComboBoxModel<>(menus);
+        empNewBookMenuBox.setModel(model1);
+        cfgResDatiMenuBox.setModel(model2);
     }
     
     /**
@@ -1375,10 +1377,14 @@ public class SimpleUI extends JFrame implements ErrorSetter, GUI
      */
     public void nextDay(String today)
     {
+      updateToday(today);
+      wareReturnListOut.setText("");
+    }
+
+    public void updateToday(String today){
         cfgBaseInputDate.setText(today);
         wareListText.setText("Lista aggiornata al " + today);
         wareListMagText.setText("Magazzino aggiornato al " + today);
-        wareReturnListOut.setText("");
     }
     
     /**

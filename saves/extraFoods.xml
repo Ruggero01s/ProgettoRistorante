@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <foods>
-	<food name="grissini" hg="0.5"></food>
-	<food name="naan" hg="0.2"></food>
-	<food name="pane" hg="1.0"></food>
+	<food name="myfood1" hg="0.2"></food>
+	<food name="myfood2" hg="0.1"></food>
 </foods>
