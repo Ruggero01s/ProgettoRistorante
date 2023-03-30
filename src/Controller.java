@@ -135,9 +135,9 @@ public class Controller implements SearchRecipe, SearchDish, Login, SaveData, Da
 		model.setCapacity(0);
 		model.setWorkPersonLoad(0);
 		model.setIncrement(5);
-		model.setToday(new DateOur("01", "01", "1444"));
+		model.setToday(new DateOur("11", "11", "1444"));
 
-		String[] data = {"0", "0", "0", "01/01/1444", "5"};
+		String[] data = {"0", "0", "0", "11/11/1444", "5"};
 		gui.updateConfig(List.of(data));
 
 		//clear delle recipe

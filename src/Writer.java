@@ -7,7 +7,7 @@ import java.util.Set;
 
 public class Writer implements Write
 {
-	public static final String ROOT = "saves/";
+	public static final String ROOT = "./saves/";
 	public static final String USERS_NAME_FILE = "users.xml";
 	public static final String CONFIG_NAME_FILE = "config.xml";
 	public static final String DRINKS_NAME_FILE = "drinks.xml";
