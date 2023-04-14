@@ -1483,7 +1483,7 @@ public class SimpleUI extends JFrame implements ErrorSetter, GUI
     {
         switch (code)
         {
-            case 0 -> JOptionPane.showMessageDialog(getContentPane(), "Numero inserito < 0", "Err", JOptionPane.ERROR_MESSAGE);
+            case 0 -> JOptionPane.showMessageDialog(getContentPane(), "Numero inserito <= 0", "Err", JOptionPane.ERROR_MESSAGE);
             case 1 -> JOptionPane.showMessageDialog(getContentPane(), "Formato incorretto", "Err", JOptionPane.ERROR_MESSAGE);
             case 2 -> JOptionPane.showMessageDialog(getContentPane(), "Inserisci prima una ricetta!", "Err", JOptionPane.ERROR_MESSAGE);
             case 3 -> JOptionPane.showMessageDialog(getContentPane(), "Piatto non trovato", "Err", JOptionPane.ERROR_MESSAGE);

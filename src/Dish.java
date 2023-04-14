@@ -31,7 +31,7 @@ public class Dish implements ConvertToString
                 throw new RuntimeException();
 
         if(seasonal && permanent)
-            throw new RuntimeException();
+            throw new RuntimeException("Errore: seasonal && permanent = true");
     }
     
     public String getName() {

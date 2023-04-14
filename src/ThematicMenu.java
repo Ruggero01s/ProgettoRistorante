@@ -30,6 +30,9 @@ public class ThematicMenu implements ConvertToString
 		if(!seasonal && !permanent)
 			if(this.startPeriod.getDate().after(this.endPeriod.getDate())) //se le date sono al contrario lancio un errore
 				throw new RuntimeException();
+
+		if(seasonal && permanent)
+			throw new RuntimeException("Errore: seasonal && permanent = true");
 	}
 	
 	public String getName()
