@@ -1,0 +1,4 @@
+<?xml version="1.0" encoding="utf-8"?>
+<config>
+	<baseConfig capacity="10" workPersonLoad="10" today="02/06/2023" increment="10"></baseConfig>
+</config>
