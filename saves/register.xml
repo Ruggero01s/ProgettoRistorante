@@ -1,9 +1,3 @@
 <?xml version="1.0" encoding="utf-8"?>
 <register>
-	<ingredient name="mydrink1" unit="L" quantity="1.0"></ingredient>
-	<ingredient name="mydrink2" unit="L" quantity="2.0"></ingredient>
-	<ingredient name="ingredient2" unit="L" quantity="0.22"></ingredient>
-	<ingredient name="ingredient1" unit="g" quantity="440.0"></ingredient>
-	<ingredient name="myfood2" unit="Hg" quantity="1.0"></ingredient>
-	<ingredient name="myfood1" unit="Hg" quantity="1.0"></ingredient>
 </register>

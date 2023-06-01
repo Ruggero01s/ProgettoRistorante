@@ -1,11 +1,3 @@
 <?xml version="1.0" encoding="utf-8"?>
 <menus>
-	<menu name="myMenu" startDate="01/01/1444" endDate="31/12/1444" seasonal="false" permanent="true">
-		<dish name="myDishPermanent"></dish>
-		<dish name="myDishSeasonal"></dish>
-		<dish name="myDish"></dish></menu>
-	<menu name="myMenuSeasonal" startDate="05/05/2023" endDate="30/05/2023" seasonal="true" permanent="false">
-		<dish name="myDishPermanent"></dish>
-		<dish name="myDishSeasonal"></dish>
-		<dish name="myDish"></dish></menu>
 </menus>

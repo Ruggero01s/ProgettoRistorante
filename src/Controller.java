@@ -1,15 +1,17 @@
+import javax.management.InstanceNotFoundException;
 import java.util.*;
 
-public class Controller implements SearchRecipe, SearchDish, Login, SaveData, DataManagement
+public class Controller implements Login, SaveData, DataManagement
 {
 	private final Model model = new Model();
+	private RestaurantRepository repo = model;
 	private GUI gui;
 	private ErrorSetter erSet;
-	private final Read reader = new Reader(this, this); //todo controllare interazioni con write e read
+	private final Read reader = new Reader(repo); //todo controllare interazioni con write e read
 	private final Write writer = new Writer();
-	
+
 	//costanti per la gestione degli errori
-	
+
 	public static final int MIN_ZERO = 0;
 	public static final int INVALID_FORMAT = 1;
 	public static final int NO_RECIPE = 2;
@@ -44,22 +46,20 @@ public class Controller implements SearchRecipe, SearchDish, Login, SaveData, Da
 	/**
 	 * Metodo d'inizializzazione
 	 */
-	public void init ()
-	{
+	public void init () {
 		gui = new SimpleUI(this, this, this);
 		erSet = (ErrorSetter) gui;
 		loadModel();
 		gui.init(model.getToday().getStringDate());
 		calculateWarehouse(true);
 	}
-	
+
 	/**
 	 * Metodo che calcola e salva tutti i dati del magazziniere, ovvero:
 	 * lista della spesa, magazzino prima del pasto e magazzino dopo il pasto
 	 * @param load true se il magazzino è gia generato e non deve essere calcolato, false altrimenti
 	 */
-	private void calculateWarehouse(boolean load)
-	{
+	private void calculateWarehouse(boolean load) {
 		Set<Ingredient> consumedSet = new HashSet<>(generateConsumedList());
 		Set<Ingredient> grocerySet = generateGroceryList(consumedSet);
 		if(!load)
@@ -68,12 +68,11 @@ public class Controller implements SearchRecipe, SearchDish, Login, SaveData, Da
 		gui.updateWare(setToString(grocerySet), setToString(model.getRegistroBeforeMeal()));
 		gui.updateWareReturnList(setToString(model.getRegistroAfterMeal()));
 	}
-	
+
 	/**
 	 * Inizializzazione del model tramite i reader
 	 */
-	private void loadModel()
-	{
+	private void loadModel() {
 		// Chiamo tutti i reader per leggere i dati salvati
 		ModelAttributes modelAttributes = reader.readConfig();
 		model.setCapacity(modelAttributes.getCapacity());
@@ -100,12 +99,11 @@ public class Controller implements SearchRecipe, SearchDish, Login, SaveData, Da
 		updateConfig();
 		oldBooking(); //elimino le vecchie prenotazioni
 	}
-	
+
 	/**
 	 * Metodo che aggiorna la pagina dei config
 	 */
-	private void updateConfig ()
-	{
+	private void updateConfig () {
 		List<String> configState = new ArrayList<>();
 		configState.add("Capacità: " + model.getCapacity() + "\nIndividualWorkload: " +
 				model.getWorkPersonLoad() + "\nRestaurant Worlkload: " + model.getWorkResturantLoad() + "\nData odierna: " +
@@ -114,15 +112,14 @@ public class Controller implements SearchRecipe, SearchDish, Login, SaveData, Da
 		configState.add(Integer.toString(model.getWorkPersonLoad()));
 		configState.add(model.getToday().getStringDate());
 		configState.add(Integer.toString(model.getIncrement()));
-		
+
 		gui.updateConfig(configState);
 	}
-	
+
 	/**
 	 * Metodo che svuota la memoria
 	 */
-	public void clearInfo()
-	{
+	public void clearInfo() {
 		//clear dei drinks
 		model.getDrinksMap().clear();
 		updateDrinkList();
@@ -156,7 +153,7 @@ public class Controller implements SearchRecipe, SearchDish, Login, SaveData, Da
 
 		gui.updateMenus(convertToString(model.getThematicMenuSetConverted()));
 		gui.updateMenuBoxes(makeMenuList());
-		
+
 		//clear delle prenotazioni
 		model.getBookingMap().clear();
 		updateBookedDates();
@@ -186,8 +183,7 @@ public class Controller implements SearchRecipe, SearchDish, Login, SaveData, Da
 	 * @param input giorno in cui annullare le prenotazioni
 	 * @return true se la
 	 */
-	public boolean clearBookings(DateOur input)
-	{
+	public boolean clearBookings(DateOur input) {
 		Object remKey;
 		if (!model.getBookingMap().containsKey(input))
 			return true;
@@ -199,22 +195,20 @@ public class Controller implements SearchRecipe, SearchDish, Login, SaveData, Da
 			return !(remKey == null);
 		} else return false;
 	}
-	
+
 	/**
 	 * Cancella tutte le prenotazioni tranne quelle in data odierna
 	 */
-	public void clearBookings()
-	{
+	public void clearBookings() {
 		model.getBookingMap().keySet().removeIf(k -> !(k.equals(model.getToday())));
 		if(writeBookings()) gui.confirmSave();
 		else erSet.errorSetter(ERROR_IN_WRITING);
 	}
-	
+
 	/**
 	 * Salvataggio tramite writer di tutti i dati del manager
 	 */
-	public boolean writeManager()
-	{
+	public boolean writeManager() {
 		boolean ok;
 		ok = writer.writeDrinks(model.getDrinksMap());
 		ok = ok && writer.writeExtraFoods(model.getExtraFoodsMap());
@@ -223,32 +217,26 @@ public class Controller implements SearchRecipe, SearchDish, Login, SaveData, Da
 		ok = ok && writer.writeDishes(model.getDishesSet());
 		return ok && writer.writeThematicMenu(model.getThematicMenusSet());
 	}
-	
+
 	/**
 	 * Metodo che legge e salva i config dalla GUI
 	 */
-	public void saveConfig(String inputCapacity, String inputWorkload, String inputPercent, String todayString)
-	{
-		try
-		{
+	public void saveConfig(String inputCapacity, String inputWorkload, String inputPercent, String todayString) {
+		try {
 			int capacity = Integer.parseInt(inputCapacity); //converto i parametri numerici
 			int workload = Integer.parseInt(inputWorkload);
 			int percent = Integer.parseInt(inputPercent);
-			if(checkValidityOfSetting(capacity,workload))
-			{
+			if(checkValidityOfSetting(capacity,workload)) {
 				if (!checkDate(todayString)) //check per correttezza della data
 				{
 					erSet.errorSetter(INVALID_DATE);
-				}
-				else
-				{
+				} else {
 					DateOur today = inputToDate(todayString);
 					if (capacity <= 0 || workload <= 0) //check parametri numerici
 						erSet.errorSetter(MIN_ZERO);
 					else if (percent > 10 || percent<0)
 						erSet.errorSetter(WRONG_SURPLUS);
-					else
-					{
+					else {
 						//salvo tutti i dati e aggiorno la GUI
 						model.setCapacity(capacity);
 						model.setWorkPersonLoad(workload);
@@ -258,25 +246,21 @@ public class Controller implements SearchRecipe, SearchDish, Login, SaveData, Da
 						gui.updateToday(todayString);
 					}
 				}
-			}
-			else
+			} else
 				erSet.errorSetter(TOO_LOW_CONFIG);
 			updateConfig();
-		}
-		catch (NumberFormatException e)
-		{
+		} catch (NumberFormatException e) {
 			erSet.errorSetter(INVALID_FORMAT);
 		}
 	}
-	
+
 	/**
 	 * Metodo che controllo se i nuovi parametri inseriti mantengono valide le prenotazioni già effettuate
 	 * @param capacity capacità modificata
 	 * @param workload workload modificato
 	 * @return true se i parametri mantengono l'integrità delle prenotazioni, false altrimenti
 	 */
-	private boolean checkValidityOfSetting (int capacity, int workload)
-	{
+	private boolean checkValidityOfSetting (int capacity, int workload) {
 		int usedCapacity, usedWorkload;
 		for (Map.Entry<DateOur, List<Booking>> books : model.getBookingMap().entrySet()) //scorro tutte le prenotazioni
 		{
@@ -292,21 +276,18 @@ public class Controller implements SearchRecipe, SearchDish, Login, SaveData, Da
 		}
 		return true;
 	}
-	
+
 	/**
 	 * Metodo che legge e salva i drinks
 	 */
-	public void saveDrinks (String input)
-	{
-		try
-		{
+	public void saveDrinks (String input) {
+		try {
 			if(input.trim().isBlank())
 				throw new Exception("");
 
 			Map<String,Double> drinks = new HashMap<>();
 
-			for (String line :input.split("\n"))
-			{
+			for (String line :input.split("\n")) {
 				if (!line.contains(":")) //controllo il formato della stringa
 					throw new Exception("");
 
@@ -328,31 +309,24 @@ public class Controller implements SearchRecipe, SearchDish, Login, SaveData, Da
 			}
 			model.getDrinksMap().putAll(drinks);
 			updateDrinkList();
-		}
-		catch (RuntimeException e)
-		{
+		} catch (RuntimeException e) {
 			erSet.errorSetter(WRONG_UNIT);
-		}
-		catch (Exception e)
-		{
+		} catch (Exception e) {
 			erSet.errorSetter(INVALID_FORMAT);
 		}
 	}
-	
+
 	/**
 	 * Metodo che legge e salva i foods aggiuntivi
 	 */
-	public void saveFoods (String input)
-	{
-		try
-		{
+	public void saveFoods (String input) {
+		try {
 			if(input.trim().isBlank())
 				throw new Exception("");
 
 			Map<String,Double> foods = new HashMap<>();
 
-			for (String line :input.split("\n"))
-			{
+			for (String line :input.split("\n")) {
 				if (!line.contains(":")) //controllo il formato della stringa
 					throw new Exception("");
 
@@ -371,45 +345,38 @@ public class Controller implements SearchRecipe, SearchDish, Login, SaveData, Da
 			}
 			model.getExtraFoodsMap().putAll(foods);
 			updateFoodList();
-		}
-		catch (RuntimeException e)
-		{
+		} catch (RuntimeException e) {
 			erSet.errorSetter(WRONG_UNIT);
-		}
-		catch (Exception e)
-		{
+		} catch (Exception e) {
 			erSet.errorSetter(INVALID_FORMAT);
 		}
 	}
-	
+
 	/**
 	 * Metodo che legge e salva le ricette
 	 */
-	public void saveRecipe (String inputName, String inputIngredients, String inputPortions, String inputWorkload)
-	{
-		try
-		{
+	public void saveRecipe (String inputName, String inputIngredients, String inputPortions, String inputWorkload) {
+		try {
 			Set<Ingredient> ingredientQuantitySet = new HashSet<>();
 			String[] lines = inputIngredients.split("\n");
-			
+
 			if (inputName.isBlank()) //controllo validità del nome
 				throw new RuntimeException("");
-			
+
 			boolean err = false;
 			double quantity;
-			for (String line : lines)
-			{
+			for (String line : lines) {
 				if (!line.contains(":")) //controllo validità della stringa
 					throw new RuntimeException("");
-				
+
 				String[] words = line.split(":");
-				
+
 				if (words[0].isBlank()) //controllo validità del nome
 					throw new RuntimeException("");
-				
+
 				if (words.length < 3) //controllo lunghezza stringa
 					throw new RuntimeException("");
-				
+
 				quantity = Double.parseDouble(words[1]);
 				quantity = checkUnit(words[2], quantity);
 				String unit;
@@ -424,13 +391,12 @@ public class Controller implements SearchRecipe, SearchDish, Login, SaveData, Da
 					unit = "g";
 				else
 					unit = "L";
-				if(!ingredientQuantitySet.add(new Ingredient(words[0].toLowerCase(), unit, quantity)))
-				{
+				if(!ingredientQuantitySet.add(new Ingredient(words[0].toLowerCase(), unit, quantity))) {
 					erSet.errorSetter(DOUBLE_INGREDIENT);
 					throw new Exception("");
 				}
 			}
-			
+
 			int portions = Integer.parseInt(inputPortions);
 			double workLoad = Double.parseDouble(inputWorkload);
 			if (workLoad >= model.getWorkPersonLoad()) //se il workload è impossibilmente alto da soddisfare
@@ -439,35 +405,30 @@ public class Controller implements SearchRecipe, SearchDish, Login, SaveData, Da
 				if (portions <= 0 || workLoad <= 0 || err)
 					erSet.errorSetter(MIN_ZERO);
 				else {
-					if (model.getRecipesSet().add(new Recipe(inputName, ingredientQuantitySet, portions, workLoad))) {
-						gui.updateRecipes(convertToStringVector(model.getRecipeSetConverted()));
-					} else
-						erSet.errorSetter(EXISTING_NAME);
+					if (!repo.isDuplicate(inputName)) {
+						if (model.getRecipesSet().add(new Recipe(inputName, ingredientQuantitySet, portions, workLoad))) {
+							gui.updateRecipes(convertToStringVector(model.getRecipeSetConverted()));
+						} else erSet.errorSetter(EXISTING_NAME);
+					}else erSet.errorSetter(EXISTING_NAME);
 				}
 			}
-		}
-		catch (RuntimeException e)
-		{
+		} catch (RuntimeException e) {
 			erSet.errorSetter(INVALID_FORMAT);
-		}
-		catch (Exception e)
-		{
+		} catch (Exception e) {
 			erSet.errorSetter(DOUBLE_INGREDIENT);
 		}
 	}
-	
+
 	/**
 	 * Converto e checko la validità delle unità
 	 * @param unit     unita d'ingresso
 	 * @param quantity quantità da convertire
 	 * @return quantità convertita
 	 */
-	private double checkUnit (String unit, Double quantity)
-	{
+	private double checkUnit (String unit, Double quantity) {
 		if (!(unit.equalsIgnoreCase("g") || unit.equalsIgnoreCase("l"))) //converto solo se l'unità non è grammi o litri
 		{
-			switch (unit.toLowerCase())
-			{
+			switch (unit.toLowerCase()) {
 				case "kg", "kl" -> quantity *= 1000.0;
 				case "hg", "hl" -> quantity *= 100.0;
 				case "dag", "dal" -> quantity *= 10.0;
@@ -479,19 +440,17 @@ public class Controller implements SearchRecipe, SearchDish, Login, SaveData, Da
 		}
 		return quantity;
 	}
-	
+
 	/**
 	 * Converto e checko la validità delle unità in caso di extra foods
 	 * @param unit     unita d'ingresso
 	 * @param quantity quantità da convertire
 	 * @return quantità convertita in Hg
 	 */
-	private double checkUnitExtraFoods (String unit, Double quantity)
-	{
+	private double checkUnitExtraFoods (String unit, Double quantity) {
 		if (!(unit.equalsIgnoreCase("hg"))) //converto solo se l'unità non è in Hg
 		{
-			switch (unit.toLowerCase())
-			{
+			switch (unit.toLowerCase()) {
 				case "kg" -> quantity *= 10.0;
 				case "dag" -> quantity /= 10.0;
 				case "g" -> quantity /= 100.0;
@@ -503,107 +462,103 @@ public class Controller implements SearchRecipe, SearchDish, Login, SaveData, Da
 		}
 		return quantity;
 	}
-	
+
 	/**
 	 * Leggo e salvo i piatti
 	 */
-	public void saveDish (String inputName, String inputRecipe, String inputStartDate, String inputEndDate, boolean perm, boolean seasonal)
-	{
-		try
-		{
+	public void saveDish (String inputName, String inputRecipe, String inputStartDate, String inputEndDate, boolean perm, boolean seasonal) {
+		try {
 			if (inputName.isBlank()) //controllo validità del nome
 				throw new NumberFormatException();
-			
+
 			if (!perm) // se non è permanente controllo le date
 			{
-				if (!checkDate(inputStartDate) || !checkDate(inputEndDate))
-				{
+				if (!checkDate(inputStartDate) || !checkDate(inputEndDate)) {
 					erSet.errorSetter(INVALID_DATE);
 					return;
 				}
-			}
-			else
-			{
+			} else {
 				inputStartDate = "01/01/1444";
 				inputEndDate = "31/12/1444";
 			}
 			boolean found = false;
 			boolean valid = true;
-			for (Recipe r : model.getRecipesSet())
-			{
-				if (r.getId().equalsIgnoreCase(inputRecipe))
-				{
+			try{
+				Recipe recipe = repo.findRecipe(inputRecipe);
+				Dish temp = new Dish(inputName, recipe, inputStartDate, inputEndDate, seasonal, perm);
+				if(!repo.isDuplicate(inputName)){
+					if (model.getDishesSet().add(temp)) {
+						gui.updateDishes(convertToStringVector(model.getDishesSetConverted())); //aggiorno la GUI
+						found = true;
+					} else	erSet.errorSetter(EXISTING_NAME);
+				}else erSet.errorSetter(EXISTING_NAME);
+				menuCartaToday(); //aggiorno il menu
+			}catch (InstanceNotFoundException e){
+				erSet.errorSetter(NO_RECIPE);
+			}
+
+			/*for (Recipe r : model.getRecipesSet()) {
+				if (r.getId().equalsIgnoreCase(inputRecipe)) {
 					Dish temp = new Dish(inputName, r, inputStartDate, inputEndDate, seasonal, perm);
-					for (ThematicMenu thematicMenu: model.getThematicMenusSet())
-					{
+					for (ThematicMenu thematicMenu: model.getThematicMenusSet()) {
 						if (thematicMenu.getName().equalsIgnoreCase(temp.getName())) //controllo che non esistano un piatto ed un menu con lo stesso nome
 						{
 							valid = false;
 							break;
 						}
 					}
-					if (valid)
-					{
-						if (model.getDishesSet().add(temp))
-						{
+					if (valid) {
+						if (model.getDishesSet().add(temp)) {
 							gui.updateDishes(convertToStringVector(model.getDishesSetConverted())); //aggiorno la GUI
 							found = true;
-						}
-						else
+						} else
 							erSet.errorSetter(EXISTING_NAME);
-					}
-					else
+					} else
 						erSet.errorSetter(NAME_SAME_AS_DISH);
 					break;
 				}
 			}
 			if (!found && valid)
-				erSet.errorSetter(NO_RECIPE);
-			menuCartaToday(); //aggiorno il menu
-		}
-		catch (RuntimeException e)
-		{
+				erSet.errorSetter(NO_RECIPE);*/
+		} catch (RuntimeException e) {
 			erSet.errorSetter(INVALID_DATE);
-		}catch (Exception e)
-		{
+		}catch (Exception e) {
 			erSet.errorSetter(INVALID_FORMAT);
 		}
 	}
-	
+
 	/**
 	 * Leggo e salvo i menu tematici
 	 */
-	public void saveMenu (String inputName, String inputs, String inputStartDate, String inputEndDate, boolean permanent, boolean seasonal)
-	{
-		try
-		{
+	public void saveMenu (String inputName, String inputs, String inputStartDate, String inputEndDate, boolean permanent, boolean seasonal) {
+		try {
 			if (inputName.isBlank()) //controllo validità del nome
 				throw new NumberFormatException();
-			
+
 			String[] inputList = inputs.split("\n");
-			
+
 			Set<Dish> dishesForMenu = new HashSet<>();
-			
+
 			if (!permanent) //se non è permanente controllo la validità delle date
 			{
-				if (!checkDate(inputStartDate) || !checkDate(inputEndDate))
-				{
+				if (!checkDate(inputStartDate) || !checkDate(inputEndDate)) {
 					erSet.errorSetter(INVALID_DATE);
 					return;
 				}
-			}
-			else
-			{
+			} else {
 				inputStartDate = "01/01/1444";
 				inputEndDate = "31/12/1444";
 			}
 			boolean found, dishNotFound = false;
-			for (String s : inputList)
-			{
-				found = false;
-				if (!s.isBlank())
-				{
-					for (Dish d : model.getDishesSet())
+			for (String s : inputList) {
+				//found = false;
+				if (!s.isBlank()) {
+					try{
+						dishesForMenu.add(repo.findDish(s));
+					}catch (InstanceNotFoundException e) {
+						dishNotFound = true;
+					}
+                /*for (Dish d : model.getDishesSet())
 					{
 						if (d.getName().equalsIgnoreCase(s))
 						{
@@ -611,60 +566,54 @@ public class Controller implements SearchRecipe, SearchDish, Login, SaveData, Da
 							found = true;
 							break;
 						}
-					}
+					}*/
 				}
-				if (!found) // se non trova il piatto
-					dishNotFound = true;
+				//	if (!found) // se non trova il piatto
+				//dishNotFound = true;
 			}
 			if (dishNotFound) //se almeno un piatto prima non è stato trovato da errore
 				erSet.errorSetter(NO_DISH);
-			else
-			{
+			else {
 				ThematicMenu temp = new ThematicMenu(inputName, inputStartDate, inputEndDate, dishesForMenu, seasonal, permanent); //creo il menu
 				if (temp.getWorkThematicMenuLoad() <= ((double) model.getWorkPersonLoad() * 4 / 3)) //controllo se il workLoad è giusto
 				{
-					boolean valid = true;
-					for (Dish dish : model.getDishesSet())
+					//	boolean valid = true;
+
+                    /*for (Dish dish : model.getDishesSet())
 					{
 						if (dish.getName().equalsIgnoreCase(temp.getName())) //controllo che non esistano un piatto ed un menu con lo stesso nome
 						{
 							valid = false;
 							break;
 						}
-					}
-					if (valid)
+					}*/
+
+					if (!repo.isDuplicate(temp.getName())) //if (valid)
 					{
 						if (model.getThematicMenusSet().add(temp)) //aggiorno la GUI
 						{
 							gui.updateMenus(convertToString(model.getThematicMenuSetConverted()));
 							gui.updateMenuBoxes(makeMenuList());
-						}
-						else
+						} else
 							erSet.errorSetter(EXISTING_NAME);
-					}
-					else
-						erSet.errorSetter(NAME_SAME_AS_DISH);
-				}
-				else
+					} else
+						erSet.errorSetter(EXISTING_NAME);
+				} else
 					erSet.errorSetter(THICC_MENU);
 			}
-		}
-		catch (RuntimeException e)
-		{
+		} catch (RuntimeException e) {
 			erSet.errorSetter(INVALID_DATE);
-		}catch (Exception e)
-		{
+		}catch (Exception e) {
 			erSet.errorSetter(INSUFFICENT_DISH);
 		}
 	}
-	
+
 	/**
 	 * Controllo se una data è valida
 	 * @param date data da controllare
 	 * @return true se valida, false altrimenti
 	 */
-	public boolean checkDate (String date)
-	{
+	public boolean checkDate (String date) {
 		if (date.isBlank()) //se è vuota non è valida
 			return false;
 		if (!date.contains("/")) //se non contiene / non è valida
@@ -675,95 +624,60 @@ public class Controller implements SearchRecipe, SearchDish, Login, SaveData, Da
 		if (Integer.parseInt(pezzi[2]) <= 0) //se anno minore di 0 errore
 			return false;
 		return switch (Integer.parseInt(pezzi[1])) //controllo mesi e giorni
-				{
-					case 1, 3, 5, 7, 8, 10, 12 -> (Integer.parseInt(pezzi[0]) <= 31 || Integer.parseInt(pezzi[0]) > 0);
-					case 2 -> (Integer.parseInt(pezzi[0]) <= 29 || Integer.parseInt(pezzi[0]) > 0);
-					case 4, 6, 9, 11 -> (Integer.parseInt(pezzi[0]) <= 30 || Integer.parseInt(pezzi[0]) > 0);
-					default -> false;
-				};
-	}
-	
-	/**
-	 * Metodo che riceve in ingresso una stringa
-	 * contenente piatti e la trasforma in un array list
-	 * @param name stringa di piatti
-	 * @return Array list di piatti
-	 */
-	public Dish searchDish (String name)
-	{
-		for (Dish dish : model.getDishesSet())
 		{
-			if (dish.getName().equalsIgnoreCase(name))
-				return dish;
-		}
-		return null;
+			case 1, 3, 5, 7, 8, 10, 12 -> (Integer.parseInt(pezzi[0]) <= 31 || Integer.parseInt(pezzi[0]) > 0);
+			case 2 -> (Integer.parseInt(pezzi[0]) <= 29 || Integer.parseInt(pezzi[0]) > 0);
+			case 4, 6, 9, 11 -> (Integer.parseInt(pezzi[0]) <= 30 || Integer.parseInt(pezzi[0]) > 0);
+			default -> false;
+		};
 	}
 
-	/**
-	 * Metodo che trasforma una stringa in una ricetta
-	 * @param name ricetta in forma di stringa
-	 * @return ricetta
-	 */
-	public Recipe searchRecipe (String name)
-	{
-		for (Recipe recipe : model.getRecipesSet())
-		{
-			if (recipe.getId().equalsIgnoreCase(name))
-				return recipe;
-		}
-		return null;
-	}
-	
 	/**
 	 * Metodo che converte un oggetto che implementa ConvertToStrings in una stringa
 	 * @param convertToStrings collection da convertire
 	 * @return stringa che elenca la collection
 	 */
-	private String convertToString (Collection<ConvertToString> convertToStrings)
-	{
+	private String convertToString (Collection<ConvertToString> convertToStrings) {
 		StringBuilder out = new StringBuilder();
 		for (ConvertToString convertToString : convertToStrings)
 			out.append(convertToString.convertToString()).append("\n");
 		return out.toString().trim();
 	}
-	
+
 	/**
 	 * Metodo che converte un oggetto che implementa ConvertToStrings in un vettore di stringhe
 	 * @param convertToStrings collection di oggetti che implementano l'interfaccia
 	 * @return la collection convertita in vettore di stringhe
 	 */
-	private String[] convertToStringVector (Collection<ConvertToString> convertToStrings)
-	{
+	private String[] convertToStringVector (Collection<ConvertToString> convertToStrings) {
 		String[] out = new String[convertToStrings.size()];
 		int i = 0;
-		
+
 		for (ConvertToString convertToString : convertToStrings)
 			out[i++] = convertToString.convertToString();
-		
+
 		return out;
 	}
 
 	/**
 	 * Metodo che serve per aggiornare i drinks nella GUI
 	 */
-	private void updateDrinkList ()
-	{
+	private void updateDrinkList () {
 		StringBuilder out = new StringBuilder();
 		for (Map.Entry<String, Double> drink : model.getDrinksMap().entrySet()) //trasformo la map di drinks in stringa
 			out.append(drink.getKey()).append(":").append(drink.getValue().toString()).append(":L").append("\n");
-		
+
 		gui.updateDrinks(out.toString().trim());
 	}
-	
+
 	/**
 	 * Metodo che serve per aggiornare gli extra foods nella GUI
 	 */
-	private void updateFoodList ()
-	{
+	private void updateFoodList () {
 		StringBuilder out = new StringBuilder();
 		for (Map.Entry<String, Double> food : model.getExtraFoodsMap().entrySet()) //trasformo la map di extra foods in stringa
 			out.append(food.getKey()).append(":").append(food.getValue().toString()).append(":Hg").append("\n");
-		
+
 		gui.updateFoods(out.toString().trim());
 	}
 
@@ -771,20 +685,17 @@ public class Controller implements SearchRecipe, SearchDish, Login, SaveData, Da
 	 * Crea una stringa con i dati di un certo menu con nome menuName
 	 * @param menuName menu da trasformare in stringa
 	 */
-	public void writeMenuComp (String menuName)
-	{
+	public void writeMenuComp (String menuName) {
 		StringBuilder out = new StringBuilder();
-		for (ThematicMenu menu : model.getThematicMenusSet())
-		{
-			if (menu.getName().equalsIgnoreCase(menuName))
-			{
-				out.append(menuName).append(" w.").append(menu.getWorkThematicMenuLoad()).append("\n");
-				for (Dish d : menu.getDishes())
-				{
-					out.append("    ").append(d.getName()).append("\n");
-				}
-				break;
-			}
+		ThematicMenu menu = null;
+		try {
+			menu = repo.findMenu(menuName);
+		} catch (InstanceNotFoundException e) {
+			erSet.errorSetter(-1);
+		}
+		out.append(menuName).append(" w.").append(menu.getWorkThematicMenuLoad()).append("\n");
+		for (Dish d : menu.getDishes()) {
+			out.append("    ").append(d.getName()).append("\n");
 		}
 		gui.selectedMenu(out.toString());
 	}
@@ -793,46 +704,39 @@ public class Controller implements SearchRecipe, SearchDish, Login, SaveData, Da
 	 * Salvo il magazzino
 	 * @return true se il salvataggio è riuscito, false altrimenti
 	 */
-	public boolean writeRegister()
-	{
+	public boolean writeRegister() {
 		return writer.writeRegister(model.getRegistroBeforeMeal());
 	}
 
 	/**
 	 * @return un array con un nome per ogni menu per indice
 	 */
-	private String[] makeMenuList ()
-	{
+	private String[] makeMenuList () {
 		String[] out = new String[model.getThematicMenusSet().size()];
 		int i = 0;
-		for (ThematicMenu m : model.getThematicMenusSet())
-		{
+		for (ThematicMenu m : model.getThematicMenusSet()) {
 			out[i] = m.getName();
 			i++;
 		}
 		return out;
 	}
-	
+
 	/**
 	 * Metodo che prende una string e la trasforma in data
 	 * @param input stringa da convertire
 	 * @return data costruita
 	 */
-	public DateOur inputToDate (String input)
-	{
+	public DateOur inputToDate (String input) {
 		String[] bookDates;
-		try
-		{
+		try {
 			bookDates = input.split("/");
 			return new DateOur(bookDates[0], bookDates[1], bookDates[2]);
-		}
-		catch (Exception e)
-		{
+		} catch (Exception e) {
 			erSet.errorSetter(INVALID_DATE);
 			return null;
 		}
 	}
-	
+
 	/**
 	 * Metodo che prende dati dalla finestra di creazione ordine e ne estrae un ordine, analizza una stringa spezzandola in righe e cerca il nome del piatto/menu nei vari set esistenti
 	 * @param in     Stringa in entrata
@@ -840,15 +744,13 @@ public class Controller implements SearchRecipe, SearchDish, Login, SaveData, Da
 	 * @param number numero del piatto/menu ordinato
 	 * @return un HashMap che contiene per ogni Dish nell'ordine la quantità ordinata
 	 */
-	private HashMap<Dish, Integer> inputToOrder (String in, DateOur date, int number)
-	{
+	private HashMap<Dish, Integer> inputToOrder (String in, DateOur date, int number) {
 		if (in.isBlank()) throw new RuntimeException();
 		String[] lines = in.split("\n");
 		HashMap<Dish, Integer> order = new HashMap<>();
 		boolean found;
 		int count = 0;
-		try
-		{
+		try {
 			for (String line : lines)  //per ogni linea
 			{
 				found = false;
@@ -861,10 +763,51 @@ public class Controller implements SearchRecipe, SearchDish, Login, SaveData, Da
 					erSet.errorSetter(MIN_ZERO);
 					return order;
 				}
-				for (ThematicMenu menu : model.getThematicMenusSet()) //cerca se il nome scritto è tra i menu tematici
-				{
-					if (name.equalsIgnoreCase(menu.getName()))
+				try {
+					ThematicMenu menu = repo.findMenu(name);
+					if (menu.isValid(date)) //controllo della data di disponibilità
 					{
+						found = true;
+						count += num;
+						for (Dish dish : menu.getDishes()) // "spacchetta" il menu nei piatti che lo compongono e li aggiunge all'ordine
+						{
+							if (order.containsKey(dish)) //sommando il numero se già presenti
+								order.put(dish, order.get(dish) + num);
+							else
+								order.put(dish, num);
+						}
+						break;
+					} else {
+						order.clear();
+						erSet.errorSetter(OUT_OF_DATE);
+						return order;
+					}
+				} catch (InstanceNotFoundException e) {
+					try{
+						Dish dish = repo.findDish(name);
+						if (dish.isValid(date)) {
+							found = true;
+							count += num;
+							if (order.containsKey(dish))
+								order.put(dish, order.get(dish) + num);
+							else
+								order.put(dish, num);
+							break;
+						} else {
+							order.clear();
+							erSet.errorSetter(INVALID_DATE);
+							return order;
+						}
+					}catch (InstanceNotFoundException e2){
+						order.clear();
+						erSet.errorSetter(NOT_FOUND);
+						return order;
+					}
+				}
+
+				/*for (ThematicMenu menu : model.getThematicMenusSet()) //cerca se il nome scritto è tra i menu tematici
+				{
+					if (name.equalsIgnoreCase(menu.getName())) {
 						if (menu.isValid(date)) //controllo della data di disponibilità
 						{
 							found = true;
@@ -877,9 +820,7 @@ public class Controller implements SearchRecipe, SearchDish, Login, SaveData, Da
 									order.put(dish, num);
 							}
 							break;
-						}
-						else
-						{
+						} else {
 							order.clear();
 							erSet.errorSetter(OUT_OF_DATE);
 							return order;
@@ -888,12 +829,9 @@ public class Controller implements SearchRecipe, SearchDish, Login, SaveData, Da
 				}
 				if (!found) //se il nome non è tra i menu cerca i piatti singoli e fa lo stesso procedimento
 				{
-					for (Dish dish : model.getDishesSet())
-					{
-						if (name.equalsIgnoreCase(dish.getName()))
-						{
-							if (dish.isValid(date))
-							{
+					for (Dish dish : model.getDishesSet()) {
+						if (name.equalsIgnoreCase(dish.getName())) {
+							if (dish.isValid(date)) {
 								found = true;
 								count += num;
 								if (order.containsKey(dish))
@@ -901,9 +839,7 @@ public class Controller implements SearchRecipe, SearchDish, Login, SaveData, Da
 								else
 									order.put(dish, num);
 								break;
-							}
-							else
-							{
+							} else {
 								order.clear();
 								erSet.errorSetter(INVALID_DATE);
 								return order;
@@ -916,7 +852,8 @@ public class Controller implements SearchRecipe, SearchDish, Login, SaveData, Da
 					order.clear();
 					erSet.errorSetter(NOT_FOUND);
 					return order;
-				}
+				}*/
+
 			}
 			if (count < number) //controlla che ci sia almeno un piatto per persona
 			{
@@ -924,45 +861,39 @@ public class Controller implements SearchRecipe, SearchDish, Login, SaveData, Da
 				erSet.errorSetter(ORDER_FOR_TOO_LITTLE);
 			}
 			return order;
-		}
-		catch (NumberFormatException e) //catch l'errore del parseInt iniziale
+		} catch (NumberFormatException e) //catch l'errore del parseInt iniziale
 		{
 			erSet.errorSetter(NO_QUANTITY);
 			return new HashMap<>();
-		}
-		catch (RuntimeException e) //catch l'errore del parseInt iniziale
+		} catch (RuntimeException e) //catch l'errore del parseInt iniziale
 		{
 			erSet.errorSetter(EMPTY_INPUT);
 			return new HashMap<>();
 		}
 	}
-	
+
 	/**
 	 * Metodo che mostra in GUI tutte le prenotazioni di un giorno
 	 * @param data giorno da controllare
 	 */
-	public void seeBookings (DateOur data)
-	{
-		if (model.getBookingMap().containsKey(data))
-		{
+	public void seeBookings (DateOur data) {
+		if (model.getBookingMap().containsKey(data)) {
 			ArrayList<Booking> dayBookings = new ArrayList<>(model.getBookingMap().get(data)); //prenotazioni della data
 			StringBuilder name = new StringBuilder();
 			StringBuilder number = new StringBuilder();
 			StringBuilder work = new StringBuilder();
 			int capacity = 0, workload = 0;
-			
-			for (Booking b : dayBookings)
-			{
+
+			for (Booking b : dayBookings) {
 				name.append(b.getName()).append("\n");
 				number.append(b.getNumber()).append("\n");
 				work.append(b.getWorkload()).append("\n");
 				capacity += b.getNumber();
 				workload += b.getWorkload();
 			}
-			
+
 			gui.updateBooking(name.toString().trim(), number.toString().trim(), work.toString().trim(), Integer.toString(model.getCapacity() - capacity), Double.toString(model.getWorkResturantLoad() - workload));
-		}
-		else
+		} else
 			erSet.errorSetter(NO_BOOKINGS); //non ci sono prenotazioni per quel giorno
 	}
 
@@ -982,39 +913,32 @@ public class Controller implements SearchRecipe, SearchDish, Login, SaveData, Da
 	 * @param orderString ordini sotto forma di stringa
 	 * @return true se la prenotazione è stata salvata, false altrimenti
 	 */
-	public boolean saveBooking (String name, String dateString, String numberString, String orderString)
-	{
-		try
-		{
+	public boolean saveBooking (String name, String dateString, String numberString, String orderString) {
+		try {
 			int number = Integer.parseInt(numberString);
 			DateOur date = inputToDate(dateString);
 			if (date != null && date.getDate().after(model.getToday().getDate())) //controllo che la data abbia un senso
 			{
 				int workload = 0;
 				HashMap<Dish, Integer> order = inputToOrder(orderString, date, number);
-				if (!order.isEmpty())
-				{
+				if (!order.isEmpty()) {
 					if (number > 0)//il numero deve essere maggiore di 0
 					{
 						for (Map.Entry<Dish, Integer> dish : order.entrySet())
 							workload += dish.getKey().getRecipe().getWorkLoadPortion() * dish.getValue(); //calcolo il workload di questo giorno
 
 						return manageBooking(name, date, number, workload, order); //se la prenotazione viene salvata ritorno true
-					}
-					else
+					} else
 						erSet.errorSetter(MIN_ZERO);
 				}
-			}
-			else
+			} else
 				erSet.errorSetter(NOT_TODAY);
-		}
-		catch (NumberFormatException e)
-		{
+		} catch (NumberFormatException e) {
 			erSet.errorSetter(INVALID_FORMAT);
 		}
 		return false;
 	}
-	
+
 	/**
 	 * Aggiunge una prenotazione alle prenotazioni del ristorante
 	 * @param name     nome della prenotazione
@@ -1024,44 +948,37 @@ public class Controller implements SearchRecipe, SearchDish, Login, SaveData, Da
 	 * @param order    hashmap di tutti i piatti ordinati
 	 * @return true se la prenotazione è stata salvata, false altrimenti
 	 */
-	private boolean manageBooking (String name, DateOur date, int number, int workload, HashMap<Dish, Integer> order)
-	{
+	private boolean manageBooking (String name, DateOur date, int number, int workload, HashMap<Dish, Integer> order) {
 		ArrayList<Booking> day = new ArrayList<>();
 		int capacity = number;
 		int work = workload;
-		
-		if (model.getBookingMap().containsKey(date))
-		{
+
+		if (model.getBookingMap().containsKey(date)) {
 			//se ci sono altre prenotazioni per quel giorno
 			//calcolo la capacità ed il workload occupati
 			day = new ArrayList<>(model.getBookingMap().get(date));
-			for (Booking b : day)
-			{
+			for (Booking b : day) {
 				capacity += b.getNumber();
 				work += b.getWorkload();
 			}
 		}
 		//controllo se c`è posto nel ristorante
-		if (capacity <= model.getCapacity() && work <= model.getWorkResturantLoad())
-		{
+		if (capacity <= model.getCapacity() && work <= model.getWorkResturantLoad()) {
 			day.add(new Booking(name, number, workload, order));
 			model.getBookingMap().put(date, day);
 			updateBookedDates();
 			return true;
-		}
-		else
-		{
+		} else {
 			erSet.errorSetter(FULL_RESTURANT);
 			return false;
 		}
 	}
-	
+
 	/**
 	 * Metodo che produce una stringa di date
 	 * di tutti i giorni in cui c'è almeno una prenotazione
 	 */
-	private void updateBookedDates ()
-	{
+	private void updateBookedDates () {
 		Set<DateOur> daysList = model.getBookingMap().keySet(); //insieme di date con almeno una prenotazione
 		StringBuilder out = new StringBuilder();
 		for (DateOur date : daysList) //scorro le date e creo una stringa
@@ -1077,109 +994,93 @@ public class Controller implements SearchRecipe, SearchDish, Login, SaveData, Da
 	 * @param set set da convertire
 	 * @return stringa del set
 	 */
-	public String setToString (Set<Ingredient> set)
-	{
+	public String setToString (Set<Ingredient> set) {
 		StringBuilder out = new StringBuilder();
 		for (Ingredient entry : set)
 			out.append(entry.convertToString()).append("\n");
 		return out.toString().trim();
 	}
-	
+
 	/**
 	 * Metodo che dalla GUI crea una lista d'ingredienti da modificare nel magazzino
 	 * @param text ingredienti da cambiare
 	 * @return true se è andato a buon fine, false altrimenti
 	 */
-	public boolean warehouseChanges (String text)
-	{
+	public boolean warehouseChanges (String text) {
 		if (text.isBlank()) //controllo che il testo sia valido
 		{
 			erSet.errorSetter(INVALID_FORMAT);
 			return false;
 		}
-		
+
 		Set<Ingredient> ingredients = new HashSet<>();
-		
-		for (String s : text.split("\n"))
-		{
+
+		for (String s : text.split("\n")) {
 			if (!s.contains(":")) //controllo il formato della riga
 			{
 				erSet.errorSetter(INVALID_FORMAT);
 				return false;
 			}
-			
+
 			String[] t = s.split(":");
-			
+
 			if (t.length < 3 || t[0].isBlank() || t[2].isBlank()) //controllo il formato della stringa splittata
 			{
 				erSet.errorSetter(INVALID_FORMAT);
 				return false;
 			}
-			
+
 			String name = t[0], unit = t[2];
 			double quantity = Double.parseDouble(t[1]);
-			if(model.getExtraFoodsMap().containsKey(name))
-			{
+			if(model.getExtraFoodsMap().containsKey(name)) {
 				quantity = checkUnitExtraFoods(unit,quantity);
 				unit="Hg";
-			}
-			else
-			{
+			} else {
 				quantity = checkUnit(unit, quantity); //converto la quantità e controllo la validità dell'unità di misura
 				if (unit.toLowerCase().contains("g")) //ho convertito tutto in grammi e litri
 					unit = "g";
 				else
 					unit = "L";
 			}
-			
+
 			if (!ingredients.add(new Ingredient(name, unit, quantity))) //aggiungo l'ingrediente alla lista
 			{
 				erSet.errorSetter(INVALID_FORMAT);
 				return false;
 			}
 		}
-		try
-		{
+		try {
 			updateAfterMeal(ingredients);
 			return true;
-		}
-		catch (RuntimeException e)
-		{
+		} catch (RuntimeException e) {
 			erSet.errorSetter(Integer.parseInt(e.getMessage()));
 		}
 		return false;
 	}
-	
+
 	/**
 	 * Metodo che modifica il magazzino dopo il pasto
 	 * @param ingredients ingredienti da togliere e/o da aggiungere
 	 * @throws RuntimeException usata per gestire i problemi di formato
 	 */
-	private void updateAfterMeal (Set<Ingredient> ingredients) throws RuntimeException
-	{
+	private void updateAfterMeal (Set<Ingredient> ingredients) throws RuntimeException {
 		Set<Ingredient> register = new HashSet<>(model.getRegistroAfterMeal());
-		for (Ingredient deltaIngredient : ingredients)
-		{
+		for (Ingredient deltaIngredient : ingredients) {
 			if (!model.getRegistroBeforeMeal().contains(deltaIngredient)) //se provo ad aggiungere un ingrediente che prima non c'era ho un errore
 				throw new RuntimeException(Integer.toString(NO_INGREDIENT));
-			for (Ingredient regIngr : model.getRegistroBeforeMeal())
-			{
-				if (regIngr.equals(deltaIngredient))
-				{
+			for (Ingredient regIngr : model.getRegistroBeforeMeal()) {
+				if (regIngr.equals(deltaIngredient)) {
 					if (register.contains(deltaIngredient))  //modifico il registro post pasto
 					{
-						for (Ingredient ingredient : register)
-						{
-							if (ingredient.equals(deltaIngredient))
-							{
+						for (Ingredient ingredient : register) {
+							if (ingredient.equals(deltaIngredient)) {
 								if (!ingredient.getUnit().equals(deltaIngredient.getUnit()))
 									throw new RuntimeException(Integer.toString(WRONG_UNIT));
 								double newIngr = ingredient.getQuantity() + deltaIngredient.getQuantity();
-								
+
 								if (newIngr < 0)
 									register.remove(ingredient);
-								else
-								{
+								else {
 									if (newIngr > regIngr.getQuantity())
 										throw new RuntimeException(Integer.toString(INVALID_QUANTITY)); //se la quantità che torna dalla cucina è maggiore di quella che è uscita c'è un errore
 									ingredient.setQuantity(newIngr);
@@ -1188,9 +1089,7 @@ public class Controller implements SearchRecipe, SearchDish, Login, SaveData, Da
 								break;
 							}
 						}
-					}
-					else
-					{
+					} else {
 						if (deltaIngredient.getQuantity() >= 0 && deltaIngredient.getQuantity() <= regIngr.getQuantity())
 							if(deltaIngredient.getUnit().equals(regIngr.getUnit()))
 								register.add(deltaIngredient);
@@ -1204,12 +1103,11 @@ public class Controller implements SearchRecipe, SearchDish, Login, SaveData, Da
 		model.setRegistroAfterMeal(register);
 		gui.updateWareReturnList(setToString(model.getRegistroAfterMeal()));
 	}
-	
+
 	/**
 	 * Metodo che si occupa delle operazioni necessarie per il cambio di giorno
 	 */
-	public void nextDay ()
-	{
+	public void nextDay () {
 		model.getToday().getDate().add(Calendar.DATE, 1); //cambio la data
 		//update GUI
 		gui.updateDishes(convertToStringVector(model.getDishesSetConverted()));
@@ -1218,35 +1116,32 @@ public class Controller implements SearchRecipe, SearchDish, Login, SaveData, Da
 		gui.nextDay(model.getToday().getStringDate());
 		updateConfig();
 		menuCartaToday();
-		
+
 		oldBooking(); //cancello le vecchie prenotazioni
-		
+
 		//aggiorno e calcolo magazzino e lista della spesa
 		model.setRegistroBeforeMeal(model.getRegistroAfterMeal());
 		calculateWarehouse(false);
 	}
-	
+
 	/**
 	 * Metodo che rimuove tutte le prenotazioni scadute
 	 */
-	private void oldBooking ()
-	{
+	private void oldBooking () {
 		HashMap<DateOur, List<Booking>> temp = new HashMap<>(model.getBookingMap()); //per evitare concurrent access
-		for (Map.Entry<DateOur, List<Booking>> entry : model.getBookingMap().entrySet())
-		{
+		for (Map.Entry<DateOur, List<Booking>> entry : model.getBookingMap().entrySet()) {
 			if (entry.getKey().getDate().before(model.getToday().getDate())) //rimuovo le prenotazioni che hanno una data precedente ad oggi
 				temp.remove(entry.getKey());
 		}
 		model.setBookingMap(temp);
 		updateBookedDates();
 	}
-	
+
 	/**
 	 * Metodo che mostra in GUI
 	 * tutti i piatti validi oggi
 	 */
-	private void menuCartaToday ()
-	{
+	private void menuCartaToday () {
 		StringBuilder menuCarta = new StringBuilder();
 		for (Dish dish : model.getDishesSet()) //genero la lista di piatti
 			if (dish.isValid(model.getToday()))
@@ -1255,54 +1150,43 @@ public class Controller implements SearchRecipe, SearchDish, Login, SaveData, Da
 			menuCarta = new StringBuilder("Non ci sono piatti disponibili per la data ordierna"); //se non ci sono piatti validi
 		gui.updateMenuCarta(menuCarta.toString());
 	}
-	
+
 	/**
 	 * Metodo che genera una lista d'ingredienti consumati nel giorno di oggi
 	 * @return set d'ingredienti consumati
 	 */
-	private Set<Ingredient> generateConsumedList ()
-	{
+	private Set<Ingredient> generateConsumedList () {
 		Set<Ingredient> consumedSet = new HashSet<>();
 		Set<Ingredient> drinks = new HashSet<>();
 		Set<Ingredient> foods = new HashSet<>();
-		
-		if (model.getBookingMap().containsKey(model.getToday()))
-		{
+
+		if (model.getBookingMap().containsKey(model.getToday())) {
 			Map<Dish, Integer> allDish = new HashMap<>();
-			for (Booking booking : model.getBookingMap().get(model.getToday()))
-			{
+			for (Booking booking : model.getBookingMap().get(model.getToday())) {
 				for (Map.Entry<String, Double> entry : model.getDrinksMap().entrySet()) //aggiungo i drink alla lista della spesa
 				{
 					Ingredient i = new Ingredient(entry.getKey(), "L", Math.ceil(entry.getValue() * booking.getNumber()));
-					if (drinks.contains(i))
-					{
-						for (Ingredient drink : drinks)
-						{
-							if (drink.equals(i))
-							{
+					if (drinks.contains(i)) {
+						for (Ingredient drink : drinks) {
+							if (drink.equals(i)) {
 								drink.setQuantity(drink.getQuantity() + i.getQuantity()); //aggiungo i drinks in caso esistano già nel set
 								break;
 							}
 						}
-					}
-					else
+					} else
 						drinks.add(i); //aggiungo i drinks in caso non ci siano già
 				}
 				for (Map.Entry<String, Double> entry : model.getExtraFoodsMap().entrySet()) //aggiungo i foods alla lista della spesa
 				{
 					Ingredient i = new Ingredient(entry.getKey(), "Hg", Math.ceil(entry.getValue() * booking.getNumber()));
-					if (foods.contains(i))
-					{
-						for (Ingredient food : foods)
-						{
-							if (food.equals(i))
-							{
+					if (foods.contains(i)) {
+						for (Ingredient food : foods) {
+							if (food.equals(i)) {
 								food.setQuantity(food.getQuantity() + i.getQuantity()); //aggiungo i drinks in caso esistano già nel set
 								break;
 							}
 						}
-					}
-					else
+					} else
 						foods.add(i); //aggiungo i foods in caso non ci siano già
 				}
 				for (Map.Entry<Dish, Integer> dish : booking.getOrder().entrySet()) //calcolo quanti piatti di ogni tipo devo cucinare oggi
@@ -1313,32 +1197,27 @@ public class Controller implements SearchRecipe, SearchDish, Login, SaveData, Da
 						allDish.put(dish.getKey(), dish.getValue());
 				}
 			}
-			for (Map.Entry<Dish, Integer> dish : allDish.entrySet())
-			{
+			for (Map.Entry<Dish, Integer> dish : allDish.entrySet()) {
 				Recipe recipe = dish.getKey().getRecipe();
-				
-				for (Ingredient ingredient : recipe.getIngredients())
-				{
+
+				for (Ingredient ingredient : recipe.getIngredients()) {
 					double multi = (dish.getValue() / (double) recipe.getPortions()); //calcolo la proporzione d'ingredienti da usare
-					
+
 					if (consumedSet.contains(ingredient)) //se ci sono già ingredienti uguali consumati sommo il loro valore
 					{
-						for (Ingredient consumedStock : consumedSet)
-						{
-							if (consumedStock.equals(ingredient))
-							{
+						for (Ingredient consumedStock : consumedSet) {
+							if (consumedStock.equals(ingredient)) {
 								consumedStock.setQuantity(consumedStock.getQuantity() + multi * ingredient.getQuantity());
 								break;
 							}
 						}
-					}
-					else
+					} else
 						consumedSet.add(new Ingredient(ingredient.getName(), ingredient.getUnit(), multi * ingredient.getQuantity()));
 				}
 			}
 			for (Ingredient consumedStock : consumedSet)
 				consumedStock.setQuantity(consumedStock.getQuantity() * (100 + model.getIncrement()) / 100); //calcolo dell'incremento dell'X%
-			
+
 			//aggiungo foods and drinks agli ingredienti consumati
 			consumedSet.addAll(drinks);
 			consumedSet.addAll(foods);
@@ -1352,82 +1231,68 @@ public class Controller implements SearchRecipe, SearchDish, Login, SaveData, Da
 	 * @param consumedSet ingredienti consumati oggi
 	 * @return lista della spesa
 	 */
-	private Set<Ingredient> generateGroceryList (Set<Ingredient> consumedSet)
-	{
+	private Set<Ingredient> generateGroceryList (Set<Ingredient> consumedSet) {
 		Set<Ingredient> registroBeforeMeal = new HashSet<>(model.getRegistroBeforeMeal());
 		Set<Ingredient> consumedCopy = new HashSet<>();
 
 		for (Ingredient consIngr : consumedSet)//faccio una copia in modo da non modificare l'originale
 			consumedCopy.add(new Ingredient(consIngr.getName(), consIngr.getUnit(), consIngr.getQuantity()));
-		
+
 		Set<Ingredient> groceryList = new HashSet<>();
-		for (Ingredient consumedIngr : consumedCopy)
-		{
+		for (Ingredient consumedIngr : consumedCopy) {
 			if (registroBeforeMeal.contains(consumedIngr)) //se ho già un ingrediente in magazzino
 			{
-				for (Ingredient regIngr : registroBeforeMeal)
-				{
-					if (regIngr.equals(consumedIngr))
-					{
+				for (Ingredient regIngr : registroBeforeMeal) {
+					if (regIngr.equals(consumedIngr)) {
 						double q = consumedIngr.getQuantity() - regIngr.getQuantity(); //calcolo quanto devo effettivamente comprare
-						if (q >= 0)
-						{
+						if (q >= 0) {
 							consumedIngr.setQuantity(q);
 							groceryList.add(consumedIngr);
 						}
 						break;
 					}
 				}
-			}
-			else
+			} else
 				groceryList.add(consumedIngr); //se non ho un ingrediente in magazzino devo comprare l'intera quantità che consumo
 		}
 		return groceryList;
 	}
-	
+
 	/**
 	 * Metodo che calcola il magazzino prima di un pasto
 	 * in base al magazzino del giorno precedente e alla lista della spesa
 	 * @param groceryList lista della spesa
 	 */
-	private void generateRegistroBeforeMeal (Set<Ingredient> groceryList)
-	{
+	private void generateRegistroBeforeMeal (Set<Ingredient> groceryList) {
 		Set<Ingredient> registroBeforeMeal = new HashSet<>();
 		for (Ingredient regIngr : model.getRegistroBeforeMeal()) //faccio una copia per non modificare l'originale
 			registroBeforeMeal.add(new Ingredient(regIngr.getName(), regIngr.getUnit(), regIngr.getQuantity()));
 
-		for (Ingredient grocery : groceryList)
-		{
-			if (registroBeforeMeal.contains(grocery))
-			{
-				for (Ingredient regIngr : registroBeforeMeal)
-				{
-					if (regIngr.equals(grocery))
-					{
+		for (Ingredient grocery : groceryList) {
+			if (registroBeforeMeal.contains(grocery)) {
+				for (Ingredient regIngr : registroBeforeMeal) {
+					if (regIngr.equals(grocery)) {
 						//se un ingrediente è nella lista e nel magazzino lo addo al magazzino considerando anche la quantità residua nello stesso
 						regIngr.setQuantity(grocery.getQuantity() + regIngr.getQuantity());
 						break;
 					}
 				}
-			}
-			else //se un ingrediente è nella lista ma non nel magazzino lo addo al magazzino
+			} else //se un ingrediente è nella lista ma non nel magazzino lo addo al magazzino
 				registroBeforeMeal.add(grocery);
 		}
 		model.setRegistroBeforeMeal(registroBeforeMeal);
 	}
-	
+
 	/**
 	 * Metodo che genera il magazzino dopo il pasto
 	 * calcolandolo dal magazzino prima del pasto
 	 * @param consumedList lista d'ingredienti consumati nel pasto
 	 */
-	private void generateRegistroAfterMeal (Set<Ingredient> consumedList)
-	{
+	private void generateRegistroAfterMeal (Set<Ingredient> consumedList) {
 		Set<Ingredient> registroBeforeMeal = new HashSet<>(model.getRegistroBeforeMeal());
 		Set<Ingredient> registroAfterMeal = new HashSet<>();
 
-		for (Ingredient beforeIngr : registroBeforeMeal)
-		{
+		for (Ingredient beforeIngr : registroBeforeMeal) {
 			double q = beforeIngr.getQuantity();
 			for (Ingredient consumedIngr : consumedList) {
 				if (beforeIngr.equals(consumedIngr)) {
@@ -1451,8 +1316,7 @@ public class Controller implements SearchRecipe, SearchDish, Login, SaveData, Da
 	 * @param storageWorker true se ha accesso alla tab storageWorker, false altrimenti
 	 * @return true se il salvataggio è avvenuto, false altrimenti
 	 */
-	public boolean saveUser (String name, String password, String confPassword, boolean manager, boolean employee, boolean storageWorker)
-	{
+	public boolean saveUser (String name, String password, String confPassword, boolean manager, boolean employee, boolean storageWorker) {
 		if (manager || employee || storageWorker) //deve avere almeno un ruolo, altrimenti non può accedere a nulla
 		{
 			if (!name.isBlank() && !password.isBlank()) //controllo la loro validità
@@ -1460,8 +1324,7 @@ public class Controller implements SearchRecipe, SearchDish, Login, SaveData, Da
 				boolean doppler = false;
 				if (model.getUsers().size() != 0) //se c`è almeno un altro utente
 				{
-					for (User user : model.getUsers())
-					{
+					for (User user : model.getUsers()) {
 						if (user.getName().equals(name)) //controllo che non esista un altro utente con lo stesso nome
 						{
 							erSet.errorSetter(INVALID_USERNAME);
@@ -1470,42 +1333,36 @@ public class Controller implements SearchRecipe, SearchDish, Login, SaveData, Da
 						}
 					}
 				}
-				if (!doppler)
-				{
+				if (!doppler) {
 					if (password.equals(confPassword)) //se le password coincidono
 					{
 						User user = new User(name, password, manager, employee, storageWorker); //salvo l'utente
 						user.hashAndSaltPassword(); //hasho la password
 						model.getUsers().add(user);
 						if(writer.writePeople(model.getUsers())) gui.confirmSave(); // salvo la nuova lista
-						else	erSet.errorSetter(ERROR_IN_WRITING);
+						else erSet.errorSetter(ERROR_IN_WRITING);
 						return true;
-					}
-					else
+					} else
 						erSet.errorSetter(INVALID_PASSWORD);
 				}
-			}
-			else
+			} else
 				erSet.errorSetter(INVALID_FORMAT);
-		}
-		else
+		} else
 			erSet.errorSetter(NOT_ENOUGHT_ROLES);
 		return false;
 	}
-	
+
 	/**
 	 * Metodo che gestisce il login di un utente tramite utente e password
 	 * @param name     nome utente
 	 * @param password password inserita
 	 * @return true se il login è andato a buon fine, false altrimenti
 	 */
-	public boolean login (String name, String password)
-	{
+	public boolean login (String name, String password) {
 		if (!name.isBlank() && !password.isBlank()) //controllo che abbiano un valore
 		{
 			boolean found = false;
-			for (User user : model.getUsers())
-			{
+			for (User user : model.getUsers()) {
 				if (user.getName().equals(name)) //cerco l'utente tra l'elenco
 				{
 					found = true;
@@ -1514,34 +1371,30 @@ public class Controller implements SearchRecipe, SearchDish, Login, SaveData, Da
 						gui.login(); //cambio stato alla GUI
 						model.setTheUser(user); //memorizzo l'utente corrente
 						return true;
-					}
-					else
+					} else
 						erSet.errorSetter(INVALID_PASSWORD);
 					break;
 				}
 			}
 			if (!found)
 				erSet.errorSetter(INVALID_USERNAME);
-		}
-		else
+		} else
 			erSet.errorSetter(INVALID_FORMAT);
 		return false;
 	}
-	
+
 	/**
 	 * Controlla se l'utente ha i permessi per accedere ad un certo ruolo
 	 * @param role ruolo che devo controllare
 	 * @return true se l'utente ha i permessi, false altrimenti
 	 */
-	public boolean checkPermission (String role)
-	{
-		boolean out = switch (role)
-				{
-					case "manager" -> model.getTheUser().isManager();
-					case "employee" -> model.getTheUser().isEmployee();
-					case "warehouse worker" -> model.getTheUser().isStorageWorker();
-					default -> false;
-				};
+	public boolean checkPermission (String role) {
+		boolean out = switch (role) {
+			case "manager" -> model.getTheUser().isManager();
+			case "employee" -> model.getTheUser().isEmployee();
+			case "warehouse worker" -> model.getTheUser().isStorageWorker();
+			default -> false;
+		};
 		if (!out)
 			erSet.errorSetter(NO_PERMISSION); //in caso non abbia i permessi giusto avviso l'utente
 		return out;

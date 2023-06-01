@@ -8,13 +8,11 @@ public class Reader implements Read
 {
 	private static final String ERRORE = "\nErrore in Input: ";
 	
-	SearchRecipe sR;
-	SearchDish sD;
-
-	public Reader(SearchRecipe sR, SearchDish sD)
+	RestaurantRepository repo;
+	
+	public Reader(RestaurantRepository repo)
 	{
-		this.sR = sR;
-		this.sD = sD;
+		this.repo = repo;
 	}
 	
 	public Set<User> readPeople()
@@ -231,7 +229,7 @@ public class Reader implements Read
 				if (xmlr.getEventType() == XMLStreamConstants.END_ELEMENT)
 					if (xmlr.getLocalName().equals("dish"))
 					{
-						dishes.add(new Dish(name, sR.searchRecipe(id), startPeriod, endPeriod, seasonal, permanent));
+						dishes.add(new Dish(name, repo.findRecipe(id), startPeriod, endPeriod, seasonal, permanent));
 					}
 				
 				xmlr.next();
@@ -281,7 +279,7 @@ public class Reader implements Read
 					if (xmlr.getLocalName().equals("menu"))
 					{
 						for (String s: dishesNames) {
-							dishes.add(sD.searchDish(s));
+							dishes.add(repo.findDish(s));
 						}
 						menu.add(new ThematicMenu(name, startPeriod, endPeriod, new HashSet<>(dishes), seasonal, permanent)); //il new serve per evitare che vengano clearati alla riga dopo
 						dishes.clear();
@@ -327,7 +325,7 @@ public class Reader implements Read
 							workload = Integer.parseInt(xmlr.getAttributeValue(2));
 						}
 						case "order" ->
-								order.put(sD.searchDish(xmlr.getAttributeValue(0)), Integer.parseInt(xmlr.getAttributeValue(1)));
+								order.put(repo.findDish(xmlr.getAttributeValue(0)), Integer.parseInt(xmlr.getAttributeValue(1)));
 					}
 				}
 				if (xmlr.getEventType() == XMLStreamConstants.END_ELEMENT)

@@ -1,9 +1,3 @@
 <?xml version="1.0" encoding="utf-8"?>
 <dishes>
-	<dish name="myDishPermanent" startDate="01/01/1444" endDate="31/12/1444" seasonal="false" permanent="true">
-		<recipe id="myRecipe"></recipe></dish>
-	<dish name="myDishSeasonal" startDate="01/01/2023" endDate="30/06/2023" seasonal="true" permanent="false">
-		<recipe id="myRecipe"></recipe></dish>
-	<dish name="myDish" startDate="01/01/2023" endDate="30/06/2023" seasonal="false" permanent="false">
-		<recipe id="myRecipe"></recipe></dish>
 </dishes>
