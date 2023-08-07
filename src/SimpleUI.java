@@ -21,8 +21,10 @@ public class SimpleUI extends JFrame implements ErrorSetter, GUI
 
     //interfacce usate
     private final SaveData saver;
-    private final Login loginner;
-    private final DataManagement dataManager;
+    private final DataManager dataManager;
+    private final WriterManager writerManager;
+    private final DateManager dateManager;
+    private final Controller controller;
 
     // variabile per lo stato
     private State state;
@@ -296,10 +298,12 @@ public class SimpleUI extends JFrame implements ErrorSetter, GUI
     private final Border border = BorderFactory.createLineBorder(Color.GRAY, 1);
 
 
-    public SimpleUI(SaveData saver, Login loginner, DataManagement dataManager) {
+    public SimpleUI(Controller controller, SaveData saver,  DataManager dataManager, WriterManager writerManager, DateManager dateManager) {
         this.saver = saver;
-        this.loginner = loginner;
+        this.controller  = controller;
         this.dataManager = dataManager;
+        this.writerManager = writerManager;
+        this.dateManager = dateManager;
 
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setSize(800, 600);
@@ -367,9 +371,9 @@ public class SimpleUI extends JFrame implements ErrorSetter, GUI
         //actionlistener che chiama i metodi dell'interfaccia per scrivere
         passWriteButton.addActionListener(e -> {
             boolean ok;
-            ok = dataManager.writeManager();
-            ok = ok && dataManager.writeBookings();
-            ok = ok && dataManager.writeRegister();
+            ok = writerManager.writeManager();
+            ok = ok && writerManager.writeBookings();
+            ok = ok && writerManager.writeRegister();
             if (ok) confirmSave();
             else errorSetter(Controller.ERROR_IN_WRITING); //errore in writer
         });
@@ -418,7 +422,7 @@ public class SimpleUI extends JFrame implements ErrorSetter, GUI
         passTabbedPane.addTab("Login",passLoginPanel);
         passTabbedPane.addTab("Sign Up", passSavePanel);
         passSaveButton.addActionListener(e -> {
-            if(loginner.saveUser(passSaveUserText.getText().trim(),Arrays.toString(passSavePasswordField.getPassword()).trim(),Arrays.toString(passSavePassword2Field.getPassword()).trim(),passManCheck.isSelected(),passEmpCheck.isSelected(),passWareCheck.isSelected()))
+            if(saver.saveUser(passSaveUserText.getText().trim(),Arrays.toString(passSavePasswordField.getPassword()).trim(),Arrays.toString(passSavePassword2Field.getPassword()).trim(),passManCheck.isSelected(),passEmpCheck.isSelected(),passWareCheck.isSelected()))
             {
                 passSaveUserText.setText(BLANK);
                 passSavePasswordField.setText(BLANK);
@@ -426,7 +430,7 @@ public class SimpleUI extends JFrame implements ErrorSetter, GUI
             }
         });
         passLoginButton.addActionListener(e ->{
-            if(loginner.login(passLoginUserText.getText().trim(), Arrays.toString(passLoginPasswordField.getPassword()).trim()))
+            if(controller.login(passLoginUserText.getText().trim(), Arrays.toString(passLoginPasswordField.getPassword()).trim()))
             {
                 passLoginPasswordField.setText(BLANK);
                 passLoginUserText.setText(BLANK);
@@ -457,21 +461,21 @@ public class SimpleUI extends JFrame implements ErrorSetter, GUI
 
         //action listener che controllano i permessi dell'utente quando accede ad un ruolo
         managerButton.addActionListener(e -> {
-            if(loginner.checkPermission("manager"))
+            if(controller.checkPermission("manager"))
             {
                 state = State.MANAGER;
                 updateUI();
             }
         });
         employeeButton.addActionListener(e -> {
-            if(loginner.checkPermission("employee"))
+            if(controller.checkPermission("employee"))
             {
                 state = State.EMPLOYEE;
                 updateUI();
             }
         });
         warehouseWorkerButton.addActionListener(e -> {
-            if(loginner.checkPermission("warehouse worker"))
+            if(controller.checkPermission("warehouse worker"))
             {
                 state = State.WAREHOUSE_WORKER;
                 updateUI();
@@ -560,8 +564,6 @@ public class SimpleUI extends JFrame implements ErrorSetter, GUI
         cfgMenuAreaScroll.setPreferredSize(new Dimension(200, 100));
         cfgResMenuCartaScroll.setPreferredSize(new Dimension(200, 100));
 
-
-
         cfgDrinksScroll.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS);
         cfgFoodsScroll.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS);
         cfgResBaseScroll.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS);
@@ -594,7 +596,7 @@ public class SimpleUI extends JFrame implements ErrorSetter, GUI
 
 
         cfgWriteButton.addActionListener(e -> {
-            if (dataManager.writeManager()) confirmSave();
+            if (writerManager.writeManager()) confirmSave();
             else errorSetter(Controller.ERROR_IN_WRITING);
         });
        //red button che azzera i dati
@@ -831,7 +833,7 @@ public class SimpleUI extends JFrame implements ErrorSetter, GUI
         cfgMenuPanel.add(cfgMenuComboBox, c);
         cfgMenuComboBox.addActionListener(e ->
         {
-            String selectedItem = ((String) Objects.requireNonNull(cfgMenuComboBox.getSelectedItem())).split("-")[0].trim();
+            String selectedItem = ((String) Objects.requireNonNull(cfgMenuComboBox.getSelectedItem())).split("-")[0].trim(); //non riusciamo a trovare alternativa
             cfgMenuDishesInput.setText(cfgMenuDishesInput.getText() + selectedItem + "\n");
         });
 
@@ -941,7 +943,7 @@ public class SimpleUI extends JFrame implements ErrorSetter, GUI
         c.gridx = 2;
         c.gridy = 4;
         cfgResPanel.add(cfgResDatiMenuBox, c);
-        cfgResDatiMenuBox.addActionListener(e -> dataManager.writeMenuComp((String) cfgResDatiMenuBox.getSelectedItem())); //actionlister chiama il metodo dell'interfaccia che scrive i contenuti del menù selezionato
+        cfgResDatiMenuBox.addActionListener(e -> dataManager.printMenuComp((String) cfgResDatiMenuBox.getSelectedItem())); //actionlister chiama il metodo dell'interfaccia che scrive i contenuti del menù selezionato
         c.gridx = 3;
         c.gridy = 4;
         cfgResPanel.add(cfgResDatiMenuScroll, c);
@@ -1023,8 +1025,8 @@ public class SimpleUI extends JFrame implements ErrorSetter, GUI
         empSeeBookingsPanel.add(empSeeBookSend, c);
         empSeeBookSend.addActionListener(e -> {
             String s = empSeeBookDateInput.getText().trim();
-            if (dataManager.checkDate(s)) {
-                dataManager.seeBookings(dataManager.inputToDate(s));
+            if (dateManager.checkDate(s)) {
+                dataManager.seeBookings(dateManager.inputToDate(s));
             } else {
                 errorSetter(Controller.INVALID_DATE);
             }
@@ -1033,7 +1035,7 @@ public class SimpleUI extends JFrame implements ErrorSetter, GUI
         c.gridy = 7;
         empSeeBookingsPanel.add(empSeeBookWrite, c);
         empSeeBookWrite.addActionListener(e -> {
-            if (dataManager.writeBookings()) confirmSave();
+            if (writerManager.writeBookings()) confirmSave();
             else errorSetter(Controller.ERROR_IN_WRITING);
         });
 
@@ -1043,7 +1045,7 @@ public class SimpleUI extends JFrame implements ErrorSetter, GUI
         //actionlistener per pulire le prenotazioni di questa data
         empSeeBookClear.addActionListener(e ->
                 {
-                    if(dataManager.clearBookings(dataManager.inputToDate(empSeeBookDateInput.getText())))
+                    if(dataManager.clearBookings(dateManager.inputToDate(empSeeBookDateInput.getText())))
                         empSeeBookDateInput.setText("");
                     else errorSetter(Controller.CANNOT_DELETE);
                 }
@@ -1192,7 +1194,7 @@ public class SimpleUI extends JFrame implements ErrorSetter, GUI
         c.gridy = 4;
         //fa scrivere il registro attuale tramite interfaccia
         wareListSend.addActionListener(e-> {
-            if (dataManager.writeRegister()) confirmSave();
+            if (writerManager.writeRegister()) confirmSave();
             else errorSetter(Controller.ERROR_IN_WRITING);
         });
         wareListPanel.add(wareListSend, c);

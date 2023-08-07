@@ -1,3 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <bookings>
+	<booking date="13/11/2022">
+		<book name="Andrea" number="2" workload="2">
+			<order dish="Pasta con Tonno" quantity="1"></order>
+			<order dish="Polpettine" quantity="1"></order></book></booking>
 </bookings>

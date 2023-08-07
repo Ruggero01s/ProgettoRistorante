@@ -35,21 +35,6 @@ public class ThematicMenu implements ConvertToString
 			throw new RuntimeException("Errore: seasonal && permanent = true");
 	}
 	
-	public String getName()
-	{
-		return name;
-	}
-	
-	public DateOur getStartPeriod()
-	{
-		return startPeriod;
-	}
-	
-	public DateOur getEndPeriod()
-	{
-		return endPeriod;
-	}
-	
 	public Set<Dish> getDishes()
 	{
 		return dishes;
@@ -59,15 +44,7 @@ public class ThematicMenu implements ConvertToString
 	{
 		return workThematicMenuLoad;
 	}
-	
-	public boolean isSeasonal() {
-		return seasonal;
-	}
-	
-	public boolean isPermanent() {
-		return permanent;
-	}
-	
+
 	/**
 	 * Calcola in automatico il workload del menu
 	 */
@@ -79,58 +56,18 @@ public class ThematicMenu implements ConvertToString
 	}
 	
 	/**
-	 * override dell'equals
-	 * @param obj oggetto da confrontare
-	 * @return true se i nomi sono uguali e sono entrambi dello stesso tipo, false altrimenti
-	 */
-	public boolean equals(Object obj) {
-		if (obj == this)
-			return true;
-		if (!(obj instanceof ThematicMenu))
-			return false;
-
-		ThematicMenu menu = (ThematicMenu) obj;
-
-		return this.name.equalsIgnoreCase(menu.getName());
-	}
-
-	@Override
-	public int hashCode() {
-		int result = 17;
-		result = 31 * result + name.hashCode();
-		return result;
-	}
-	/**
-	 * Controllo la validità di un menu
-	 * @param date data da controllare
-	 * @return true se il menu è valido nella data, false altrimenti
-	 */
-	public boolean isValid(DateOur date)
-	{
-		if(this.permanent) //i piatti permanenti sono sempre validi
-			return true;
-		else
-		{
-			if (this.seasonal)
-				return date.bet(this.startPeriod,this.endPeriod);
-			else
-				return date.between(this.startPeriod, this.endPeriod);
-		}
-	}
-	
-	/**
 	 * Converto i menu in stringhe
 	 * @return Stringa di output
 	 */
 	public String convertToString()
 	{
 		String s;
-		if(permanent)  s = this.name+" - [PERM] - (";
-		else if(seasonal) {
-			String startDate = startPeriod.getDate().get(Calendar.DAY_OF_MONTH) + "/" + (startPeriod.getDate().get(Calendar.MONTH)+1);
-			String endDate = endPeriod.getDate().get(Calendar.DAY_OF_MONTH) +"/"+ (endPeriod.getDate().get(Calendar.MONTH)+1);
-			s = this.name+" - ["+startDate+" || "+endDate+"] - [SEAS] - (";
-		}else s = this.name+" - ["+this.startPeriod.getStringDate()+" || "+this.endPeriod.getStringDate()+"] - (";
+		if(this.isPermanent())  s = this.getName() +" - [PERM] - (";
+		else if(this.isSeasonal()) {
+			String startDate = this.getStartPeriod().getDate().get(Calendar.DAY_OF_MONTH) + "/" + (this.getStartPeriod().getDate().get(Calendar.MONTH)+1);
+			String endDate = this.getEndPeriod().getDate().get(Calendar.DAY_OF_MONTH) +"/"+ (this.getEndPeriod().getDate().get(Calendar.MONTH)+1);
+			s = this.getName() +" - ["+startDate+" || "+endDate+"] - [SEAS] - (";
+		}else s = this.getName() +" - ["+ this.getStartPeriod().getStringDate()+" || "+ this.getEndPeriod().getStringDate()+"] - (";
 		StringBuilder out = new StringBuilder(s);
 		for (Dish dish:this.dishes)
 			out.append(dish.getName()).append(", ");

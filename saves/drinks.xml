@@ -1,3 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <drinks>
+	<drink name="acqua" liter="1.0"></drink>
+	<drink name="vino" liter="0.75"></drink>
 </drinks>

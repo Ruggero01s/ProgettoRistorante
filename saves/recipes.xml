@@ -1,3 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <recipes>
+	<recipe id="pastaTonno" portions="2" workLoadPortion="1.0">
+		<ingredient name="farina" quantity="200.0" unity="g"></ingredient></recipe>
+	<recipe id="polpette" portions="1" workLoadPortion="1.0">
+		<ingredient name="carne" quantity="100.0" unity="g"></ingredient></recipe>
 </recipes>
