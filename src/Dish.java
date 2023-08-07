@@ -1,13 +1,8 @@
 import java.util.Calendar;
 
-public class Dish implements ConvertToString
+public class Dish extends ConsumerItem
 {
-    private final String name; //nome del piatto
-    private final DateOur startPeriod; //inizio periodo di validità del piatto
-    private final DateOur endPeriod; //fine periodo di validità del piatto
     private final Recipe recipe; //ricetta associata al piatto
-    private final boolean seasonal;// se un piatto è stagionale o no
-    private final boolean permanent; // se un piatto è permanente o no
 
     public Dish(String name, Recipe recipe, String startPeriod, String endPeriod, boolean seasonal, boolean permanent) throws RuntimeException
     {

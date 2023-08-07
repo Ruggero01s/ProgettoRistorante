@@ -1,38 +1,16 @@
 import java.util.Calendar;
 import java.util.Set;
 
-public class ThematicMenu implements ConvertToString
+public class ThematicMenu extends ConsumerItem
 {
-	private final String name; //nome del menu tematico
-	private final DateOur startPeriod; //inizio periodo di validità
-	private final DateOur endPeriod; //fine periodo di validità
 	private final Set <Dish> dishes; //elenco dei piatti contenuti nel menu
-	private final boolean seasonal; //true se stagionale
-	private final boolean permanent; //true se permanente
 	private double workThematicMenuLoad; //workLoad del menu
 	
 	public ThematicMenu(String name, String startPeriod, String endPeriod, Set<Dish> dishes, boolean seasonal, boolean permanent) throws  RuntimeException
 	{
-		this.name = name;
-		String[] startPezzi = startPeriod.split("/");
-		String[] endPezzi = endPeriod.split("/");
-		this.startPeriod = new DateOur(startPezzi[0],startPezzi[1],startPezzi[2]);
-		this.endPeriod = new DateOur(endPezzi[0],endPezzi[1],endPezzi[2]);
+		super(name,startPeriod,endPeriod,seasonal,permanent);
 		this.dishes = dishes;
 		calcWorkThematicMenuLoad(); //calcola in automatico il workThematicMenuLoad
-		this.seasonal=seasonal;
-		this.permanent=permanent;
-		
-		if(!permanent)
-			if(this.startPeriod.equals(this.endPeriod)) //se le date sono uguali lancio un errore
-				throw new RuntimeException();
-		
-		if(!seasonal && !permanent)
-			if(this.startPeriod.getDate().after(this.endPeriod.getDate())) //se le date sono al contrario lancio un errore
-				throw new RuntimeException();
-
-		if(seasonal && permanent)
-			throw new RuntimeException("Errore: seasonal && permanent = true");
 	}
 	
 	public Set<Dish> getDishes()

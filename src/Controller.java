@@ -667,10 +667,10 @@ public class Controller implements SaveData, DataManager, WriterManager, DateMan
 
         oldBooking(); //cancello le vecchie prenotazioni
 
-		//aggiorno e calcolo magazzino e lista della spesa
-		model.setRegistroBeforeMeal(model.getRegistroAfterMeal());
-		calculateWarehouse(false);
-	}
+        //aggiorno e calcolo magazzino e lista della spesa
+        model.setRegistroBeforeMeal(model.getRegistroAfterMeal());
+        calculateWarehouse(false);
+    }
 
     /**
      * Metodo che rimuove tutte le prenotazioni scadute

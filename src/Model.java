@@ -18,18 +18,6 @@ public class Model implements RestaurantRepository
 	private Set<User> users = new HashSet<>();
 	private User theUser;
 
-	public Set<ConvertToString> getDishesSetConverted () {
-		return new HashSet<>(this.dishesSet);
-	}
-
-	public Set<ConvertToString> getRecipeSetConverted () {
-		return new HashSet<>(this.recipesSet);
-	}
-
-	public Set<ConvertToString> getThematicMenuSetConverted () {
-		return new HashSet<>(this.thematicMenusSet);
-	}
-
 	public User getCurrentUser() {
 		return theUser;
 	}
@@ -352,3 +340,4 @@ public class Model implements RestaurantRepository
 	}
 
 }
+
