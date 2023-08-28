@@ -16,7 +16,7 @@ public class Loginner implements Login{
      * @return true se il login è andato a buon fine, false altrimenti
      */
     public User login(String name, String password) {
-        if (!name.isBlank() && !password.isBlank()) //controllo che abbiano un valore
+        if (!name.trim().isEmpty() && !password.trim().isEmpty()) //controllo che abbiano un valore
         {
             try {
                 User user = repo.findUser(name);
@@ -38,11 +38,19 @@ public class Loginner implements Login{
      * @return true se l'utente ha i permessi, false altrimenti
      */
     public boolean checkPermission(String role, User currentUser) {
-        boolean out = switch (role) {
-            case "manager" -> currentUser.isManager();
-            case "employee" -> currentUser.isEmployee();
-            case "warehouse worker" -> currentUser.isStorageWorker();
-            default -> false;
+        boolean out;
+        switch (role) {
+            case "manager":
+                out = currentUser.isManager();
+                break;
+            case "employee":
+                out = currentUser.isEmployee();
+                break;
+            case "warehouse worker":
+                out = currentUser.isStorageWorker();
+                break;
+            default:
+                out = false;
         };
         if (!out)
             erSet.errorSetter(Controller.NO_PERMISSION); //in caso non abbia i permessi giusto avviso l'utente

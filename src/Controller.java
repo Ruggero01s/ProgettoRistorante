@@ -10,7 +10,7 @@ public class Controller implements SaveData, DataManager, WriterManager, DateMan
     private Login loginner;
     private InputParser inputParser;
     private Updater updater;
-    private final Read reader = new Reader(repo);
+    private Read reader;
     private final Write writer = new Writer();
     //costanti per la gestione degli errori
     public static final int MIN_ZERO = 0;
@@ -51,6 +51,7 @@ public class Controller implements SaveData, DataManager, WriterManager, DateMan
         model = new Model();
         repo = model;
         gui = new SimpleUI(this, this, this, this, this);
+        reader = new Reader(repo);
         erSet = (ErrorSetter) gui;
         loginner = new Loginner(repo, erSet);
         inputParser = new InParser(this, model, erSet);
@@ -253,13 +254,32 @@ public class Controller implements SaveData, DataManager, WriterManager, DateMan
         if (!(unit.equalsIgnoreCase("g") || unit.equalsIgnoreCase("l"))) //converto solo se l'unità non è grammi o litri
         {
             switch (unit.toLowerCase()) {
-                case "kg", "kl" -> quantity *= 1000.0;
-                case "hg", "hl" -> quantity *= 100.0;
-                case "dag", "dal" -> quantity *= 10.0;
-                case "dg", "dl" -> quantity /= 10.0;
-                case "cg", "cl" -> quantity /= 100.0;
-                case "mg", "ml" -> quantity /= 1000.0;
-                default -> throw new RuntimeException(""); //in caso di unità non riconosciuta lancio un errore
+                case "kl":
+                case "kg":
+                    quantity *= 1000.0;
+                    break;
+                case "hg":
+                case "hl":
+                    quantity *= 100.0;
+                    break;
+                case "dag":
+                case "dal":
+                    quantity *= 10.0;
+                    break;
+                case "dg":
+                case "dl":
+                    quantity /= 10.0;
+                    break;
+                case "cg":
+                case "cl":
+                    quantity /= 100.0;
+                    break;
+                case "mg":
+                case "ml":
+                    quantity /= 1000.0;
+                    break;
+                default:
+                    throw new RuntimeException(""); //in caso di unità non riconosciuta lancio un errore
             }
         }
         return quantity;
@@ -276,13 +296,26 @@ public class Controller implements SaveData, DataManager, WriterManager, DateMan
         if (!(unit.equalsIgnoreCase("hg"))) //converto solo se l'unità non è in Hg
         {
             switch (unit.toLowerCase()) {
-                case "kg" -> quantity *= 10.0;
-                case "dag" -> quantity /= 10.0;
-                case "g" -> quantity /= 100.0;
-                case "dg" -> quantity /= 1000.0;
-                case "cg" -> quantity /= 10000.0;
-                case "mg" -> quantity /= 100000.0;
-                default -> throw new RuntimeException(""); //in caso di unità non riconosciuta lancio un errore
+                case "kg":
+                    quantity *= 10.0;
+                    break;
+                case "dag":
+                    quantity /= 10.0;
+                    break;
+                case "g":
+                    quantity /= 100.0;
+                    break;
+                case "dg":
+                    quantity /= 1000.0;
+                    break;
+                case "cg":
+                    quantity /= 10000.0;
+                    break;
+                case "mg":
+                    quantity /= 100000.0;
+                    break;
+                default:
+                    throw new RuntimeException(""); //in caso di unità non riconosciuta lancio un errore
             }
         }
         return quantity;
@@ -318,7 +351,7 @@ public class Controller implements SaveData, DataManager, WriterManager, DateMan
      * @return true se valida, false altrimenti
      */
     public boolean checkDate(String date) {
-        if (date.isBlank()) //se è vuota non è valida
+        if (date.trim().isEmpty()) //se è vuota non è valida
             return false;
         if (!date.contains("/")) //se non contiene / non è valida
             return false;
@@ -327,13 +360,26 @@ public class Controller implements SaveData, DataManager, WriterManager, DateMan
             return false;
         if (Integer.parseInt(pezzi[2]) <= 0) //se anno minore di 0 errore
             return false;
-        return switch (Integer.parseInt(pezzi[1])) //controllo mesi e giorni
+        switch (Integer.parseInt(pezzi[1])) //controllo mesi e giorni
         {
-            case 1, 3, 5, 7, 8, 10, 12 -> (Integer.parseInt(pezzi[0]) <= 31 || Integer.parseInt(pezzi[0]) > 0);
-            case 2 -> (Integer.parseInt(pezzi[0]) <= 29 || Integer.parseInt(pezzi[0]) > 0);
-            case 4, 6, 9, 11 -> (Integer.parseInt(pezzi[0]) <= 30 || Integer.parseInt(pezzi[0]) > 0);
-            default -> false;
-        };
+            case 1:
+            case 3:
+            case 5:
+            case 7:
+            case 8:
+            case 10:
+            case 12:
+                return (Integer.parseInt(pezzi[0]) <= 31 || Integer.parseInt(pezzi[0]) > 0);
+            case 2:
+                return (Integer.parseInt(pezzi[0]) <= 29 || Integer.parseInt(pezzi[0]) > 0);
+            case 4:
+            case 6:
+            case 9:
+            case 11:
+                return (Integer.parseInt(pezzi[0]) <= 30 || Integer.parseInt(pezzi[0]) > 0);
+            default:
+                return false;
+        }
     }
 
 
@@ -393,7 +439,7 @@ public class Controller implements SaveData, DataManager, WriterManager, DateMan
      * @return un HashMap che contiene per ogni Dish nell'ordine la quantità ordinata
      */
     public HashMap<Dish, Integer> inputToOrder(String in, DateOur date, int number) {
-        if (in.isBlank()) throw new RuntimeException();
+        if (in.trim().isEmpty()) throw new RuntimeException();
         String[] lines = in.split("\n");
         HashMap<Dish, Integer> order = new HashMap<>();
         int count = 0;
@@ -554,7 +600,7 @@ public class Controller implements SaveData, DataManager, WriterManager, DateMan
      * @return true se è andato a buon fine, false altrimenti
      */
     public boolean warehouseChanges(String text) {
-        if (text.isBlank()) //controllo che il testo sia valido
+        if (text.trim().isEmpty()) //controllo che il testo sia valido
         {
             erSet.errorSetter(INVALID_FORMAT);
             return false;
@@ -571,7 +617,7 @@ public class Controller implements SaveData, DataManager, WriterManager, DateMan
 
             String[] t = s.split(":");
 
-            if (t.length < 3 || t[0].isBlank() || t[2].isBlank()) //controllo il formato della stringa splittata
+            if (t.length < 3 || t[0].trim().isEmpty() || t[2].trim().isEmpty()) //controllo il formato della stringa splittata
             {
                 erSet.errorSetter(INVALID_FORMAT);
                 return false;

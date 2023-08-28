@@ -168,14 +168,14 @@ public class Reader implements Read
 				{
 					switch (xmlr.getLocalName())
 					{
-						case "recipe" ->
-						{
+						case "recipe":
 							id = xmlr.getAttributeValue(0);
 							portions = Integer.parseInt(xmlr.getAttributeValue(1));
 							workLoadPortion = Double.parseDouble(xmlr.getAttributeValue(2));
-						}
-						case "ingredient" ->
-								ingredients.add(new Ingredient(xmlr.getAttributeValue(0), xmlr.getAttributeValue(2), Double.parseDouble(xmlr.getAttributeValue(1))));
+							break;
+						case "ingredient":
+							ingredients.add(new Ingredient(xmlr.getAttributeValue(0), xmlr.getAttributeValue(2), Double.parseDouble(xmlr.getAttributeValue(1))));
+							break;
 					}
 				}
 				if (xmlr.getEventType() == XMLStreamConstants.END_ELEMENT)
@@ -215,15 +215,16 @@ public class Reader implements Read
 				{
 					switch (xmlr.getLocalName())
 					{
-						case "dish" ->
-						{
+						case "dish":
 							name = xmlr.getAttributeValue(0);
 							startPeriod = xmlr.getAttributeValue(1);
 							endPeriod = xmlr.getAttributeValue(2);
 							seasonal = Boolean.parseBoolean(xmlr.getAttributeValue(3));
 							permanent = Boolean.parseBoolean(xmlr.getAttributeValue(4));
-						}
-						case "recipe" -> id = xmlr.getAttributeValue(0);
+							break;
+						case "recipe":
+							id = xmlr.getAttributeValue(0);
+							break;
 					}
 				}
 				if (xmlr.getEventType() == XMLStreamConstants.END_ELEMENT)
@@ -264,15 +265,16 @@ public class Reader implements Read
 				{
 					switch (xmlr.getLocalName())
 					{
-						case "menu" ->
-						{
+						case "menu":
 							name = xmlr.getAttributeValue(0);
 							startPeriod = xmlr.getAttributeValue(1);
 							endPeriod = xmlr.getAttributeValue(2);
 							seasonal = Boolean.parseBoolean(xmlr.getAttributeValue(3));
 							permanent = Boolean.parseBoolean(xmlr.getAttributeValue(4));
-						}
-						case "dish" -> dishesNames.add(xmlr.getAttributeValue(0));
+							break;
+						case "dish":
+							dishesNames.add(xmlr.getAttributeValue(0));
+							break;
 					}
 				}
 				if (xmlr.getEventType() == XMLStreamConstants.END_ELEMENT)
@@ -317,33 +319,33 @@ public class Reader implements Read
 				{
 					switch (xmlr.getLocalName())
 					{
-						case "booking" -> dateString = xmlr.getAttributeValue(0).split("/");
-						case "book" ->
-						{
+						case "booking":
+							dateString = xmlr.getAttributeValue(0).split("/");
+							break;
+						case "book":
 							name = xmlr.getAttributeValue(0);
 							number = Integer.parseInt(xmlr.getAttributeValue(1));
 							workload = Integer.parseInt(xmlr.getAttributeValue(2));
-						}
-						case "order" ->
-								order.put(repo.findDish(xmlr.getAttributeValue(0)), Integer.parseInt(xmlr.getAttributeValue(1)));
+							break;
+						case "order":
+							order.put(repo.findDish(xmlr.getAttributeValue(0)), Integer.parseInt(xmlr.getAttributeValue(1)));
+							break;
 					}
 				}
 				if (xmlr.getEventType() == XMLStreamConstants.END_ELEMENT)
 					switch (xmlr.getLocalName())
 					{
-						case "booking" ->
-						{
+						case "booking":
 							if (dateString.length == 0) //per evitare rotture in lettura
 								return new HashMap<>();
 							List<Booking> out = new ArrayList<>(book);
 							bookings.put(new DateOur(dateString[0], dateString[1], dateString[2]), out);
 							book.clear();
-						}
-						case "book" ->
-						{
+							break;
+						case "book":
 							book.add(new Booking(name, number, workload, new HashMap<>(order)));
 							order.clear();
-						}
+							break;
 					}
 				xmlr.next();
 			}

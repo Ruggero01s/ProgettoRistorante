@@ -91,7 +91,7 @@ public class InParser implements InputParser {
     }
 
     public  Map<String, Double> createExtraFoodsMap(String input, boolean isFoods) throws Exception{
-        if (input.trim().isBlank())
+        if (input.trim().isEmpty())
             throw new Exception("");
         Map<String, Double> extraFoods = new HashMap<>();
         for (String line : input.split("\n")) {
@@ -100,7 +100,7 @@ public class InParser implements InputParser {
 
             String[] inputSplit = line.split(":");
 
-            if (inputSplit[0].isBlank())
+            if (inputSplit[0].isEmpty())
                 throw new Exception(""); //nome non valido
             if (inputSplit.length < 2)
                 throw new Exception("");
@@ -129,7 +129,7 @@ public class InParser implements InputParser {
             Set<Ingredient> ingredientQuantitySet = new HashSet<>();
             String[] lines = inputIngredients.split("\n");
 
-            if (inputName.isBlank()) //controllo validità del nome
+            if (inputName.trim().isEmpty()) //controllo validità del nome
                 throw new RuntimeException("");
 
             boolean err = false;
@@ -140,7 +140,7 @@ public class InParser implements InputParser {
 
                 String[] words = line.split(":");
 
-                if (words[0].isBlank()) //controllo validità del nome
+                if (words[0].trim().isEmpty()) //controllo validità del nome
                     throw new RuntimeException("");
 
                 if (words.length < 3) //controllo lunghezza stringa
@@ -204,7 +204,7 @@ public class InParser implements InputParser {
     public boolean parseDish(String inputName, String inputRecipe, String inputStartDate, String inputEndDate, boolean perm, boolean seasonal){
         try
         {
-            if (inputName.isBlank()) //controllo validità del nome
+            if (inputName.trim().isEmpty()) //controllo validità del nome
                 throw new NumberFormatException();
 
             if (!perm) // se non è permanente controllo le date
@@ -237,7 +237,7 @@ public class InParser implements InputParser {
 
     public boolean parseMenu(String inputName, String inputs, String inputStartDate, String inputEndDate, boolean permanent, boolean seasonal){
         try {
-            if (inputName.isBlank()) //controllo validità del nome
+            if (inputName.trim().isEmpty()) //controllo validità del nome
                 throw new NumberFormatException();
 
             String[] inputList = inputs.split("\n");
@@ -256,7 +256,7 @@ public class InParser implements InputParser {
             }
             boolean dishNotFound = false;
             for (String s : inputList) {
-                if (!s.isBlank()) {
+                if (!s.trim().isEmpty()) {
                     try {
                         dishesForMenu.add(repo.findDish(s));
                     } catch (InstanceNotFoundException e) {
@@ -316,7 +316,7 @@ public class InParser implements InputParser {
     public boolean parseUser(String name, String password, String confPassword, boolean manager, boolean employee, boolean storageWorker){
         if (manager || employee || storageWorker) //deve avere almeno un ruolo, altrimenti non può accedere a nulla
         {
-            if (!name.isBlank() && !password.isBlank()) //controllo la loro validità
+            if (!name.trim().isEmpty() && !password.trim().isEmpty()) //controllo la loro validità
             {
                 if (password.equals(confPassword)) //se le password coincidono
                 {
